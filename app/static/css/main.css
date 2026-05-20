@@ -64,6 +64,23 @@ footer {
   font-size: 0.8rem;
 }
 
+.avatar-circle {
+  width: 120px;          /* same width and height => circle */
+  height: 120px;
+  border-radius: 50%;    /* makes the container circular */
+  overflow: hidden;      /* hide anything outside circle */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+.avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;     /* fill the circle, may crop edges */
+  display: block;
+}
 @media print {
   .navbar, .sidebar-col, .no-print {
     display: none !important;

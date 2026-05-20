@@ -1,0 +1,93 @@
+{% extends 'base/layout.html' %}
+{% block title %}Bulk Upload Products — StockInvoice{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><i class="bi bi-upload me-2"></i>Bulk Upload Products</h4>
+    <a href="{{ url_for('web_stock.list_products') }}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i>Back to Products
+    </a>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header"><strong>Upload File</strong></div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label">Select JSON or CSV file</label>
+                        <input type="file" name="file" class="form-control" accept=".json,.csv" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-upload me-1"></i>Upload & Import
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header"><strong>File Format</strong></div>
+            <div class="card-body small">
+                <p class="mb-2"><strong>CSV</strong> — Include headers row:</p>
+                <pre class="bg-light p-2 rounded"><code>name,sku,description,quantity,unit_price,category,tax_rate,low_stock_threshold
+Product A,SKU001,Description,10,15.99,General,20,5</code></pre>
+                <p class="mb-0 mt-2"><strong>JSON</strong> — Array of objects:</p>
+                <pre class="bg-light p-2 rounded"><code>[{
+  "name": "Product A",
+  "sku": "SKU001",
+  "quantity": 10,
+  "unit_price": 15.99
+}]</code></pre>
+                <p class="text-muted mt-2 mb-0">Only <code>name</code> and <code>sku</code> are required. Other fields default to 0 or empty.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if results %}
+<div class="card shadow-sm mt-3">
+    <div class="card-header"><strong>Import Results</strong></div>
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0 small">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>SKU</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in results %}
+                <tr class="{{ 'table-success' if r.status == 'success' else 'table-danger' }}">
+                    <td>{{ r.row }}</td>
+                    <td>{{ r.name }}</td>
+                    <td><code>{{ r.sku }}</code></td>
+                    <td>
+                        {% if r.status == 'success' %}
+                        <span class="badge bg-success">Imported</span>
+                        {% else %}
+                        <span class="badge bg-danger">Error</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if r.errors %}
+                        <ul class="mb-0 ps-3">
+                            {% for e in r.errors %}
+                            <li>{{ e }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <span class="text-muted">OK</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -38,24 +38,24 @@
                 <main class="col-12 px-3 py-3">
             {% endif %}
                 {% if current_company %}
-                <div class="d-flex align-items-center gap-3 mb-3 pb-2 border-bottom">
-                    {% if current_company.logo %}
-                    <div class="rounded-circle overflow-hidden flex-shrink-0 border d-flex align-items-center justify-content-center" style="width:48px;height:48px;background:#fff;">
-                        <img src="{{ url_for('static', filename='uploads/logos/' + current_company.logo) }}" alt="Logo" style="max-width:100%;max-height:100%;object-fit:contain;object-position:center;display:block;">
+                <div class="row justify-content-center">
+                    <div class="col-3">
+                        <div class="avatar-circle">
+                            <img src="{{ url_for('static', filename='uploads/logos/' + current_company.logo) }}" alt="Logo" style="max-width:100%;max-height:100%;object-fit:contain;object-position:center;display:block;">
+                        </div>
                     </div>
-                    {% else %}
-                    <div class="d-flex align-items-center justify-content-center bg-light rounded-circle flex-shrink-0" style="width:48px;height:48px;">
-                        <i class="bi bi-building text-secondary" style="font-size:1.3rem;"></i>
+                    <div class="col-9 d-flex flex-column justify-content-center">
+                        <h1 class="h4 mb-0">{{ current_company.name }}</h1>
+                        <div class="small text-muted">
+                            <i class="bi bi-telephone me-1"></i>{{ current_company.phone or '-' }} &nbsp;|&nbsp;
+                            <i class="bi bi-envelope me-1"></i>{{ current_company.email or '-' }} &nbsp;|&nbsp;
+                            <i class="bi bi-file-earmark-text me-1"></i>ICE: <code>{{ current_company.ice or '-' }}</code>
+                        </div>
                     </div>
-                    {% endif %}
-                    <strong class="me-2">{{ current_company.name }}</strong>
-                    <span class="vr"></span>
-                    <span class="small text-muted"><i class="bi bi-telephone me-1"></i>{{ current_company.phone or '-' }}</span>
-                    <span class="vr"></span>
-                    <span class="small text-muted"><i class="bi bi-envelope me-1"></i>{{ current_company.email or '-' }}</span>
-                    <span class="vr"></span>
-                    <span class="small text-muted"><i class="bi bi-file-earmark-text me-1"></i>ICE: <code>{{ current_company.ice or '-' }}</code></span>
+
+
                 </div>
+
                 {% endif %}
                 {% include 'base/flash_messages.html' %}
                 {% block content %}{% endblock %}
