@@ -285,3 +285,130 @@ def set_user_role(user_id):
     if company_id:
         return redirect(url_for('admin.company_detail', company_id=company_id))
     return redirect(url_for('admin.index'))
+
+
+@admin_bp.route('/users')
+@jwt_required()
+@super_admin_required
+def list_users():
+    from bson.objectid import ObjectId
+    user = _get_user()
+    search = (request.args.get('search') or '').strip()
+
+    users_raw = UserModel.find_all(search=search if search else None)
+    all_users = []
+    for u in users_raw:
+        d = UserModel.to_dict(u)
+        if d['company_id']:
+            comp = CompanyModel.find_by_id(d['company_id'])
+            d['company_name'] = comp.get('name', '—') if comp else '—'
+        else:
+            d['company_name'] = '—'
+        all_users.append(d)
+
+    total = len(all_users)
+
+    return render_template('admin/users.html', mode='web',
+                           user=UserModel.to_dict(user) if user else None,
+                           users=all_users,
+                           total=total, search=search)
+
+
+@admin_bp.route('/users/<user_id>/edit', methods=['GET', 'POST'])
+@jwt_required()
+@super_admin_required
+def edit_user(user_id):
+    user = _get_user()
+    target = UserModel.find_by_id(user_id)
+    if not target:
+        flash('User not found.', 'danger')
+        return redirect(url_for('admin.list_users'))
+
+    if target.get('role') == 'super_admin' and str(target['_id']) != str(get_jwt_identity()):
+        flash('Cannot edit super admin accounts.', 'danger')
+        return redirect(url_for('admin.list_users'))
+
+    if request.method == 'GET':
+        return render_template('admin/edit_user.html', mode='web',
+                               user=UserModel.to_dict(user) if user else None,
+                               target=UserModel.to_dict(target))
+
+    name = (request.form.get('name') or '').strip()
+    email = (request.form.get('email') or '').strip().lower()
+
+    errors = []
+    if not name:
+        errors.append('Name is required.')
+    if not email:
+        errors.append('Email is required.')
+
+    existing = UserModel.find_by_email(email)
+    if existing and str(existing['_id']) != user_id:
+        errors.append('Email already in use.')
+
+    if errors:
+        for e in errors:
+            flash(e, 'danger')
+        return render_template('admin/edit_user.html', mode='web',
+                               user=UserModel.to_dict(user) if user else None,
+                               target=UserModel.to_dict(target))
+
+    UserModel.update(user_id, {'name': name, 'email': email})
+    logger.info('User updated: %s (id=%s)', email, user_id)
+    flash('User details updated.', 'success')
+    return redirect(url_for('admin.list_users'))
+
+
+@admin_bp.route('/users/<user_id>/reset-password', methods=['POST'])
+@jwt_required()
+@super_admin_required
+def reset_password(user_id):
+    target = UserModel.find_by_id(user_id)
+    if not target:
+        flash('User not found.', 'danger')
+        return redirect(url_for('admin.list_users'))
+
+    if target.get('role') == 'super_admin':
+        flash('Cannot reset password for super admin via UI.', 'danger')
+        return redirect(url_for('admin.list_users'))
+
+    new_password = request.form.get('new_password', '')
+    if len(new_password) < 8:
+        flash('Password must be at least 8 characters.', 'danger')
+        company_id = str(target['company_id']) if target.get('company_id') else None
+        return redirect(url_for('admin.edit_user', user_id=user_id) if not company_id else url_for('admin.company_detail', company_id=company_id))
+
+    from app.extensions.db import bcrypt
+    hashed = bcrypt.generate_password_hash(new_password).decode('utf-8')
+    UserModel.update(user_id, {'password': hashed})
+    logger.info('Password reset for user %s', target.get('email'))
+    flash('Password reset successful.', 'success')
+
+    company_id = str(target['company_id']) if target.get('company_id') else None
+    if company_id:
+        return redirect(url_for('admin.company_detail', company_id=company_id))
+    return redirect(url_for('admin.list_users'))
+
+
+@admin_bp.route('/users/<user_id>/delete', methods=['POST'])
+@jwt_required()
+@super_admin_required
+def delete_user(user_id):
+    target = UserModel.find_by_id(user_id)
+    if not target:
+        flash('User not found.', 'danger')
+        return redirect(url_for('admin.list_users'))
+
+    if target.get('role') == 'super_admin':
+        flash('Cannot delete super admin account.', 'danger')
+        return redirect(url_for('admin.list_users'))
+
+    company_id = str(target['company_id']) if target.get('company_id') else None
+    from bson.objectid import ObjectId
+    mongo.db['users'].delete_one({'_id': ObjectId(user_id)})
+    logger.warning('User deleted: %s (id=%s)', target.get('email'), user_id)
+    flash(f'User "{target.get("email")}" deleted.', 'success')
+
+    if company_id:
+        return redirect(url_for('admin.company_detail', company_id=company_id))
+    return redirect(url_for('admin.list_users'))

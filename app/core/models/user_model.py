@@ -44,6 +44,16 @@ class UserModel:
         return list(mongo.db[UserModel.collection].find({'company_id': ObjectId(company_id)}))
 
     @staticmethod
+    def find_all(search=None):
+        query = {}
+        if search:
+            query['$or'] = [
+                {'name': {'$regex': search, '$options': 'i'}},
+                {'email': {'$regex': search, '$options': 'i'}},
+            ]
+        return list(mongo.db[UserModel.collection].find(query).sort('created_at', -1))
+
+    @staticmethod
     def to_dict(user):
         return {
             'id': str(user['_id']),

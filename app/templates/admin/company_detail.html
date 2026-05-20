@@ -91,12 +91,15 @@
                             <th>Email</th>
                             <th>Role</th>
                             <th>Joined</th>
+                            <th class="text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for u in users %}
                         <tr>
-                            <td>{{ u.name }}</td>
+                            <td>
+                                <a href="{{ url_for('admin.edit_user', user_id=u.id) }}" class="text-decoration-none">{{ u.name }}</a>
+                            </td>
                             <td>{{ u.email }}</td>
                             <td>
                                 {% if u.role == 'super_admin' %}
@@ -111,9 +114,19 @@
                                 {% endif %}
                             </td>
                             <td><small>{{ u.created_at[:10] if u.created_at else '-' }}</small></td>
+                            <td class="text-end">
+                                {% if u.role != 'super_admin' %}
+                                <a href="{{ url_for('admin.edit_user', user_id=u.id) }}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form method="POST" action="{{ url_for('admin.delete_user', user_id=u.id) }}" class="d-inline" onsubmit="return confirm('Delete user {{ u.email }}?')">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="bi bi-trash"></i></button>
+                                </form>
+                                {% endif %}
+                            </td>
                         </tr>
                         {% else %}
-                        <tr><td colspan="4" class="text-center text-muted py-4">No users.</td></tr>
+                        <tr><td colspan="5" class="text-center text-muted py-4">No users.</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>
