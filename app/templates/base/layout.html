@@ -25,7 +25,9 @@
     {% if user %}
         {% include 'base/navbar.html' %}
     {% endif %}
-
+    {{ user }}
+    {{ mode }}
+    {{ company }}
     <div class="container-fluid">
         <div class="row">
             {% if user and mode != 'mobile' %}

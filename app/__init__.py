@@ -64,10 +64,28 @@ def create_app(config_class=Config):
         lang = request.cookies.get('lang', 'en')
         if lang not in LANGS:
             lang = 'en'
+
+        current_company = None
+        try:
+            from flask_jwt_extended import get_jwt_identity
+            identity = get_jwt_identity()
+            if identity:
+                from app.core.models.user_model import UserModel
+                from app.core.models.company_model import CompanyModel
+                u = UserModel.find_by_id(identity)
+                if u and u.get('company_id'):
+                    from bson.objectid import ObjectId
+                    company = CompanyModel.find_by_id(str(u['company_id']))
+                    if company:
+                        current_company = CompanyModel.to_dict(company)
+        except Exception:
+            pass
+
         return {
             'current_lang': lang,
             'available_langs': LANGS,
             'version': VERSION,
+            'current_company': current_company,
         }
 
     @app.cli.command('create-super-admin')
