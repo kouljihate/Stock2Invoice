@@ -258,3 +258,30 @@ def add_user(company_id):
     logger.info('User %s added to company %s (role=%s)', email, company.get('name'), role)
     flash(f'User "{email}" added to company.', 'success')
     return redirect(url_for('admin.company_detail', company_id=company_id))
+
+
+@admin_bp.route('/users/<user_id>/set-role', methods=['POST'])
+@jwt_required()
+@super_admin_required
+def set_user_role(user_id):
+    user = UserModel.find_by_id(user_id)
+    if not user:
+        flash('User not found.', 'danger')
+        return redirect(url_for('admin.index'))
+
+    if user.get('role') == 'super_admin':
+        flash('Cannot change super admin role.', 'danger')
+        return redirect(url_for('admin.index'))
+
+    new_role = request.form.get('role', '')
+    if new_role not in ('user', 'company_admin'):
+        flash('Invalid role.', 'danger')
+    else:
+        UserModel.update(user_id, {'role': new_role})
+        logger.info('User %s role changed to %s', user.get('email'), new_role)
+        flash(f'User role updated to {new_role}.', 'success')
+
+    company_id = str(user['company_id']) if user.get('company_id') else None
+    if company_id:
+        return redirect(url_for('admin.company_detail', company_id=company_id))
+    return redirect(url_for('admin.index'))
