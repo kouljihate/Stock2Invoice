@@ -1,0 +1,63 @@
+<div class="row mb-3">
+    <div class="col-md-4">
+        <label class="form-label">Customer Name *</label>
+        <input type="text" name="customer_name" class="form-control" value="{{ invoice.get('customer_name', '') if invoice else '' }}" required>
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">Customer Email</label>
+        <input type="email" name="customer_email" class="form-control" value="{{ invoice.get('customer_email', '') if invoice else '' }}">
+    </div>
+    <div class="col-md-4">
+        <label class="form-label">Status</label>
+        <select name="status" class="form-select">
+            <option value="draft" {% if invoice and invoice.get('status') == 'draft' %}selected{% endif %}>Draft</option>
+            <option value="sent" {% if invoice and invoice.get('status') == 'sent' %}selected{% endif %}>Sent</option>
+            <option value="paid" {% if invoice and invoice.get('status') == 'paid' %}selected{% endif %}>Paid</option>
+        </select>
+    </div>
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Customer Address</label>
+    <textarea name="customer_address" class="form-control" rows="2">{{ invoice.get('customer_address', '') if invoice else '' }}</textarea>
+</div>
+
+<h5 class="mt-4 mb-3">Line Items</h5>
+<div id="line-items">
+    <div class="row g-2 mb-2 line-item">
+        <div class="col-md-4">
+            <select name="sku" class="form-select" required>
+                <option value="">-- Select Product --</option>
+                {% for p in products %}
+                <option value="{{ p.sku }}" data-name="{{ p.name }}" data-price="{{ p.unit_price }}">[{{ p.sku }}] {{ p.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <input type="number" name="quantity" class="form-control" placeholder="Qty" min="1" required>
+        </div>
+        <div class="col-md-2">
+            <input type="number" step="0.01" name="unit_price" class="form-control" placeholder="Price" min="0" required>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-outline-danger remove-item"><i class="bi bi-x-lg"></i></button>
+        </div>
+    </div>
+</div>
+<button type="button" class="btn btn-sm btn-outline-success mb-3" id="add-item"><i class="bi bi-plus-lg me-1"></i>Add Item</button>
+
+<div class="row mb-3">
+    <div class="col-md-3">
+        <label class="form-label">Discount (%)</label>
+        <input type="number" step="0.01" name="discount_percent" class="form-control" value="0" min="0" max="100">
+    </div>
+    <div class="col-md-3">
+        <label class="form-label">Tax (%)</label>
+        <input type="number" step="0.01" name="tax_percent" class="form-control" value="10" min="0" max="100">
+    </div>
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Notes</label>
+    <textarea name="notes" class="form-control" rows="2"></textarea>
+</div>

@@ -1,0 +1,15 @@
+.sidebar-col {
+  padding-right: 0;
+}
+
+main {
+  min-height: calc(100vh - 56px);
+}
+
+.card {
+  border-radius: 0.5rem;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f0f7ff;
+}

@@ -1,0 +1,45 @@
+<div class="d-flex flex-column flex-shrink-0 pt-3 sidebar">
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+            <a href="{{ url_for('web_dashboard.index') }}" class="nav-link link-dark {% if request.endpoint and 'dashboard' in request.endpoint %}active{% endif %}">
+                <i class="bi bi-speedometer2 me-2"></i>Dashboard
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('web_orders.list_orders') }}" class="nav-link link-dark {% if request.endpoint and 'orders' in request.endpoint %}active{% endif %}">
+                <i class="bi bi-cart me-2"></i>Orders
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('web_orders.create_order') }}" class="nav-link link-dark">
+                <i class="bi bi-plus-circle me-2"></i>New Order
+            </a>
+        </li>
+        <li>
+            <hr>
+        </li>
+        <li>
+            <a href="{{ url_for('web_stock.list_products') }}" class="nav-link link-dark {% if request.endpoint and 'stock' in request.endpoint %}active{% endif %}">
+                <i class="bi bi-box me-2"></i>Products
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('web_stock.create_product') }}" class="nav-link link-dark">
+                <i class="bi bi-plus-circle me-2"></i>Add Product
+            </a>
+        </li>
+        <li>
+            <hr>
+        </li>
+        <li>
+            <a href="{{ url_for('web_invoices.list_invoices') }}" class="nav-link link-dark {% if request.endpoint and 'invoices' in request.endpoint %}active{% endif %}">
+                <i class="bi bi-file-text me-2"></i>Invoices
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('web_invoices.create_invoice') }}" class="nav-link link-dark">
+                <i class="bi bi-plus-circle me-2"></i>New Invoice
+            </a>
+        </li>
+    </ul>
+</div>

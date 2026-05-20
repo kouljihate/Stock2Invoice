@@ -1,0 +1,93 @@
+{% extends 'base/layout.html' %}
+{% block title %}Print — {{ invoice.invoice_number }}{% endblock %}
+{% block extra_head %}
+<style>
+    body { font-family: 'Comfortaa', sans-serif; }
+    .no-print { display: none; }
+    @media print {
+        .no-print { display: none !important; }
+        .navbar, .sidebar-col, .sidebar, footer { display: none !important; }
+        main { margin: 0 !important; padding: 0 !important; }
+        .card { box-shadow: none !important; border: 1px solid #ddd; }
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="no-print mb-3">
+    <button onclick="window.print()" class="btn btn-primary"><i class="bi bi-printer me-1"></i>Print</button>
+    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.view_invoice', invoice_id=invoice.id) }}{% else %}{{ url_for('web_invoices.view_invoice', invoice_id=invoice.id) }}{% endif %}" class="btn btn-outline-secondary">Back</a>
+</div>
+
+<div class="card border-0">
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-6">
+                <h2 class="text-primary">StockInvoice</h2>
+                <small>123 Business Ave, Suite 100<br>City, State 12345</small>
+            </div>
+            <div class="col-6 text-end">
+                <h3>INVOICE</h3>
+                <h5 class="text-muted">{{ invoice.invoice_number }}</h5>
+                <p class="mb-0"><small>Date: {{ invoice.created_at[:10] if invoice.created_at else '-' }}</small></p>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-6">
+                <strong>Bill To:</strong>
+                <p class="mb-0">{{ invoice.customer_name }}</p>
+                {% if invoice.customer_email %}<p class="mb-0"><small>{{ invoice.customer_email }}</small></p>{% endif %}
+                {% if invoice.customer_address %}<p><small>{{ invoice.customer_address }}</small></p>{% endif %}
+            </div>
+            <div class="col-6 text-end">
+                <span class="badge bg-{% if invoice.status == 'paid' %}success{% elif invoice.status == 'draft' %}secondary{% elif invoice.status == 'sent' %}info{% else %}danger{% endif %} fs-6">
+                    {{ invoice.status|upper }}
+                </span>
+            </div>
+        </div>
+
+        <table class="table table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>SKU</th>
+                    <th>Item</th>
+                    <th class="text-end">Qty</th>
+                    <th class="text-end">Unit Price</th>
+                    <th class="text-end">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in invoice.items %}
+                <tr>
+                    <td><code>{{ item.sku }}</code></td>
+                    <td>{{ item.name }}</td>
+                    <td class="text-end">{{ item.quantity }}</td>
+                    <td class="text-end">${{ item.unit_price }}</td>
+                    <td class="text-end">${{ item.total }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="row">
+            <div class="col-6">
+                {% if invoice.notes %}
+                <p><strong>Notes:</strong><br>{{ invoice.notes }}</p>
+                {% endif %}
+            </div>
+            <div class="col-6">
+                <table class="table table-sm table-borderless">
+                    <tr><td>Subtotal</td><td class="text-end">${{ invoice.subtotal }}</td></tr>
+                    {% if invoice.discount_percent > 0 %}
+                    <tr><td>Discount ({{ invoice.discount_percent }}%)</td><td class="text-end text-danger">-${{ invoice.discount_amount }}</td></tr>
+                    {% endif %}
+                    <tr><td>Tax ({{ invoice.tax_percent }}%)</td><td class="text-end">${{ invoice.tax_amount }}</td></tr>
+                    <tr class="fw-bold"><td>Total</td><td class="text-end fs-4">${{ invoice.total }}</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <p class="text-center text-muted mt-4"><small>Thank you for your business!</small></p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'base/layout.html' %}
+{% block title %}Orders — StockInvoice{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><i class="bi bi-cart me-2"></i>Orders</h4>
+    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_orders.create_order') }}{% else %}{{ url_for('web_orders.create_order') }}{% endif %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i>New Order
+    </a>
+</div>
+
+<form method="GET" class="row g-2 mb-3">
+    <div class="col-md-4">
+        <select name="status" class="form-select" onchange="this.form.submit()">
+            <option value="">All Statuses</option>
+            <option value="pending" {{ 'selected' if request.args.get('status') == 'pending' }}>Pending</option>
+            <option value="confirmed" {{ 'selected' if request.args.get('status') == 'confirmed' }}>Confirmed</option>
+            <option value="shipped" {{ 'selected' if request.args.get('status') == 'shipped' }}>Shipped</option>
+            <option value="delivered" {{ 'selected' if request.args.get('status') == 'delivered' }}>Delivered</option>
+            <option value="cancelled" {{ 'selected' if request.args.get('status') == 'cancelled' }}>Cancelled</option>
+        </select>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th class="text-end">Total</th>
+                <th class="text-end">Invoice</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for o in orders %}
+            <tr>
+                <td><code>{{ o.order_number }}</code></td>
+                <td>{{ o.customer_name }}</td>
+                <td><small>{{ o.created_at[:10] if o.created_at else '-' }}</small></td>
+                <td>
+                    <span class="badge bg-{% if o.status == 'confirmed' %}primary{% elif o.status == 'shipped' %}info{% elif o.status == 'delivered' %}success{% elif o.status == 'cancelled' %}danger{% else %}secondary{% endif %}">
+                        {{ o.status }}
+                    </span>
+                </td>
+                <td class="text-end">${{ o.total }}</td>
+                <td class="text-end">
+                    {% if o.generated_invoice_number %}
+                        <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.view_invoice', invoice_id=o.generated_invoice_id) }}{% else %}{{ url_for('web_invoices.view_invoice', invoice_id=o.generated_invoice_id) }}{% endif %}" class="btn btn-sm btn-outline-success">
+                            {{ o.generated_invoice_number }}
+                        </a>
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
+                </td>
+                <td class="text-end">
+                    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_orders.view_order', order_id=o.id) }}{% else %}{{ url_for('web_orders.view_order', order_id=o.id) }}{% endif %}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" class="text-center text-muted py-4">No orders found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if pages > 1 %}
+<nav>
+    <ul class="pagination justify-content-center">
+        {% for p in range(1, pages + 1) %}
+        <li class="page-item {{ 'active' if p == page }}">
+            <a class="page-link" href="?page={{ p }}&per_page={{ per_page }}&status={{ request.args.get('status', '') }}">{{ p }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

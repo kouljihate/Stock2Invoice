@@ -1,0 +1,79 @@
+{% extends 'base/layout.html' %}
+{% block title %}Products — StockInvoice{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><i class="bi bi-box me-2"></i>Products</h4>
+    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_stock.create_product') }}{% else %}{{ url_for('web_stock.create_product') }}{% endif %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i>Add Product
+    </a>
+</div>
+
+<form method="GET" class="row g-2 mb-3">
+    <div class="col-md-6">
+        <input type="text" name="search" class="form-control" placeholder="Search by name or SKU..." value="{{ request.args.get('search', '') }}">
+    </div>
+    <div class="col-md-3">
+        <input type="text" name="category" class="form-control" placeholder="Filter by category..." value="{{ request.args.get('category', '') }}">
+    </div>
+    <div class="col-md-3">
+        <button type="submit" class="btn btn-outline-primary w-100"><i class="bi bi-search me-1"></i>Search</button>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>SKU</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th class="text-end">Qty</th>
+                <th class="text-end">Price</th>
+                <th class="text-end">Value</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in products %}
+            <tr class="{% if p.quantity <= p.low_stock_threshold %}table-warning{% endif %}">
+                <td><code>{{ p.sku }}</code></td>
+                <td>
+                    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_stock.view_product', product_id=p.id) }}{% else %}{{ url_for('web_stock.view_product', product_id=p.id) }}{% endif %}">
+                        {{ p.name }}
+                    </a>
+                    {% if p.quantity <= p.low_stock_threshold %}
+                        <span class="badge bg-warning text-dark">Low</span>
+                    {% endif %}
+                </td>
+                <td>{{ p.category or '-' }}</td>
+                <td class="text-end">{{ p.quantity }}</td>
+                <td class="text-end">${{ p.unit_price }}</td>
+                <td class="text-end">${{ (p.quantity * p.unit_price)|round(2) }}</td>
+                <td class="text-end">
+                    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_stock.edit_product', product_id=p.id) }}{% else %}{{ url_for('web_stock.edit_product', product_id=p.id) }}{% endif %}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form method="POST" action="{% if mode == 'mobile' %}{{ url_for('mobile_stock.delete_product', product_id=p.id) }}{% else %}{{ url_for('web_stock.delete_product', product_id=p.id) }}{% endif %}" class="d-inline" onsubmit="return confirm('Delete {{ p.name }}?')">
+                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" class="text-center text-muted py-4">No products found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if pages > 1 %}
+<nav>
+    <ul class="pagination justify-content-center">
+        {% for p in range(1, pages + 1) %}
+        <li class="page-item {{ 'active' if p == page }}">
+            <a class="page-link" href="?page={{ p }}&per_page={{ per_page }}&search={{ request.args.get('search', '') }}&category={{ request.args.get('category', '') }}">{{ p }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

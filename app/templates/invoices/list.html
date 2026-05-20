@@ -1,0 +1,71 @@
+{% extends 'base/layout.html' %}
+{% block title %}Invoices — StockInvoice{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><i class="bi bi-file-text me-2"></i>Invoices</h4>
+    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.create_invoice') }}{% else %}{{ url_for('web_invoices.create_invoice') }}{% endif %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i>New Invoice
+    </a>
+</div>
+
+<form method="GET" class="row g-2 mb-3">
+    <div class="col-md-4">
+        <select name="status" class="form-select" onchange="this.form.submit()">
+            <option value="">All Statuses</option>
+            <option value="draft" {{ 'selected' if request.args.get('status') == 'draft' }}>Draft</option>
+            <option value="sent" {{ 'selected' if request.args.get('status') == 'sent' }}>Sent</option>
+            <option value="paid" {{ 'selected' if request.args.get('status') == 'paid' }}>Paid</option>
+            <option value="cancelled" {{ 'selected' if request.args.get('status') == 'cancelled' }}>Cancelled</option>
+        </select>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th class="text-end">Total</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inv in invoices %}
+            <tr>
+                <td><code>{{ inv.invoice_number }}</code></td>
+                <td>{{ inv.customer_name }}</td>
+                <td><small>{{ inv.created_at[:10] if inv.created_at else '-' }}</small></td>
+                <td>
+                    <span class="badge bg-{% if inv.status == 'paid' %}success{% elif inv.status == 'draft' %}secondary{% elif inv.status == 'sent' %}info{% else %}danger{% endif %}">
+                        {{ inv.status }}
+                    </span>
+                </td>
+                <td class="text-end">${{ inv.total }}</td>
+                <td class="text-end">
+                    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.view_invoice', invoice_id=inv.id) }}{% else %}{{ url_for('web_invoices.view_invoice', invoice_id=inv.id) }}{% endif %}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" class="text-center text-muted py-4">No invoices found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if pages > 1 %}
+<nav>
+    <ul class="pagination justify-content-center">
+        {% for p in range(1, pages + 1) %}
+        <li class="page-item {{ 'active' if p == page }}">
+            <a class="page-link" href="?page={{ p }}&per_page={{ per_page }}&status={{ request.args.get('status', '') }}">{{ p }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

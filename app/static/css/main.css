@@ -1,0 +1,75 @@
+:root {
+  --font-default: 'Comfortaa', sans-serif;
+  --font-arabic: 'Reem Kufi Fun', sans-serif;
+  --font-french: 'Tangerine', cursive;
+}
+
+html[data-lang="en"] body {
+  font-family: var(--font-default);
+}
+
+html[data-lang="ar"] body {
+  font-family: var(--font-arabic);
+  direction: rtl;
+}
+
+html[data-lang="fr"] body {
+  font-family: var(--font-french);
+  font-weight: 500;
+}
+
+body {
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 100%;
+  background: #f8f9fa;
+  border-right: 1px solid #dee2e6;
+  min-height: calc(100vh - 56px);
+}
+
+html[data-lang="ar"] .sidebar {
+  border-right: none;
+  border-left: 1px solid #dee2e6;
+}
+
+.sidebar .nav-link {
+  border-radius: 0;
+  padding: 0.6rem 1rem;
+}
+
+.sidebar .nav-link:hover {
+  background: #e9ecef;
+}
+
+.sidebar .nav-link.active {
+  background: #0d6efd;
+  color: #fff !important;
+}
+
+.card {
+  border: none;
+}
+
+.table > thead {
+  border-top: none;
+}
+
+.badge {
+  font-weight: 500;
+}
+
+footer {
+  font-size: 0.8rem;
+}
+
+@media print {
+  .navbar, .sidebar-col, .no-print {
+    display: none !important;
+  }
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}

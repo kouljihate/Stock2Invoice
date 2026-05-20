@@ -1,0 +1,44 @@
+from datetime import datetime, timezone
+
+
+class UserModel:
+    collection = 'users'
+
+    @staticmethod
+    def create(data):
+        from app.extensions import mongo
+        data['created_at'] = datetime.now(timezone.utc)
+        data['updated_at'] = datetime.now(timezone.utc)
+        result = mongo.db[UserModel.collection].insert_one(data)
+        return str(result.inserted_id)
+
+    @staticmethod
+    def find_by_email(email):
+        from app.extensions import mongo
+        return mongo.db[UserModel.collection].find_one({'email': email})
+
+    @staticmethod
+    def find_by_id(user_id):
+        from app.extensions import mongo
+        from bson.objectid import ObjectId
+        return mongo.db[UserModel.collection].find_one({'_id': ObjectId(user_id)})
+
+    @staticmethod
+    def update(user_id, data):
+        from app.extensions import mongo
+        from bson.objectid import ObjectId
+        data['updated_at'] = datetime.now(timezone.utc)
+        mongo.db[UserModel.collection].update_one(
+            {'_id': ObjectId(user_id)},
+            {'$set': data}
+        )
+
+    @staticmethod
+    def to_dict(user):
+        return {
+            'id': str(user['_id']),
+            'name': user.get('name'),
+            'email': user.get('email'),
+            'role': user.get('role', 'user'),
+            'created_at': user.get('created_at').isoformat() if user.get('created_at') else None,
+        }
