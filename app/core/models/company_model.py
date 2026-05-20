@@ -30,6 +30,19 @@ class CompanyModel:
         return mongo.db[CompanyModel.collection].count_documents({})
 
     @staticmethod
+    def update(company_id, data):
+        from bson.objectid import ObjectId
+        mongo.db[CompanyModel.collection].update_one(
+            {'_id': ObjectId(company_id)},
+            {'$set': data},
+        )
+
+    @staticmethod
+    def delete(company_id):
+        from bson.objectid import ObjectId
+        mongo.db[CompanyModel.collection].delete_one({'_id': ObjectId(company_id)})
+
+    @staticmethod
     def to_dict(c):
         return {
             'id': str(c['_id']),
