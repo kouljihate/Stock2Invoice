@@ -41,16 +41,19 @@
                 <div class="d-flex align-items-center gap-3 mb-3 pb-2 border-bottom">
                     {% if current_company.logo %}
                     <img src="{{ url_for('static', filename='uploads/logos/'+current_company.logo) }}"
-                         alt="Logo" style="width:40px;height:40px;object-fit:contain;border-radius:4px;">
-                    {% endif %}
-                    <div>
-                        <strong>{{ current_company.name }}</strong>
-                        <div class="small text-muted">
-                            {% if current_company.city %}{{ current_company.city }}{% endif %}
-                            {% if current_company.phone %}{% if current_company.city %} · {% endif %}{{ current_company.phone }}{% endif %}
-                            {% if current_company.contact_name %}{% if current_company.city or current_company.phone %} · {% endif %}{{ current_company.contact_name }}{% endif %}
-                        </div>
+                         alt="Logo" style="width:40px;height:40px;object-fit:cover;border-radius:50%;">
+                    {% else %}
+                    <div class="d-flex align-items-center justify-content-center bg-light rounded-circle" style="width:40px;height:40px;">
+                        <i class="bi bi-building text-secondary"></i>
                     </div>
+                    {% endif %}
+                    <strong class="me-2">{{ current_company.name }}</strong>
+                    <span class="vr"></span>
+                    <span class="small text-muted"><i class="bi bi-telephone me-1"></i>{{ current_company.phone or '-' }}</span>
+                    <span class="vr"></span>
+                    <span class="small text-muted"><i class="bi bi-envelope me-1"></i>{{ current_company.email or '-' }}</span>
+                    <span class="vr"></span>
+                    <span class="small text-muted"><i class="bi bi-file-earmark-text me-1"></i>ICE: <code>{{ current_company.ice or '-' }}</code></span>
                 </div>
                 {% endif %}
                 {% include 'base/flash_messages.html' %}
