@@ -34,6 +34,12 @@ def create_app(config_class=Config):
     mongo.init_app(app)
     bcrypt.init_app(app)
     jwt.init_app(app)
+
+    @jwt.expired_token_loader
+    def expired_token_callback(jwt_header, jwt_data):
+        from flask import render_template, url_for
+        return render_template('base/token_expired.html'), 401
+
     setup_logging(app)
     register_error_handlers(app)
 
