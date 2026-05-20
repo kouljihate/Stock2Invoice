@@ -1,25 +1,4 @@
 <div class="d-flex flex-column flex-shrink-0 pt-3 sidebar">
-    {% if current_company %}
-    <div class="px-3 mb-3 text-center border-bottom pb-3">
-        {% if current_company.logo %}
-        <img src="{{ url_for('static', filename='uploads/logos/'+current_company.logo) }}"
-             alt="Logo" style="width:56px;height:56px;object-fit:contain;border-radius:6px;" class="mb-1">
-        {% endif %}
-        <strong class="d-block small">{{ current_company.name }}</strong>
-        {% if current_company.city or current_company.phone %}
-        <small class="text-muted d-block">
-            {% if current_company.city %}{{ current_company.city }}{% endif %}
-            {% if current_company.phone %}{% if current_company.city %} · {% endif %}{{ current_company.phone }}{% endif %}
-        </small>
-        {% endif %}
-        {% if current_company.contact_name %}
-        <small class="text-muted d-block">{{ current_company.contact_name }}</small>
-        {% endif %}
-        <small class="text-muted d-block">
-            ICE: <code>{{ current_company.ice or '-' }}</code>
-        </small>
-    </div>
-    {% endif %}
     <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
             <a href="{{ url_for('web_dashboard.index') }}" class="nav-link link-dark {% if request.endpoint and 'dashboard' in request.endpoint %}active{% endif %}">
