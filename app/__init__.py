@@ -1,3 +1,4 @@
+import click
 from flask import Flask, request, redirect, url_for
 from flask_cors import CORS
 
@@ -68,6 +69,26 @@ def create_app(config_class=Config):
             'available_langs': LANGS,
             'version': VERSION,
         }
+
+    @app.cli.command('create-super-admin')
+    @click.argument('email')
+    @click.argument('password')
+    @click.argument('name', default='Super Admin')
+    def create_super_admin(email, password, name):
+        from app.core.models.user_model import UserModel
+        existing = UserModel.find_by_email(email)
+        if existing:
+            click.echo(f'ERROR: User "{email}" already exists.')
+            return
+        from app.extensions.db import bcrypt
+        hashed = bcrypt.generate_password_hash(password).decode('utf-8')
+        UserModel.create({
+            'name': name,
+            'email': email.strip().lower(),
+            'password': hashed,
+            'role': 'super_admin',
+        })
+        click.echo(f'Super admin created: {email}')
 
     @app.route('/')
     def index():

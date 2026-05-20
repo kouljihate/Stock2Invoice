@@ -4,14 +4,15 @@ Production-ready Flask web application for stock management and invoice generati
 
 ## Features
 
-- **Authentication** — Secure registration/login with bcrypt password hashing, JWT sessions
-- **Dashboard** — Key metrics, low-stock alerts, recent activity, category breakdown
+- **Multi-tenant** — Companies with fully isolated products, orders, and invoices
+- **Authentication** — Secure login with bcrypt + JWT, roles: super_admin, company_admin, user
+- **Orders** — Order management with auto invoice generation on confirmation
 - **Stock Management** — CRUD products, SKU tracking, stock movements, low-stock thresholds, category valuation
-- **Invoicing** — Create invoices with line items, discount/tax calculation, status workflow (draft → sent → paid → cancelled), printable HTML views
-- **Web + Mobile** — Separate blueprints for `/web/` and `/mobile/` with responsive Bootstrap themes
-- **Role-aware** — Admin vs regular user claim enforcement
-- **Logging** — Rotating file logs for app activity and errors
-- **3‑font i18n ready** — Comfortaa (EN),  Ruwudu (AR), Tangerine (FR) wired in CSS
+- **Invoicing** — Invoices with discount/tax, status workflow (draft → sent → paid → cancelled), printable HTML views
+- **Admin Panel** — Super admin creates companies + their admin users
+- **Language Switch** — EN (Comfortaa) / AR (Reem Kufi Fun) / FR (Tangerine) via navbar dropdown
+- **Web + Mobile** — Separate blueprints for desktop and mobile layouts
+- **Logging** — Rotating file logs with request context
 
 ## Quick Start
 
@@ -31,7 +32,10 @@ pip install -r requirements.txt
 cp .env.example .env
 # Edit .env — set MONGO_URI (MongoDB Atlas) and SECRET_KEY
 
-# 5. Run
+# 5. Create super admin (one-time)
+flask create-super-admin admin@example.com yourpassword "Super Admin"
+
+# 6. Run
 python run.py
 ```
 
@@ -61,16 +65,24 @@ StockInvoice/
     logs/                     # Rotating log files
 ```
 
-## API Endpoints
+## CLI Commands
+
+| Command | Description |
+|---------|-------------|
+| `flask create-super-admin <email> <password> [name]` | Create initial super admin |
+
+## Routes
 
 | Prefix | Description |
 |--------|-------------|
+| `/admin/` | Super admin panel (companies, users) |
 | `/web/auth/` | Login, register, logout |
 | `/web/dashboard/` | Dashboard (JWT required) |
+| `/web/orders/` | Order CRUD + status workflow (JWT required) |
 | `/web/stock/` | Product CRUD (JWT required) |
 | `/web/invoices/` | Invoice CRUD + print view (JWT required) |
-| `/mobile/auth/` | Mobile login/register |
 | `/mobile/...` | Mobile equivalents of all web routes |
+| `/lang/<code>` | Language switch (en/ar/fr) |
 | `/api/health` | Health check |
 
 ## Environment Variables
