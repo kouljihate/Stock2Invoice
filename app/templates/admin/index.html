@@ -43,22 +43,33 @@
         <table class="table table-hover mb-0">
             <thead class="table-light">
                 <tr>
-                    <th>Company Name</th>
-                    <th>Slug</th>
+                    <th>Company</th>
+                    <th>City</th>
+                    <th>Phone</th>
+                    <th>Contact</th>
                     <th class="text-center">Users</th>
-                    <th>Created</th>
+                    <th>ICE</th>
                     <th class="text-end">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for c in companies %}
                 <tr>
-                    <td><strong>{{ c.name }}</strong></td>
-                    <td><code>{{ c.slug }}</code></td>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            {% if c.logo %}
+                            <img src="{{ url_for('static', filename='uploads/logos/'+c.logo) }}" alt="Logo" style="width:24px;height:24px;object-fit:contain;border-radius:3px;">
+                            {% endif %}
+                            <strong>{{ c.name }}</strong>
+                        </div>
+                    </td>
+                    <td><small>{{ c.city or '-' }}</small></td>
+                    <td><small>{{ c.phone or '-' }}</small></td>
+                    <td><small>{{ c.contact_name or c.email or '-' }}</small></td>
                     <td class="text-center">
                         <span class="badge bg-secondary rounded-pill">{{ c.user_count }}</span>
                     </td>
-                    <td><small>{{ c.created_at[:10] if c.created_at else '-' }}</small></td>
+                    <td><small><code>{{ c.ice or '-' }}</code></small></td>
                     <td class="text-end">
                         <a href="{{ url_for('admin.company_detail', company_id=c.id) }}" class="btn btn-sm btn-outline-success">
                             <i class="bi bi-gear me-1"></i> Manage
@@ -70,7 +81,7 @@
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="5" class="text-center py-5">
+                    <td colspan="7" class="text-center py-5">
                         <i class="bi bi-building text-muted" style="font-size: 2rem;"></i>
                         <p class="text-muted mt-2 mb-3">No companies registered yet.</p>
                         <a href="{{ url_for('admin.create_company') }}" class="btn btn-primary">
@@ -90,10 +101,10 @@
     </div>
     <div class="card-body">
         <ol class="mb-0">
-            <li><strong>Create a Company</strong> — Click "New Company" and fill in the company name and admin credentials.</li>
+            <li><strong>Create a Company</strong> — Click "New Company" and fill in the company details, legal IDs, and admin credentials.</li>
             <li><strong>Company Admin Login</strong> — The newly created admin can log in at <code>/web/auth/login</code> with the credentials you set.</li>
             <li><strong>Manage Resources</strong> — Each company admin manages their own products, orders, and invoices — fully isolated from other companies.</li>
-            <li><strong>View Users</strong> — Click "Manage Users" on any company to see all users belonging to that company.</li>
+            <li><strong>View Users</strong> — Click "Users" on any company to see all users belonging to that company.</li>
         </ol>
     </div>
 </div>

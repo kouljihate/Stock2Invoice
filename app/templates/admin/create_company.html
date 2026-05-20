@@ -3,37 +3,136 @@
 {% block content %}
 <h4 class="mb-4"><i class="bi bi-building-plus me-2"></i>Create Company</h4>
 
-<div class="row">
-    <div class="col-md-6">
-        <form method="POST" action="" class="card shadow-sm">
+<form method="POST" action="" enctype="multipart/form-data">
+<div class="row g-3">
+    <div class="col-md-7">
+        <div class="card shadow-sm h-100">
+            <div class="card-header"><strong><i class="bi bi-info-circle me-1"></i>Company Information</strong></div>
             <div class="card-body">
-                <h6 class="card-title mb-3">Company Details</h6>
-                <div class="mb-3">
-                    <label class="form-label">Company Name *</label>
-                    <input type="text" name="company_name" class="form-control" required>
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <label class="form-label">Company Name *</label>
+                        <input type="text" name="company_name" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Phone</label>
+                        <input type="text" name="phone" class="form-control" placeholder="+212 5XX XX XX XX">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Address</label>
+                        <input type="text" name="address" class="form-control" placeholder="Street, building, etc.">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">City</label>
+                        <input type="text" name="city" class="form-control" placeholder="Casablanca">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Website</label>
+                        <input type="url" name="website" class="form-control" placeholder="https://">
+                    </div>
                 </div>
-
-                <hr>
-                <h6 class="mb-3">Company Admin User</h6>
-                <div class="mb-3">
-                    <label class="form-label">Admin Name</label>
-                    <input type="text" name="admin_name" class="form-control" placeholder="e.g. John Doe">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Admin Email *</label>
-                    <input type="email" name="admin_email" class="form-control" required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Admin Password *</label>
-                    <input type="password" name="admin_password" class="form-control" minlength="8" required>
-                </div>
-
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-check-lg me-1"></i>Create Company
-                </button>
-                <a href="{{ url_for('admin.index') }}" class="btn btn-outline-secondary">Cancel</a>
             </div>
-        </form>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="card shadow-sm h-100">
+            <div class="card-header"><strong><i class="bi bi-image me-1"></i>Logo</strong></div>
+            <div class="card-body d-flex flex-column align-items-center justify-content-center">
+                <div class="mb-3 text-center">
+                    <div id="logoPreview" class="border rounded d-flex align-items-center justify-content-center bg-light" style="width:140px;height:140px;">
+                        <i class="bi bi-building text-secondary" style="font-size:3rem;"></i>
+                    </div>
+                </div>
+                <input type="file" name="logo" class="form-control form-control-sm" accept="image/*" onchange="previewLogo(this)">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header"><strong><i class="bi bi-person me-1"></i>Contact Person</strong></div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Contact Name</label>
+                        <input type="text" name="contact_name" class="form-control" placeholder="Contact person">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Contact Email</label>
+                        <input type="email" name="contact_email" class="form-control" placeholder="company@example.com">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header"><strong><i class="bi bi-file-earmark-text me-1"></i>Moroccan Legal IDs</strong></div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">ICE</label>
+                        <input type="text" name="ice" class="form-control" placeholder="Identifiant Commun">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">RC</label>
+                        <input type="text" name="rc" class="form-control" placeholder="Registre de Commerce">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">IF</label>
+                        <input type="text" name="if_tax" class="form-control" placeholder="Identifiant Fiscal">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">CNSS</label>
+                        <input type="text" name="cnss" class="form-control" placeholder="N° CNSS">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Patente</label>
+                        <input type="text" name="patente" class="form-control" placeholder="N° Patente">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header"><strong><i class="bi bi-person-badge me-1"></i>Company Admin User</strong></div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Admin Name</label>
+                        <input type="text" name="admin_name" class="form-control" placeholder="e.g. John Doe">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Admin Email *</label>
+                        <input type="email" name="admin_email" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Admin Password *</label>
+                        <input type="password" name="admin_password" class="form-control" minlength="8" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check-lg me-1"></i>Create Company
+        </button>
+        <a href="{{ url_for('admin.index') }}" class="btn btn-outline-secondary">Cancel</a>
     </div>
 </div>
+</form>
+
+<script>
+function previewLogo(input) {
+    const preview = document.getElementById('logoPreview');
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = '<img src="'+e.target.result+'" style="max-width:130px;max-height:130px;object-fit:contain;">';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
 {% endblock %}

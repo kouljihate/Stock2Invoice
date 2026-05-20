@@ -1,12 +1,30 @@
 import logging
+import os
 import re
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from uuid import uuid4
+from flask import Blueprint, current_app, render_template, request, redirect, url_for, flash
 from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
+from werkzeug.utils import secure_filename
 from app.core.models.company_model import CompanyModel
 from app.core.models.user_model import UserModel
 from app.core.services.auth_service import AuthService
 from app.extensions.db import mongo
 from functools import wraps
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+
+
+def _save_logo(file):
+    if not file or not file.filename:
+        return None
+    ext = file.filename.rsplit('.', 1)[-1].lower() if '.' in file.filename else ''
+    if ext not in ALLOWED_EXTENSIONS:
+        return None
+    filename = f'{uuid4().hex}.{ext}'
+    upload_dir = os.path.join(current_app.root_path, 'static', 'uploads', 'logos')
+    os.makedirs(upload_dir, exist_ok=True)
+    file.save(os.path.join(upload_dir, filename))
+    return filename
 
 logger = logging.getLogger(__name__)
 admin_bp = Blueprint('admin', __name__, template_folder='../templates')
@@ -82,6 +100,9 @@ def create_company():
     if existing_user:
         errors.append('Email already registered.')
 
+    logo = request.files.get('logo')
+    logo_filename = _save_logo(logo)
+
     if errors:
         for e in errors:
             flash(e, 'danger')
@@ -92,6 +113,18 @@ def create_company():
     company_data = {
         'name': company_name,
         'slug': company_name.lower().replace(' ', '-'),
+        'logo': logo_filename,
+        'address': (request.form.get('address') or '').strip(),
+        'city': (request.form.get('city') or '').strip(),
+        'phone': (request.form.get('phone') or '').strip(),
+        'email': (request.form.get('contact_email') or '').strip(),
+        'contact_name': (request.form.get('contact_name') or '').strip(),
+        'ice': (request.form.get('ice') or '').strip(),
+        'rc': (request.form.get('rc') or '').strip(),
+        'if_tax': (request.form.get('if_tax') or '').strip(),
+        'cnss': (request.form.get('cnss') or '').strip(),
+        'patente': (request.form.get('patente') or '').strip(),
+        'website': (request.form.get('website') or '').strip(),
     }
     company_id = CompanyModel.create(company_data)
 
@@ -190,7 +223,29 @@ def edit_company(company_id):
                                user=UserModel.to_dict(user) if user else None,
                                company=CompanyModel.to_dict(company))
 
-    CompanyModel.update(company_id, {'name': company_name, 'slug': new_slug})
+    update_data = {
+        'name': company_name,
+        'slug': new_slug,
+        'address': (request.form.get('address') or '').strip(),
+        'city': (request.form.get('city') or '').strip(),
+        'phone': (request.form.get('phone') or '').strip(),
+        'email': (request.form.get('contact_email') or '').strip(),
+        'contact_name': (request.form.get('contact_name') or '').strip(),
+        'ice': (request.form.get('ice') or '').strip(),
+        'rc': (request.form.get('rc') or '').strip(),
+        'if_tax': (request.form.get('if_tax') or '').strip(),
+        'cnss': (request.form.get('cnss') or '').strip(),
+        'patente': (request.form.get('patente') or '').strip(),
+        'website': (request.form.get('website') or '').strip(),
+    }
+
+    logo = request.files.get('logo')
+    if logo and logo.filename:
+        logo_filename = _save_logo(logo)
+        if logo_filename:
+            update_data['logo'] = logo_filename
+
+    CompanyModel.update(company_id, update_data)
     logger.info('Company updated: %s (id=%s)', company_name, company_id)
     flash(f'Company "{company_name}" updated.', 'success')
     return redirect(url_for('admin.company_detail', company_id=company_id))
