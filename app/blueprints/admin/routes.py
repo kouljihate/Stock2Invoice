@@ -70,6 +70,40 @@ def index():
                            total_users=total_users)
 
 
+@admin_bp.route('/companies')
+@jwt_required()
+@super_admin_required
+def companies():
+    from bson.objectid import ObjectId
+    user = _get_user()
+    companies_raw = CompanyModel.find_all()
+
+    company_list = []
+    grand = {'users': 0, 'products': 0, 'orders': 0, 'invoices': 0, 'movements': 0}
+    for c in companies_raw:
+        cid = ObjectId(c['_id'])
+        d = CompanyModel.to_dict(c)
+        d['user_count'] = UserModel.count({'company_id': cid})
+        d['product_count'] = mongo.db['products'].count_documents({'company_id': cid})
+        d['order_count'] = mongo.db['orders'].count_documents({'company_id': cid})
+        d['invoice_count'] = mongo.db['invoices'].count_documents({'company_id': cid})
+        d['movement_count'] = mongo.db['stock_movements'].count_documents({'company_id': cid})
+        d['total_revenue'] = 0
+        invoices_cursor = mongo.db['invoices'].find({'company_id': cid, 'status': 'paid'})
+        for inv in invoices_cursor:
+            d['total_revenue'] += float(inv.get('total', 0))
+        company_list.append(d)
+        grand['users'] += d['user_count']
+        grand['products'] += d['product_count']
+        grand['orders'] += d['order_count']
+        grand['invoices'] += d['invoice_count']
+        grand['movements'] += d['movement_count']
+
+    return render_template('admin/companies.html', mode='web',
+                           user=UserModel.to_dict(user) if user else None,
+                           companies=company_list, grand=grand)
+
+
 @admin_bp.route('/companies/create', methods=['GET', 'POST'])
 @jwt_required()
 @super_admin_required
@@ -180,6 +214,29 @@ def company_detail(company_id):
     invoice_count = mongo.db['invoices'].count_documents({'company_id': cid})
     movement_count = mongo.db['stock_movements'].count_documents({'company_id': cid})
 
+    products_raw = mongo.db['products'].find({'company_id': cid}).sort('created_at', -1).limit(50)
+    products = [{
+        'id': str(p['_id']), 'name': p.get('name'), 'sku': p.get('sku'),
+        'quantity': p.get('quantity', 0), 'unit_price': float(p.get('unit_price', 0)),
+        'category': p.get('category', ''), 'stock_value': float(p.get('quantity', 0)) * float(p.get('unit_price', 0)),
+    } for p in products_raw]
+
+    orders_raw = mongo.db['orders'].find({'company_id': cid}).sort('created_at', -1).limit(50)
+    orders = [{
+        'id': str(o['_id']), 'order_number': o.get('order_number'),
+        'customer_name': o.get('customer_name'), 'total': float(o.get('total', 0)),
+        'status': o.get('status', 'pending'),
+        'created_at': o.get('created_at').isoformat()[:10] if o.get('created_at') else '',
+    } for o in orders_raw]
+
+    invoices_raw = mongo.db['invoices'].find({'company_id': cid}).sort('created_at', -1).limit(50)
+    invoices = [{
+        'id': str(inv['_id']), 'invoice_number': inv.get('invoice_number'),
+        'customer_name': inv.get('customer_name'), 'total': float(inv.get('total', 0)),
+        'status': inv.get('status', 'draft'),
+        'created_at': inv.get('created_at').isoformat()[:10] if inv.get('created_at') else '',
+    } for inv in invoices_raw]
+
     return render_template('admin/company_detail.html', mode='web',
                            user=UserModel.to_dict(user) if user else None,
                            company=CompanyModel.to_dict(company),
@@ -189,7 +246,8 @@ def company_detail(company_id):
                                'order_count': order_count,
                                'invoice_count': invoice_count,
                                'movement_count': movement_count,
-                           })
+                           },
+                           products=products, orders=orders, invoices=invoices)
 
 
 @admin_bp.route('/companies/<company_id>/edit', methods=['GET', 'POST'])
