@@ -11,7 +11,7 @@ Production-ready Flask web application for stock management and invoice generati
 - **Web + Mobile** — Separate blueprints for `/web/` and `/mobile/` with responsive Bootstrap themes
 - **Role-aware** — Admin vs regular user claim enforcement
 - **Logging** — Rotating file logs for app activity and errors
-- **3‑font i18n ready** — Comfortaa (EN), Reem Kufi Fun (AR), Tangerine (FR) wired in CSS
+- **3‑font i18n ready** — Comfortaa (EN),  Ruwudu (AR), Tangerine (FR) wired in CSS
 
 ## Quick Start
 

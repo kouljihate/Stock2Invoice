@@ -35,8 +35,13 @@ class UserModel:
         )
 
     @staticmethod
-    def count():
-        return mongo.db[UserModel.collection].count_documents({})
+    def count(filters=None):
+        return mongo.db[UserModel.collection].count_documents(filters or {})
+
+    @staticmethod
+    def find_by_company(company_id):
+        from bson.objectid import ObjectId
+        return list(mongo.db[UserModel.collection].find({'company_id': ObjectId(company_id)}))
 
     @staticmethod
     def to_dict(user):

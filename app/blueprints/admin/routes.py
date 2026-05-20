@@ -31,11 +31,24 @@ def _get_user():
 @jwt_required()
 @super_admin_required
 def index():
+    from bson.objectid import ObjectId
     companies = CompanyModel.find_all()
     user = _get_user()
+
+    company_list = []
+    for c in companies:
+        d = CompanyModel.to_dict(c)
+        d['user_count'] = UserModel.count({'company_id': ObjectId(d['id'])})
+        company_list.append(d)
+
+    total_companies = len(company_list)
+    total_users = sum(c['user_count'] for c in company_list)
+
     return render_template('admin/index.html', mode='web',
                            user=UserModel.to_dict(user) if user else None,
-                           companies=companies)
+                           companies=company_list,
+                           total_companies=total_companies,
+                           total_users=total_users)
 
 
 @admin_bp.route('/companies/create', methods=['GET', 'POST'])
@@ -108,7 +121,7 @@ def company_users(company_id):
         flash('Company not found.', 'danger')
         return redirect(url_for('admin.index'))
 
-    users = list(UserModel.collection.find({'company_id': ObjectId(company_id)}))
+    users = UserModel.find_by_company(company_id)
     return render_template('admin/company_users.html', mode='web',
                            user=UserModel.to_dict(user) if user else None,
                            company=CompanyModel.to_dict(company),
