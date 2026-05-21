@@ -1,18 +1,41 @@
-# StockInvoice
+# ProcureFlow
 
-Production-ready Flask web application for stock management and invoice generation with MongoDB Atlas.
+Flask web application for the full **Procure-to-Pay** and **Quote-to-Cash** lifecycle with MongoDB Atlas.
 
-## Features
+## Procure-to-Pay (Inbound)
 
-- **Multi-tenant** — Companies with fully isolated products, orders, and invoices
-- **Authentication** — Secure login with bcrypt + JWT, roles: super_admin, company_admin, user
-- **Orders** — Order management with auto invoice generation on confirmation
-- **Stock Management** — CRUD products, SKU tracking, stock movements, low-stock thresholds, category valuation
-- **Invoicing** — Invoices with discount/tax, status workflow (draft → sent → paid → cancelled), printable HTML views
-- **Admin Panel** — Super admin creates companies + their admin users
-- **Language Switch** — EN (Comfortaa) / AR (Reem Kufi Fun) / FR (Tangerine) via navbar dropdown
-- **Web + Mobile** — Separate blueprints for desktop and mobile layouts
-- **Logging** — Rotating file logs with request context
+```
+Supplier → Purchase Order → Goods Receipt → Supplier Invoice → Payment
+```
+
+| Module | Description | Status |
+|--------|-------------|--------|
+| **Suppliers** | Manage vendor information, contacts, legal IDs | ✅ Ready |
+| **Purchase Orders** | Create and send POs to suppliers | ⚙️ Skeleton |
+| **Goods Receipt** | Receive inventory against POs | ⚙️ Skeleton |
+| **Supplier Invoices** | Track bills from suppliers | ⚙️ Skeleton |
+| **Payments** | Record payments and close transactions | ⚙️ Skeleton |
+
+## Quote-to-Cash (Outbound)
+
+```
+Quote → Customer Order → Delivery Note → Customer Invoice
+```
+
+| Module | Description | Status |
+|--------|-------------|--------|
+| **Quotes** | Send quotes to customers | ⚙️ Skeleton |
+| **Customer Orders** | Manage sales orders from customers | ✅ Implemented |
+| **Delivery Notes** | Record goods dispatched to customers | ⚙️ Skeleton |
+| **Customer Invoices** | Bill customers with status workflow | ✅ Implemented |
+
+## Cross-Cutting
+
+- **Products (Inventory)** — Stock tracking, movements, low-stock alerts
+- **Multi-tenant** — Company-isolated data with role-based access (super_admin, company_admin, user)
+- **Admin Panel** — Company and user management
+
+## Quick Start
 
 ## Quick Start
 

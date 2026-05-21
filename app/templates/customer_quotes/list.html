@@ -1,0 +1,31 @@
+{% extends 'base/layout.html' %}
+{% block title %}Customer Quotes — StockInvoice{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>Customer Quotes</h4>
+</div>
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0 small">
+            <thead class="table-light">
+                <tr><th>Quote #</th><th>Customer</th><th>Status</th><th class="text-end">Total</th><th>Valid Until</th><th>Date</th><th class="text-end">Actions</th></tr>
+            </thead>
+            <tbody>
+                {% for q in quotes %}
+                <tr>
+                    <td><code>{{ q.quote_number or q.id[:8] }}</code></td>
+                    <td>{{ q.customer_name or '-' }}</td>
+                    <td><span class="badge bg-{{ 'success' if q.status in ('accepted','confirmed') else 'warning' if q.status in ('draft','sent') else 'danger' }}">{{ q.status }}</span></td>
+                    <td class="text-end">{{ "%.2f"|format(q.total) }}</td>
+                    <td><small>{{ q.valid_until[:10] if q.valid_until else '-' }}</small></td>
+                    <td><small>{{ q.created_at[:10] if q.created_at else '-' }}</small></td>
+                    <td class="text-end"><a href="{{ url_for('web_customer_quotes.view_quote', quote_id=q.id) }}" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="7" class="text-center text-muted py-4">No quotes yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

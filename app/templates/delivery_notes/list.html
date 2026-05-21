@@ -1,0 +1,29 @@
+{% extends 'base/layout.html' %}
+{% block title %}Delivery Notes — StockInvoice{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><i class="bi bi-truck me-2"></i>Delivery Notes</h4>
+</div>
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0 small">
+            <thead class="table-light">
+                <tr><th>DN #</th><th>Order #</th><th>Customer</th><th>Date</th><th class="text-end">Actions</th></tr>
+            </thead>
+            <tbody>
+                {% for dn in notes %}
+                <tr>
+                    <td><code>{{ dn.dn_number or dn.id[:8] }}</code></td>
+                    <td>{{ dn.order_number or '-' }}</td>
+                    <td>{{ dn.customer_name or '-' }}</td>
+                    <td><small>{{ dn.created_at[:10] if dn.created_at else '-' }}</small></td>
+                    <td class="text-end"><span class="text-muted small">—</span></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="text-center text-muted py-4">No delivery notes yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

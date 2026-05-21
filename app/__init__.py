@@ -13,6 +13,15 @@ from .blueprints.web.stock.routes import web_stock_bp
 from .blueprints.web.invoices.routes import web_invoices_bp
 from .blueprints.web.orders.routes import web_orders_bp
 
+from .blueprints.web.suppliers.routes import web_suppliers_bp
+from .blueprints.web.purchase_orders.routes import web_purchase_orders_bp
+from .blueprints.web.goods_receipt.routes import web_goods_receipt_bp
+from .blueprints.web.supplier_invoices.routes import web_supplier_invoices_bp
+from .blueprints.web.payments.routes import web_payments_bp
+
+from .blueprints.web.customer_quotes.routes import web_customer_quotes_bp
+from .blueprints.web.delivery_notes.routes import web_delivery_notes_bp
+
 from .blueprints.mobile.auth.routes import mobile_auth_bp
 from .blueprints.mobile.dashboard.routes import mobile_dashboard_bp
 from .blueprints.mobile.stock.routes import mobile_stock_bp
@@ -48,6 +57,15 @@ def create_app(config_class=Config):
     app.register_blueprint(web_stock_bp, url_prefix='/web/stock')
     app.register_blueprint(web_invoices_bp, url_prefix='/web/invoices')
     app.register_blueprint(web_orders_bp, url_prefix='/web/orders')
+
+    app.register_blueprint(web_suppliers_bp, url_prefix='/web/suppliers')
+    app.register_blueprint(web_purchase_orders_bp, url_prefix='/web/purchase-orders')
+    app.register_blueprint(web_goods_receipt_bp, url_prefix='/web/goods-receipt')
+    app.register_blueprint(web_supplier_invoices_bp, url_prefix='/web/supplier-invoices')
+    app.register_blueprint(web_payments_bp, url_prefix='/web/payments')
+
+    app.register_blueprint(web_customer_quotes_bp, url_prefix='/web/quotes')
+    app.register_blueprint(web_delivery_notes_bp, url_prefix='/web/delivery-notes')
 
     app.register_blueprint(mobile_auth_bp, url_prefix='/mobile/auth')
     app.register_blueprint(mobile_dashboard_bp, url_prefix='/mobile/dashboard')

@@ -1,0 +1,31 @@
+{% extends 'base/layout.html' %}
+{% block title %}Payments — StockInvoice{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><i class="bi bi-credit-card me-2"></i>Payments</h4>
+</div>
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0 small">
+            <thead class="table-light">
+                <tr><th>Payment #</th><th>Supplier</th><th>Invoice</th><th class="text-end">Amount</th><th>Method</th><th>Date</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                {% for p in payments %}
+                <tr>
+                    <td><code>{{ p.payment_number or p.id[:8] }}</code></td>
+                    <td>{{ p.supplier_name or '-' }}</td>
+                    <td><small>{{ p.invoice_number or '-' }}</small></td>
+                    <td class="text-end">{{ "%.2f"|format(p.amount) }}</td>
+                    <td>{{ p.payment_method or '-' }}</td>
+                    <td><small>{{ p.payment_date[:10] if p.payment_date else '-' }}</small></td>
+                    <td><span class="badge bg-{{ 'success' if p.status == 'cleared' else 'warning' if p.status == 'pending' else 'danger' }}">{{ p.status }}</span></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="7" class="text-center text-muted py-4">No payments yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
