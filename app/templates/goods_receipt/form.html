@@ -1,0 +1,75 @@
+{% extends 'base/layout.html' %}
+{% block title %}{{ _('New Goods Receipt') }} — Maure STC{% endblock %}
+{% block content %}
+<h4 class="mb-4"><i class="bi bi-plus-circle me-2"></i>{{ _('New Goods Receipt') }}</h4>
+<form method="POST" action="" class="card shadow-sm">
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">{{ _('Purchase Order') }} *</label>
+                <select name="po_id" class="form-select" id="po-select" required>
+                    <option value="">{{ _('-- Select PO --') }}</option>
+                    {% for po in pos %}
+                    <option value="{{ po.id }}" data-number="{{ po.po_number }}" data-supplier="{{ po.supplier_name }}" data-supplier-id="{{ po.supplier_id }}">{{ po.po_number }} — {{ po.supplier_name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="hidden" name="po_number" id="po-number" value="">
+                <input type="hidden" name="supplier_name" id="supplier-name" value="">
+                <input type="hidden" name="supplier_id" id="supplier-id" value="">
+            </div>
+        </div>
+        <h5 class="mt-4 mb-3">{{ _('Received Items') }}</h5>
+        <div id="line-items">
+            <div class="row g-2 mb-2 line-item">
+                <div class="col-md-3">
+                    <input type="text" name="sku" class="form-control" placeholder="{{ _('SKU') }}" required>
+                </div>
+                <div class="col-md-5">
+                    <input type="text" name="name" class="form-control" placeholder="{{ _('Item name') }}">
+                </div>
+                <div class="col-md-2">
+                    <input type="number" name="quantity" class="form-control" placeholder="{{ _('Qty') }}" min="1" required>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-outline-danger remove-item"><i class="bi bi-x-lg"></i></button>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-success mb-3" id="add-item">
+            <i class="bi bi-plus-lg me-1"></i>{{ _('Add Item') }}
+        </button>
+        <div class="mb-3">
+            <label class="form-label">{{ _('Notes') }}</label>
+            <textarea name="notes" class="form-control" rows="2"></textarea>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>{{ _('Create Goods Receipt') }}</button>
+            <a href="{{ url_for('web_goods_receipt.list_receipts') }}" class="btn btn-outline-secondary">{{ _('Cancel') }}</a>
+        </div>
+    </div>
+</form>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('po-select').addEventListener('change', function () {
+        var opt = this.options[this.selectedIndex];
+        document.getElementById('po-number').value = opt.dataset.number || '';
+        document.getElementById('supplier-name').value = opt.dataset.supplier || '';
+        document.getElementById('supplier-id').value = opt.dataset.supplierId || '';
+    });
+    document.getElementById('add-item').addEventListener('click', function () {
+        var template = document.querySelector('.line-item');
+        var clone = template.cloneNode(true);
+        clone.querySelectorAll('input').forEach(function (inp) { inp.value = ''; });
+        document.getElementById('line-items').appendChild(clone);
+    });
+    document.getElementById('line-items').addEventListener('click', function (e) {
+        if (e.target.closest('.remove-item')) {
+            var items = document.querySelectorAll('.line-item');
+            if (items.length > 1) e.target.closest('.line-item').remove();
+        }
+    });
+});
+</script>
+{% endblock %}

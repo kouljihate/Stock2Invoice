@@ -1,0 +1,86 @@
+{% extends 'base/layout.html' %}
+{% block title %}{{ _('New Customer Quote') }} — Maure STC{% endblock %}
+{% block content %}
+<h4 class="mb-4"><i class="bi bi-plus-circle me-2"></i>{{ _('New Customer Quote') }}</h4>
+<form method="POST" action="" class="card shadow-sm">
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label class="form-label">{{ _('Customer Name') }} *</label>
+                <input type="text" name="customer_name" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">{{ _('Customer Email') }}</label>
+                <input type="email" name="customer_email" class="form-control">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">{{ _('Valid Until') }}</label>
+                <input type="date" name="valid_until" class="form-control">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">{{ _('Customer Address') }}</label>
+            <textarea name="customer_address" class="form-control" rows="2"></textarea>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label class="form-label">{{ _('Discount') }} (%)</label>
+                <input type="number" step="0.01" name="discount_percent" class="form-control" value="0" min="0" max="100">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">{{ _('Tax') }} (%)</label>
+                <input type="number" step="0.01" name="tax_percent" class="form-control" value="0" min="0" max="100">
+            </div>
+        </div>
+        <h5 class="mt-4 mb-3">{{ _('Line Items') }}</h5>
+        <div id="line-items">
+            <div class="row g-2 mb-2 line-item">
+                <div class="col-md-2">
+                    <input type="text" name="sku" class="form-control" placeholder="{{ _('SKU') }}" required>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" name="name" class="form-control" placeholder="{{ _('Item name') }}">
+                </div>
+                <div class="col-md-2">
+                    <input type="number" name="quantity" class="form-control" placeholder="{{ _('Qty') }}" min="1" required>
+                </div>
+                <div class="col-md-2">
+                    <input type="number" step="0.01" name="unit_price" class="form-control" placeholder="{{ _('Price') }}" min="0" required>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-outline-danger remove-item"><i class="bi bi-x-lg"></i></button>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-sm btn-outline-success mb-3" id="add-item">
+            <i class="bi bi-plus-lg me-1"></i>{{ _('Add Item') }}
+        </button>
+        <div class="mb-3">
+            <label class="form-label">{{ _('Notes') }}</label>
+            <textarea name="notes" class="form-control" rows="2"></textarea>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>{{ _('Create Quote') }}</button>
+            <a href="{{ url_for('web_customer_quotes.list_quotes') }}" class="btn btn-outline-secondary">{{ _('Cancel') }}</a>
+        </div>
+    </div>
+</form>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('add-item').addEventListener('click', function () {
+        var template = document.querySelector('.line-item');
+        var clone = template.cloneNode(true);
+        clone.querySelectorAll('input').forEach(function (inp) { inp.value = ''; });
+        document.getElementById('line-items').appendChild(clone);
+    });
+    document.getElementById('line-items').addEventListener('click', function (e) {
+        if (e.target.closest('.remove-item')) {
+            var items = document.querySelectorAll('.line-item');
+            if (items.length > 1) e.target.closest('.line-item').remove();
+        }
+    });
+});
+</script>
+{% endblock %}

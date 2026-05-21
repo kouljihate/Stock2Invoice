@@ -1,10 +1,10 @@
-{% extends 'base/layout.html' %}
-{% block title %}Order {{ order.order_number }} — StockInvoice{% endblock %}
+﻿{% extends 'base/layout.html' %}
+{% block title %}{{ _('Order') }} {{ order.order_number }} — Maure STC{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-cart me-2"></i>Order {{ order.order_number }}</h4>
+    <h4 class="mb-0"><i class="bi bi-cart me-2"></i>{{ _('Order') }} {{ order.order_number }}</h4>
     <a href="{% if mode == 'mobile' %}{{ url_for('mobile_orders.list_orders') }}{% else %}{{ url_for('web_orders.list_orders') }}{% endif %}" class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-arrow-left me-1"></i>Back
+        <i class="bi bi-arrow-left me-1"></i>{{ _('Back') }}
     </a>
 </div>
 
@@ -12,21 +12,21 @@
     <div class="col-md-8">
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <strong>Order Details</strong>
+                <strong>{{ _('Order Details') }}</strong>
                 <span class="badge bg-{% if order.status == 'confirmed' %}primary{% elif order.status == 'shipped' %}info{% elif order.status == 'delivered' %}success{% elif order.status == 'cancelled' %}danger{% else %}secondary{% endif %} fs-6">
-                    {{ order.status|upper }}
+                    {{ _(order.status)|upper }}
                 </span>
             </div>
             <div class="card-body">
                 <div class="row mb-3">
                     <div class="col-sm-6">
-                        <small class="text-muted">Customer</small>
+                        <small class="text-muted">{{ _('Customer') }}</small>
                         <p class="mb-0"><strong>{{ order.customer_name }}</strong></p>
                         {% if order.customer_email %}<p class="mb-0"><small>{{ order.customer_email }}</small></p>{% endif %}
                         {% if order.customer_address %}<p class="mb-0"><small>{{ order.customer_address }}</small></p>{% endif %}
                     </div>
                     <div class="col-sm-6 text-sm-end">
-                        <small class="text-muted">Order Date</small>
+                        <small class="text-muted">{{ _('Order Date') }}</small>
                         <p class="mb-0"><strong>{{ order.created_at[:10] if order.created_at else '-' }}</strong></p>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                 {% if order.generated_invoice_number %}
                 <div class="alert alert-info py-2">
                     <i class="bi bi-file-text me-1"></i>
-                    Invoice generated:
+                    {{ _('Invoice generated:') }}
                     <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.view_invoice', invoice_id=order.generated_invoice_id) }}{% else %}{{ url_for('web_invoices.view_invoice', invoice_id=order.generated_invoice_id) }}{% endif %}">
                         {{ order.generated_invoice_number }}
                     </a>
@@ -45,11 +45,11 @@
                     <table class="table table-sm">
                         <thead class="table-light">
                             <tr>
-                                <th>SKU</th>
-                                <th>Item</th>
-                                <th class="text-end">Qty</th>
-                                <th class="text-end">Price</th>
-                                <th class="text-end">Total</th>
+                                <th>{{ _('SKU') }}</th>
+                                <th>{{ _('Item') }}</th>
+                                <th class="text-end">{{ _('Qty') }}</th>
+                                <th class="text-end">{{ _('Price') }}</th>
+                                <th class="text-end">{{ _('Total') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -69,19 +69,19 @@
                 <div class="row">
                     <div class="col-md-6 offset-md-6">
                         <table class="table table-sm table-borderless mb-0">
-                            <tr><td>Subtotal</td><td class="text-end">${{ order.subtotal }}</td></tr>
+                            <tr><td>{{ _('Subtotal') }}</td><td class="text-end">${{ order.subtotal }}</td></tr>
                             {% if order.discount_percent > 0 %}
-                            <tr><td>Discount ({{ order.discount_percent }}%)</td><td class="text-end text-danger">-${{ order.discount_amount }}</td></tr>
+                            <tr><td>{{ _('Discount') }} ({{ order.discount_percent }}%)</td><td class="text-end text-danger">-${{ order.discount_amount }}</td></tr>
                             {% endif %}
-                            <tr><td>Tax ({{ order.tax_percent }}%)</td><td class="text-end">${{ order.tax_amount }}</td></tr>
-                            <tr class="fw-bold"><td>Total</td><td class="text-end fs-5">${{ order.total }}</td></tr>
+                            <tr><td>{{ _('Tax') }} ({{ order.tax_percent }}%)</td><td class="text-end">${{ order.tax_amount }}</td></tr>
+                            <tr class="fw-bold"><td>{{ _('Total') }}</td><td class="text-end fs-5">${{ order.total }}</td></tr>
                         </table>
                     </div>
                 </div>
 
                 {% if order.notes %}
                 <div class="mt-3 p-3 bg-light rounded">
-                    <small class="text-muted">Notes:</small>
+                    <small class="text-muted">{{ _('Notes:') }}</small>
                     <p class="mb-0">{{ order.notes }}</p>
                 </div>
                 {% endif %}
@@ -91,27 +91,27 @@
 
     <div class="col-md-4">
         <div class="card shadow-sm">
-            <div class="card-header"><strong>Actions</strong></div>
+            <div class="card-header"><strong>{{ _('Actions') }}</strong></div>
             <div class="card-body">
                 <form method="POST" action="{% if mode == 'mobile' %}{{ url_for('mobile_orders.update_status', order_id=order.id) }}{% else %}{{ url_for('web_orders.update_status', order_id=order.id) }}{% endif %}">
                     <div class="mb-2">
-                        <label class="form-label small">Change Status</label>
+                        <label class="form-label small">{{ _('Change Status') }}</label>
                         <select name="status" class="form-select form-select-sm">
-                            <option value="pending" {{ 'selected' if order.status == 'pending' }}>Pending</option>
-                            <option value="confirmed" {{ 'selected' if order.status == 'confirmed' }}>Confirmed</option>
-                            <option value="shipped" {{ 'selected' if order.status == 'shipped' }}>Shipped</option>
-                            <option value="delivered" {{ 'selected' if order.status == 'delivered' }}>Delivered</option>
-                            <option value="cancelled" {{ 'selected' if order.status == 'cancelled' }}>Cancelled</option>
+                            <option value="pending" {{ 'selected' if order.status == 'pending' }}>{{ _('Pending') }}</option>
+                            <option value="confirmed" {{ 'selected' if order.status == 'confirmed' }}>{{ _('Confirmed') }}</option>
+                            <option value="shipped" {{ 'selected' if order.status == 'shipped' }}>{{ _('Shipped') }}</option>
+                            <option value="delivered" {{ 'selected' if order.status == 'delivered' }}>{{ _('Delivered') }}</option>
+                            <option value="cancelled" {{ 'selected' if order.status == 'cancelled' }}>{{ _('Cancelled') }}</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary w-100 btn-sm">
-                        <i class="bi bi-check-lg me-1"></i>Update Status
+                        <i class="bi bi-check-lg me-1"></i>{{ _('Update Status') }}
                     </button>
                 </form>
                 {% if order.generated_invoice_id %}
                 <hr>
                 <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.view_invoice', invoice_id=order.generated_invoice_id) }}{% else %}{{ url_for('web_invoices.view_invoice', invoice_id=order.generated_invoice_id) }}{% endif %}" class="btn btn-outline-success w-100 btn-sm">
-                    <i class="bi bi-file-text me-1"></i>View Invoice
+                    <i class="bi bi-file-text me-1"></i>{{ _('View Invoice') }}
                 </a>
                 {% endif %}
             </div>

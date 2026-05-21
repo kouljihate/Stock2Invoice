@@ -1,14 +1,14 @@
-{% extends 'base/layout.html' %}
-{% block title %}All Companies — Admin{% endblock %}
+﻿{% extends 'base/layout.html' %}
+{% block title %}{{ _('All Companies') }} — {{ _('Admin') }}{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-buildings me-2"></i>All Companies</h4>
+    <h4 class="mb-0"><i class="bi bi-buildings me-2"></i>{{ _('All Companies') }}</h4>
     <div>
         <a href="{{ url_for('admin.create_company') }}" class="btn btn-primary btn-sm">
-            <i class="bi bi-plus-lg me-1"></i>New Company
+            <i class="bi bi-plus-lg me-1"></i>{{ _('New Company') }}
         </a>
         <a href="{{ url_for('admin.list_users') }}" class="btn btn-outline-primary btn-sm">
-            <i class="bi bi-people me-1"></i>Users
+            <i class="bi bi-people me-1"></i>{{ _('Users') }}
         </a>
     </div>
 </div>
@@ -18,7 +18,7 @@
         <div class="card border-primary text-center h-100">
             <div class="card-body py-2">
                 <h5 class="text-primary mb-0">{{ companies|length }}</h5>
-                <small class="text-muted">Companies</small>
+                <small class="text-muted">{{ _('Companies') }}</small>
             </div>
         </div>
     </div>
@@ -26,7 +26,7 @@
         <div class="card border-success text-center h-100">
             <div class="card-body py-2">
                 <h5 class="text-success mb-0">{{ grand.users }}</h5>
-                <small class="text-muted">Users</small>
+                <small class="text-muted">{{ _('Users') }}</small>
             </div>
         </div>
     </div>
@@ -34,7 +34,7 @@
         <div class="card border-info text-center h-100">
             <div class="card-body py-2">
                 <h5 class="text-info mb-0">{{ grand.products }}</h5>
-                <small class="text-muted">Products</small>
+                <small class="text-muted">{{ _('Products') }}</small>
             </div>
         </div>
     </div>
@@ -42,7 +42,7 @@
         <div class="card border-warning text-center h-100">
             <div class="card-body py-2">
                 <h5 class="text-warning mb-0">{{ grand.orders }}</h5>
-                <small class="text-muted">Orders</small>
+                <small class="text-muted">{{ _('Orders') }}</small>
             </div>
         </div>
     </div>
@@ -50,7 +50,7 @@
         <div class="card border-secondary text-center h-100">
             <div class="card-body py-2">
                 <h5 class="text-secondary mb-0">{{ grand.invoices }}</h5>
-                <small class="text-muted">Invoices</small>
+                <small class="text-muted">{{ _('Invoices') }}</small>
             </div>
         </div>
     </div>
@@ -58,7 +58,7 @@
         <div class="card border-danger text-center h-100">
             <div class="card-body py-2">
                 <h5 class="text-danger mb-0">{{ grand.movements }}</h5>
-                <small class="text-muted">Movements</small>
+                <small class="text-muted">{{ _('Movements') }}</small>
             </div>
         </div>
     </div>
@@ -69,16 +69,16 @@
         <table class="table table-hover mb-0" id="companiesTable">
             <thead class="table-light">
                 <tr>
-                    <th>Company</th>
-                    <th>City</th>
-                    <th>Phone</th>
-                    <th>ICE</th>
-                    <th class="text-center">Users</th>
-                    <th class="text-center">Products</th>
-                    <th class="text-center">Orders</th>
-                    <th class="text-center">Invoices</th>
-                    <th class="text-end">Revenue</th>
-                    <th class="text-end">Actions</th>
+                    <th>{{ _('Company') }}</th>
+                    <th>{{ _('City') }}</th>
+                    <th>{{ _('Phone') }}</th>
+                    <th>{{ _('ICE') }}</th>
+                    <th class="text-center">{{ _('Users') }}</th>
+                    <th class="text-center">{{ _('Products') }}</th>
+                    <th class="text-center">{{ _('Orders') }}</th>
+                    <th class="text-center">{{ _('Invoices') }}</th>
+                    <th class="text-end">{{ _('Revenue') }}</th>
+                    <th class="text-end">{{ _('Actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -87,7 +87,7 @@
                     <td>
                         <div class="d-flex align-items-center gap-2">
                             {% if c.logo %}
-                            <img src="{{ url_for('static', filename='uploads/logos/'+c.logo) }}" alt="Logo" style="width:28px;height:28px;object-fit:contain;border-radius:3px;">
+                            <img src="{{ url_for('static', filename='uploads/logos/'+c.logo) }}" alt="" style="width:28px;height:28px;object-fit:contain;border-radius:3px;">
                             {% endif %}
                             <strong>{{ c.name }}</strong>
                         </div>
@@ -113,8 +113,8 @@
                 <tr>
                     <td colspan="10" class="text-center py-5 text-muted">
                         <i class="bi bi-building" style="font-size:2rem;"></i>
-                        <p class="mt-2 mb-0">No companies yet.</p>
-                        <a href="{{ url_for('admin.create_company') }}" class="btn btn-primary btn-sm mt-2">Create Company</a>
+                        <p class="mt-2 mb-0">{{ _('No companies yet.') }}</p>
+                        <a href="{{ url_for('admin.create_company') }}" class="btn btn-primary btn-sm mt-2">{{ _('Create Company') }}</a>
                     </td>
                 </tr>
                 {% endfor %}

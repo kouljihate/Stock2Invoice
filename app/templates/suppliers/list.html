@@ -1,17 +1,17 @@
-{% extends 'base/layout.html' %}
-{% block title %}Suppliers — StockInvoice{% endblock %}
+﻿{% extends 'base/layout.html' %}
+{% block title %}{{ _('Suppliers') }} — Maure STC{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-truck me-2"></i>Suppliers</h4>
+    <h4 class="mb-0"><i class="bi bi-truck me-2"></i>{{ _('Suppliers') }}</h4>
     <a href="{{ url_for('web_suppliers.create_supplier') }}" class="btn btn-primary btn-sm">
-        <i class="bi bi-plus-lg me-1"></i>Add Supplier
+        <i class="bi bi-plus-lg me-1"></i>{{ _('Add Supplier') }}
     </a>
 </div>
 <div class="card shadow-sm">
     <div class="card-body p-0">
         <table class="table table-hover mb-0 small">
             <thead class="table-light">
-                <tr><th>Name</th><th>Contact</th><th>Email</th><th>Phone</th><th>City</th><th>ICE</th><th class="text-end">Actions</th></tr>
+                <tr><th>{{ _('Name') }}</th><th>{{ _('Contact') }}</th><th>{{ _('Email') }}</th><th>{{ _('Phone') }}</th><th>{{ _('City') }}</th><th>{{ _('ICE') }}</th><th class="text-end">{{ _('Actions') }}</th></tr>
             </thead>
             <tbody>
                 {% for s in suppliers %}
@@ -24,13 +24,13 @@
                     <td><code>{{ s.ice or '-' }}</code></td>
                     <td class="text-end">
                         <a href="{{ url_for('web_suppliers.edit_supplier', supplier_id=s.id) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
-                        <form method="POST" action="{{ url_for('web_suppliers.delete_supplier', supplier_id=s.id) }}" class="d-inline" onsubmit="return confirm('Delete {{ s.name }}?')">
+                        <form method="POST" action="{{ url_for('web_suppliers.delete_supplier', supplier_id=s.id) }}" class="d-inline" onsubmit="return confirm('Delete {{ s.name }}---')">
                             <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
                         </form>
                     </td>
                 </tr>
                 {% else %}
-                <tr><td colspan="7" class="text-center text-muted py-4">No suppliers yet.</td></tr>
+                <tr><td colspan="7" class="text-center text-muted py-4">{{ _('No suppliers yet.') }}</td></tr>
                 {% endfor %}
             </tbody>
         </table>

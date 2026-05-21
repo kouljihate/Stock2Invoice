@@ -1,14 +1,15 @@
-{% extends 'base/layout.html' %}
-{% block title %}Payments — StockInvoice{% endblock %}
+﻿{% extends 'base/layout.html' %}
+{% block title %}{{ _('Payments') }} — Maure STC{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-credit-card me-2"></i>Payments</h4>
+    <h4 class="mb-0"><i class="bi bi-credit-card me-2"></i>{{ _('Payments') }}</h4>
+    <a href="{{ url_for('web_payments.create_payment') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>{{ _('Add Payment') }}</a>
 </div>
 <div class="card shadow-sm">
     <div class="card-body p-0">
         <table class="table table-hover mb-0 small">
             <thead class="table-light">
-                <tr><th>Payment #</th><th>Supplier</th><th>Invoice</th><th class="text-end">Amount</th><th>Method</th><th>Date</th><th>Status</th></tr>
+                <tr><th>{{ _('Payment #') }}</th><th>{{ _('Supplier') }}</th><th>{{ _('Invoice') }}</th><th class="text-end">{{ _('Amount') }}</th><th>{{ _('Method') }}</th><th>{{ _('Date') }}</th><th>{{ _('Status') }}</th></tr>
             </thead>
             <tbody>
                 {% for p in payments %}
@@ -19,10 +20,10 @@
                     <td class="text-end">{{ "%.2f"|format(p.amount) }}</td>
                     <td>{{ p.payment_method or '-' }}</td>
                     <td><small>{{ p.payment_date[:10] if p.payment_date else '-' }}</small></td>
-                    <td><span class="badge bg-{{ 'success' if p.status == 'cleared' else 'warning' if p.status == 'pending' else 'danger' }}">{{ p.status }}</span></td>
+                    <td><span class="badge bg-{{ 'success' if p.status == 'cleared' else 'warning' if p.status == 'pending' else 'danger' }}">{{ _(p.status) }}</span></td>
                 </tr>
                 {% else %}
-                <tr><td colspan="7" class="text-center text-muted py-4">No payments yet.</td></tr>
+                <tr><td colspan="7" class="text-center text-muted py-4">{{ _('No payments yet.') }}</td></tr>
                 {% endfor %}
             </tbody>
         </table>

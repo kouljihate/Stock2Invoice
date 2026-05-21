@@ -1,9 +1,9 @@
-{% extends 'base/layout.html' %}
-{% block title %}Dashboard — StockInvoice{% endblock %}
+﻿{% extends 'base/layout.html' %}
+{% block title %}{{ _('Dashboard') }} — Maure STC{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="mb-0"><i class="bi bi-speedometer2 me-2"></i>Dashboard</h4>
-    <span class="text-muted small">Welcome, {{ user.name }}</span>
+    <h4 class="mb-0"><i class="bi bi-speedometer2 me-2"></i>{{ _('Dashboard') }}</h4>
+    <span class="text-muted small">{{ _('Welcome') }}, {{ user.name }}</span>
 </div>
 
 <div class="row g-3 mb-4">
@@ -11,7 +11,7 @@
         <div class="card border-primary border-2 text-center h-100">
             <div class="card-body">
                 <h5 class="text-primary mb-1">{{ product_count }}</h5>
-                <small class="text-muted">Total Products</small>
+                <small class="text-muted">{{ _('Total Products') }}</small>
             </div>
         </div>
     </div>
@@ -19,7 +19,7 @@
         <div class="card border-success border-2 text-center h-100">
             <div class="card-body">
                 <h5 class="text-success mb-1">{{ valuation.total_value|round(2) }}</h5>
-                <small class="text-muted">Stock Value ($)</small>
+                <small class="text-muted">{{ _('Stock Value') }}</small>
             </div>
         </div>
     </div>
@@ -27,7 +27,7 @@
         <div class="card border-warning border-2 text-center h-100">
             <div class="card-body">
                 <h5 class="text-warning mb-1">{{ low_stock_count }}</h5>
-                <small class="text-muted">Low Stock Items</small>
+                <small class="text-muted">{{ _('Low Stock Items') }}</small>
             </div>
         </div>
     </div>
@@ -35,7 +35,7 @@
         <div class="card border-info border-2 text-center h-100">
             <div class="card-body">
                 <h5 class="text-info mb-1">{{ invoice_counts.open if invoice_counts.open is defined else invoice_counts.draft + invoice_counts.sent }}</h5>
-                <small class="text-muted">Open Invoices</small>
+                <small class="text-muted">{{ _('Open Invoices') }}</small>
             </div>
         </div>
     </div>
@@ -44,8 +44,8 @@
 {% if low_stock %}
 <div class="alert alert-warning d-flex align-items-center">
     <i class="bi bi-exclamation-triangle-fill me-2"></i>
-    <strong>{{ low_stock_count }} product(s)</strong> are below their low-stock threshold.
-    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_stock.list_products') }}{% else %}{{ url_for('web_stock.list_products') }}{% endif %}" class="alert-link ms-2">View</a>
+    <strong>{{ low_stock_count }} {{ _('product(s)') }}</strong> {{ _('are below their low-stock threshold.') }}
+    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_stock.list_products') }}{% else %}{{ url_for('web_stock.list_products') }}{% endif %}" class="alert-link ms-2">{{ _('View') }}</a>
 </div>
 {% endif %}
 
@@ -53,8 +53,8 @@
     <div class="col-md-6">
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <strong><i class="bi bi-file-text me-1"></i>Recent Invoices</strong>
-                <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.create_invoice') }}{% else %}{{ url_for('web_invoices.create_invoice') }}{% endif %}" class="btn btn-sm btn-primary">+ New</a>
+                <strong><i class="bi bi-file-text me-1"></i>{{ _('Recent Invoices') }}</strong>
+                <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.create_invoice') }}{% else %}{{ url_for('web_invoices.create_invoice') }}{% endif %}" class="btn btn-sm btn-primary">+ {{ _('New') }}</a>
             </div>
             <div class="card-body p-0">
                 <div class="list-group list-group-flush">
@@ -65,13 +65,13 @@
                             <small class="text-muted">{{ inv.customer_name }}</small>
                         </div>
                         <div class="text-end">
-                            <span class="badge bg-{% if inv.status == 'paid' %}success{% elif inv.status == 'draft' %}secondary{% elif inv.status == 'sent' %}info{% else %}danger{% endif %}">{{ inv.status }}</span>
+                            <span class="badge bg-{% if inv.status == 'paid' %}success{% elif inv.status == 'draft' %}secondary{% elif inv.status == 'sent' %}info{% else %}danger{% endif %}">{{ _(inv.status) }}</span>
                             <br>
                             <small>${{ inv.total }}</small>
                         </div>
                     </a>
                     {% else %}
-                    <div class="list-group-item text-center text-muted py-3">No invoices yet.</div>
+                    <div class="list-group-item text-center text-muted py-3">{{ _('No invoices yet.') }}</div>
                     {% endfor %}
                 </div>
             </div>
@@ -81,7 +81,7 @@
     <div class="col-md-6">
         <div class="card shadow-sm">
             <div class="card-header">
-                <strong><i class="bi bi-arrow-left-right me-1"></i>Recent Stock Movements</strong>
+                <strong><i class="bi bi-arrow-left-right me-1"></i>{{ _('Recent Stock Movements') }}</strong>
             </div>
             <div class="card-body p-0">
                 <div class="list-group list-group-flush">
@@ -98,7 +98,7 @@
                         </div>
                     </div>
                     {% else %}
-                    <div class="list-group-item text-center text-muted py-3">No movements yet.</div>
+                    <div class="list-group-item text-center text-muted py-3">{{ _('No movements yet.') }}</div>
                     {% endfor %}
                 </div>
             </div>
@@ -109,23 +109,23 @@
 {% if category_summary %}
 <div class="card shadow-sm mt-3">
     <div class="card-header">
-        <strong><i class="bi bi-pie-chart me-1"></i>Stock by Category</strong>
+        <strong><i class="bi bi-pie-chart me-1"></i>{{ _('Stock by Category') }}</strong>
     </div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-sm">
                 <thead>
                     <tr>
-                        <th>Category</th>
-                        <th class="text-end">Products</th>
-                        <th class="text-end">Total Qty</th>
-                        <th class="text-end">Value ($)</th>
+                        <th>{{ _('Category') }}</th>
+                        <th class="text-end">{{ _('Products') }}</th>
+                        <th class="text-end">{{ _('Total Qty') }}</th>
+                        <th class="text-end">{{ _('Value') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for cat in category_summary %}
                     <tr>
-                        <td>{{ cat._id or 'Uncategorized' }}</td>
+                        <td>{{ cat._id or _('Uncategorized') }}</td>
                         <td class="text-end">{{ cat.count }}</td>
                         <td class="text-end">{{ cat.total_qty }}</td>
                         <td class="text-end">{{ cat.total_value|round(2) }}</td>

@@ -1,1 +1,1 @@
-console.log('StockInvoice Mobile loaded');
+﻿console.log('Maure STC Mobile loaded');

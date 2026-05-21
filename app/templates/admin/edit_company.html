@@ -1,10 +1,10 @@
-{% extends 'base/layout.html' %}
-{% block title %}Edit {{ company.name }} — Admin{% endblock %}
+﻿{% extends 'base/layout.html' %}
+{% block title %}{{ _('Edit') }} {{ company.name }} — {{ _('Admin') }}{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-pencil me-2"></i>Edit Company</h4>
+    <h4 class="mb-0"><i class="bi bi-pencil me-2"></i>{{ _('Edit Company') }}</h4>
     <a href="{{ url_for('admin.company_detail', company_id=company.id) }}" class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-arrow-left me-1"></i>Back
+        <i class="bi bi-arrow-left me-1"></i>{{ _('Back') }}
     </a>
 </div>
 
@@ -12,27 +12,27 @@
 <div class="row g-3">
     <div class="col-md-7">
         <div class="card shadow-sm">
-            <div class="card-header"><strong><i class="bi bi-info-circle me-1"></i>Company Information</strong></div>
+            <div class="card-header"><strong><i class="bi bi-info-circle me-1"></i>{{ _('Company Information') }}</strong></div>
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-8">
-                        <label class="form-label">Company Name *</label>
+                        <label class="form-label">{{ _('Company Name') }} *</label>
                         <input type="text" name="company_name" class="form-control" value="{{ company.name }}" required>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Phone</label>
+                        <label class="form-label">{{ _('Phone') }}</label>
                         <input type="text" name="phone" class="form-control" value="{{ company.phone or '' }}">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Address</label>
+                        <label class="form-label">{{ _('Address') }}</label>
                         <input type="text" name="address" class="form-control" value="{{ company.address or '' }}">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">City</label>
+                        <label class="form-label">{{ _('City') }}</label>
                         <input type="text" name="city" class="form-control" value="{{ company.city or '' }}">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">Website</label>
+                        <label class="form-label">{{ _('Website') }}</label>
                         <input type="url" name="website" class="form-control" value="{{ company.website or '' }}">
                     </div>
                 </div>
@@ -41,7 +41,7 @@
     </div>
     <div class="col-md-5">
         <div class="card shadow-sm">
-            <div class="card-header"><strong><i class="bi bi-image me-1"></i>Logo</strong></div>
+            <div class="card-header"><strong><i class="bi bi-image me-1"></i>{{ _('Logo') }}</strong></div>
             <div class="card-body d-flex flex-column align-items-center">
                 <div class="mb-3 text-center">
                     <div id="logoPreview" class="border rounded d-flex align-items-center justify-content-center bg-light" style="width:140px;height:140px;">
@@ -53,21 +53,21 @@
                     </div>
                 </div>
                 <input type="file" name="logo" class="form-control form-control-sm" accept="image/*" onchange="previewLogo(this)">
-                <small class="text-muted mt-1">Leave empty to keep current logo.</small>
+                <small class="text-muted mt-1">{{ _('Leave empty to keep current logo.') }}</small>
             </div>
         </div>
     </div>
     <div class="col-md-6">
         <div class="card shadow-sm">
-            <div class="card-header"><strong><i class="bi bi-person me-1"></i>Contact Person</strong></div>
+            <div class="card-header"><strong><i class="bi bi-person me-1"></i>{{ _('Contact Person') }}</strong></div>
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label">Contact Name</label>
+                        <label class="form-label">{{ _('Contact Name') }}</label>
                         <input type="text" name="contact_name" class="form-control" value="{{ company.contact_name or '' }}">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Contact Email</label>
+                        <label class="form-label">{{ _('Contact Email') }}</label>
                         <input type="email" name="contact_email" class="form-control" value="{{ company.email or '' }}">
                     </div>
                 </div>
@@ -76,27 +76,27 @@
     </div>
     <div class="col-md-6">
         <div class="card shadow-sm">
-            <div class="card-header"><strong><i class="bi bi-file-earmark-text me-1"></i>Moroccan Legal IDs</strong></div>
+            <div class="card-header"><strong><i class="bi bi-file-earmark-text me-1"></i>{{ _('Moroccan Legal IDs') }}</strong></div>
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label class="form-label">ICE</label>
+                        <label class="form-label">{{ _('ICE') }}</label>
                         <input type="text" name="ice" class="form-control" value="{{ company.ice or '' }}">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">RC</label>
+                        <label class="form-label">{{ _('RC') }}</label>
                         <input type="text" name="rc" class="form-control" value="{{ company.rc or '' }}">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">IF</label>
+                        <label class="form-label">{{ _('IF') }}</label>
                         <input type="text" name="if_tax" class="form-control" value="{{ company.if_tax or '' }}">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">CNSS</label>
+                        <label class="form-label">{{ _('CNSS') }}</label>
                         <input type="text" name="cnss" class="form-control" value="{{ company.cnss or '' }}">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Patente</label>
+                        <label class="form-label">{{ _('Patente') }}</label>
                         <input type="text" name="patente" class="form-control" value="{{ company.patente or '' }}">
                     </div>
                 </div>
@@ -104,8 +104,8 @@
         </div>
     </div>
     <div class="col-12">
-        <button type="submit" class="btn btn-primary"><i class="bi bi-check me-1"></i>Save Changes</button>
-        <a href="{{ url_for('admin.company_detail', company_id=company.id) }}" class="btn btn-outline-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check me-1"></i>{{ _('Save Changes') }}</button>
+        <a href="{{ url_for('admin.company_detail', company_id=company.id) }}" class="btn btn-outline-secondary">{{ _('Cancel') }}</a>
     </div>
 </div>
 </form>

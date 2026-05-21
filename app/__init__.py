@@ -30,6 +30,7 @@ from .blueprints.mobile.orders.routes import mobile_orders_bp
 
 from .blueprints.admin.routes import admin_bp
 from .version import VERSION
+from .translations import _ as _translate
 
 
 LANGS = {'en': 'English', 'ar': 'Arabic', 'fr': 'French'}
@@ -46,8 +47,11 @@ def create_app(config_class=Config):
 
     @jwt.expired_token_loader
     def expired_token_callback(jwt_header, jwt_data):
-        from flask import render_template, url_for
-        return render_template('base/token_expired.html'), 401
+        from flask import render_template, url_for, request
+        lang = request.cookies.get('lang', 'en')
+        if lang not in LANGS:
+            lang = 'en'
+        return render_template('base/token_expired.html', current_lang=lang, _=lambda key: _translate(key, lang)), 401
 
     setup_logging(app)
     register_error_handlers(app)
@@ -110,6 +114,7 @@ def create_app(config_class=Config):
             'available_langs': LANGS,
             'version': VERSION,
             'current_company': current_company,
+            '_': lambda key: _translate(key, lang),
         }
 
     @app.cli.command('create-super-admin')

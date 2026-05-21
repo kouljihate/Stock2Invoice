@@ -1,30 +1,30 @@
-{% extends 'base/layout.html' %}
-{% block title %}Login — StockInvoice{% endblock %}
+﻿{% extends 'base/layout.html' %}
+{% block title %}Login — Maure STC{% endblock %}
 {% block content %}
 <div class="row justify-content-center mt-5">
     <div class="col-md-5 col-lg-4">
         <div class="card shadow-sm">
             <div class="card-body p-4">
                 <h3 class="text-center mb-4">
-                    <i class="bi bi-box-seam text-primary me-2"></i>StockInvoice
+                    <i class="bi bi-box-seam text-primary me-2"></i>Maure STC
                 </h3>
-                <p class="text-center text-muted mb-4">Sign in to your account</p>
+                <p class="text-center text-muted mb-4">{{ _('Sign In') }}</p>
 
                 <form method="POST" action="">
                     <div class="mb-3">
-                        <label class="form-label">Email</label>
+                        <label class="form-label">{{ _('Email') }}</label>
                         <input type="email" name="email" class="form-control" placeholder="you@example.com" required autofocus>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Password</label>
+                        <label class="form-label">{{ _('Password') }}</label>
                         <input type="password" name="password" class="form-control" placeholder="Enter password" required>
                     </div>
                     <button type="submit" class="btn btn-primary w-100 mb-3">
-                        <i class="bi bi-box-arrow-in-right me-1"></i>Sign In
+                        <i class="bi bi-box-arrow-in-right me-1"></i>{{ _('Sign In') }}
                     </button>
                     <p class="text-center mb-0">
-                        Don't have an account?
-                        <a href="{% if mode == 'mobile' %}{{ url_for('mobile_auth.register') }}{% else %}{{ url_for('web_auth.register') }}{% endif %}">Register</a>
+                        {{ _("Don't have an account?") }}
+                        <a href="{% if mode == 'mobile' %}{{ url_for('mobile_auth.register') }}{% else %}{{ url_for('web_auth.register') }}{% endif %}">{{ _('Register') }}</a>
                     </p>
                 </form>
             </div>

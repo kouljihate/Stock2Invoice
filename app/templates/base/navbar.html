@@ -1,7 +1,7 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+﻿<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
     <div class="container-fluid">
         <a class="navbar-brand fw-bold" href="{% if mode == 'mobile' %}{{ url_for('mobile_dashboard.index') }}{% else %}{{ url_for('web_dashboard.index') }}{% endif %}">
-            <i class="bi bi-box-seam me-2"></i>StockInvoice
+            <i class="bi bi-box-seam me-2"></i>Maure STC
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
             <span class="navbar-toggler-icon"></span>
@@ -10,22 +10,22 @@
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="{% if mode == 'mobile' %}{{ url_for('mobile_dashboard.index') }}{% else %}{{ url_for('web_dashboard.index') }}{% endif %}">
-                        <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                        <i class="bi bi-speedometer2 me-1"></i>{{ _('Dashboard') }}
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% if mode == 'mobile' %}{{ url_for('mobile_orders.list_orders') }}{% else %}{{ url_for('web_orders.list_orders') }}{% endif %}">
-                        <i class="bi bi-cart me-1"></i>Orders
+                        <i class="bi bi-cart me-1"></i>{{ _('Orders') }}
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% if mode == 'mobile' %}{{ url_for('mobile_stock.list_products') }}{% else %}{{ url_for('web_stock.list_products') }}{% endif %}">
-                        <i class="bi bi-box me-1"></i>Products
+                        <i class="bi bi-box me-1"></i>{{ _('Products') }}
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.list_invoices') }}{% else %}{{ url_for('web_invoices.list_invoices') }}{% endif %}">
-                        <i class="bi bi-file-text me-1"></i>Invoices
+                        <i class="bi bi-file-text me-1"></i>{{ _('Invoices') }}
                     </a>
                 </li>
             </ul>
@@ -38,7 +38,7 @@
                         {% for code, name in available_langs.items() %}
                         <li>
                             <a class="dropdown-item {% if code == current_lang %}active{% endif %}" href="{{ url_for('set_lang', lang=code) }}">
-                                {% if code == 'en' %}🇬🇧{% elif code == 'ar' %}🇸🇦{% elif code == 'fr' %}🇫🇷{% endif %}
+                                {% if code == 'en' %}🇬🇧{% elif code == 'ar' %}AR{% elif code == 'fr' %}🇫🇷{% endif %}
                                 {{ name }}
                             </a>
                         </li>
@@ -48,12 +48,12 @@
                 {% if user.role == 'super_admin' %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('admin.index') }}">
-                        <i class="bi bi-shield-lock me-1"></i>Admin
+                        <i class="bi bi-shield-lock me-1"></i>{{ _('Admin') }}
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('admin.list_users') }}">
-                        <i class="bi bi-people me-1"></i>Users
+                        <i class="bi bi-people me-1"></i>{{ _('Users') }}
                     </a>
                 </li>
                 {% endif %}
@@ -63,16 +63,16 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><span class="dropdown-item-text text-muted small">{{ user.email }}</span></li>
-                        <li><span class="dropdown-item-text text-muted small">Role: {{ user.role }}</span></li>
+                        <li><span class="dropdown-item-text text-muted small">{{ _('Role') }}: {{ user.role }}</span></li>
                         {% if current_company %}
                         <li><span class="dropdown-item-text text-muted small">{{ current_company.name }}</span></li>
                         {% elif user.company_id %}
-                        <li><span class="dropdown-item-text text-muted small">Company: {{ user.company_id[:8] }}...</span></li>
+                        <li><span class="dropdown-item-text text-muted small">{{ _('Company') }}: {{ user.company_id[:8] }}...</span></li>
                         {% endif %}
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             <a class="dropdown-item" href="{% if mode == 'mobile' %}{{ url_for('mobile_auth.logout') }}{% else %}{{ url_for('web_auth.logout') }}{% endif %}">
-                                <i class="bi bi-box-arrow-right me-1"></i>Logout
+                                <i class="bi bi-box-arrow-right me-1"></i>{{ _('Logout') }}
                             </a>
                         </li>
                     </ul>

@@ -1,55 +1,55 @@
-{% extends 'base/layout.html' %}
-{% block title %}{{ 'Edit' if supplier else 'Add' }} Supplier — StockInvoice{% endblock %}
+﻿{% extends 'base/layout.html' %}
+{% block title %}{{ _('Edit') if supplier else _('Add') }} {{ _('Supplier') }} — Maure STC{% endblock %}
 {% block content %}
-<h4 class="mb-3"><i class="bi bi-truck me-2"></i>{{ 'Edit' if supplier else 'Add' }} Supplier</h4>
+<h4 class="mb-3"><i class="bi bi-truck me-2"></i>{{ _('Edit') if supplier else _('Add') }} {{ _('Supplier') }}</h4>
 <div class="row">
     <div class="col-md-6">
         <form method="POST" class="card shadow-sm">
             <div class="card-body">
                 <div class="mb-3">
-                    <label class="form-label">Supplier Name *</label>
+                    <label class="form-label">{{ _('Supplier Name') }} *</label>
                     <input type="text" name="name" class="form-control" value="{{ supplier.name if supplier else '' }}" required>
                 </div>
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
-                        <label class="form-label">Contact Name</label>
+                        <label class="form-label">{{ _('Contact Name') }}</label>
                         <input type="text" name="contact_name" class="form-control" value="{{ supplier.contact_name if supplier else '' }}">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Email</label>
+                        <label class="form-label">{{ _('Email') }}</label>
                         <input type="email" name="email" class="form-control" value="{{ supplier.email if supplier else '' }}">
                     </div>
                 </div>
                 <div class="row g-3 mb-3">
                     <div class="col-md-4">
-                        <label class="form-label">Phone</label>
+                        <label class="form-label">{{ _('Phone') }}</label>
                         <input type="text" name="phone" class="form-control" value="{{ supplier.phone if supplier else '' }}">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">City</label>
+                        <label class="form-label">{{ _('City') }}</label>
                         <input type="text" name="city" class="form-control" value="{{ supplier.city if supplier else '' }}">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Payment Terms</label>
-                        <input type="text" name="payment_terms" class="form-control" value="{{ supplier.payment_terms if supplier else '' }}" placeholder="e.g. Net 30">
+                        <label class="form-label">{{ _('Payment Terms') }}</label>
+                        <input type="text" name="payment_terms" class="form-control" value="{{ supplier.payment_terms if supplier else '' }}" placeholder="{{ _('e.g. Net 30') }}">
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Address</label>
+                    <label class="form-label">{{ _('Address') }}</label>
                     <input type="text" name="address" class="form-control" value="{{ supplier.address if supplier else '' }}">
                 </div>
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
-                        <label class="form-label">ICE</label>
+                        <label class="form-label">{{ _('ICE') }}</label>
                         <input type="text" name="ice" class="form-control" value="{{ supplier.ice if supplier else '' }}">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">RC</label>
+                        <label class="form-label">{{ _('RC') }}</label>
                         <input type="text" name="rc" class="form-control" value="{{ supplier.rc if supplier else '' }}">
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary"><i class="bi bi-check me-1"></i>{{ 'Update' if supplier else 'Create' }} Supplier</button>
-                <a href="{{ url_for('web_suppliers.list_suppliers') }}" class="btn btn-outline-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary"><i class="bi bi-check me-1"></i>{{ _('Update') if supplier else _('Create') }} {{ _('Supplier') }}</button>
+                <a href="{{ url_for('web_suppliers.list_suppliers') }}" class="btn btn-outline-secondary">{{ _('Cancel') }}</a>
             </div>
         </form>
     </div>

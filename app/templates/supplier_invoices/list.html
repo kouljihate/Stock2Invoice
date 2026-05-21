@@ -1,14 +1,15 @@
-{% extends 'base/layout.html' %}
-{% block title %}Supplier Invoices — StockInvoice{% endblock %}
+﻿{% extends 'base/layout.html' %}
+{% block title %}{{ _('Supplier Invoices') }} — Maure STC{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-receipt me-2"></i>Supplier Invoices</h4>
+    <h4 class="mb-0"><i class="bi bi-receipt me-2"></i>{{ _('Supplier Invoices') }}</h4>
+    <a href="{{ url_for('web_supplier_invoices.create_invoice') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>{{ _('Add Invoice') }}</a>
 </div>
 <div class="card shadow-sm">
     <div class="card-body p-0">
         <table class="table table-hover mb-0 small">
             <thead class="table-light">
-                <tr><th>Invoice #</th><th>Supplier</th><th>PO #</th><th>Status</th><th class="text-end">Total</th><th>Due Date</th><th class="text-end">Actions</th></tr>
+                <tr><th>{{ _('Invoice #') }}</th><th>{{ _('Supplier') }}</th><th>{{ _('PO #') }}</th><th>{{ _('Status') }}</th><th class="text-end">{{ _('Total') }}</th><th>{{ _('Due Date') }}</th><th class="text-end">{{ _('Actions') }}</th></tr>
             </thead>
             <tbody>
                 {% for inv in invoices %}
@@ -16,7 +17,7 @@
                     <td><code>{{ inv.invoice_number or inv.id[:8] }}</code></td>
                     <td>{{ inv.supplier_name or '-' }}</td>
                     <td><small>{{ inv.po_number or '-' }}</small></td>
-                    <td><span class="badge bg-{{ 'success' if inv.status == 'paid' else 'warning' if inv.status == 'draft' else 'info' if inv.status in ('sent','approved') else 'danger' }}">{{ inv.status }}</span></td>
+                    <td><span class="badge bg-{{ 'success' if inv.status == 'paid' else 'warning' if inv.status == 'draft' else 'info' if inv.status in ('sent','approved') else 'danger' }}">{{ _(inv.status) }}</span></td>
                     <td class="text-end">{{ "%.2f"|format(inv.total) }}</td>
                     <td><small>{{ inv.due_date[:10] if inv.due_date else '-' }}</small></td>
                     <td class="text-end">
@@ -24,7 +25,7 @@
                     </td>
                 </tr>
                 {% else %}
-                <tr><td colspan="7" class="text-center text-muted py-4">No supplier invoices yet.</td></tr>
+                <tr><td colspan="7" class="text-center text-muted py-4">{{ _('No supplier invoices yet.') }}</td></tr>
                 {% endfor %}
             </tbody>
         </table>

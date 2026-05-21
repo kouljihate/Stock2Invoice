@@ -1,21 +1,22 @@
-{% extends 'base/layout.html' %}
-{% block title %}Purchase Orders — StockInvoice{% endblock %}
+﻿{% extends 'base/layout.html' %}
+{% block title %}{{ _('Purchase Orders') }} — Maure STC{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-cart-check me-2"></i>Purchase Orders</h4>
+    <h4 class="mb-0"><i class="bi bi-cart-check me-2"></i>{{ _('Purchase Orders') }}</h4>
+    <a href="{{ url_for('web_purchase_orders.create_order') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>{{ _('Add PO') }}</a>
 </div>
 <div class="card shadow-sm">
     <div class="card-body p-0">
         <table class="table table-hover mb-0 small">
             <thead class="table-light">
-                <tr><th>PO #</th><th>Supplier</th><th>Status</th><th class="text-end">Total</th><th>Date</th><th class="text-end">Actions</th></tr>
+                <tr><th>{{ _('PO #') }}</th><th>{{ _('Supplier') }}</th><th>{{ _('Status') }}</th><th class="text-end">{{ _('Total') }}</th><th>{{ _('Date') }}</th><th class="text-end">{{ _('Actions') }}</th></tr>
             </thead>
             <tbody>
                 {% for o in orders %}
                 <tr>
                     <td><code>{{ o.po_number or o.id[:8] }}</code></td>
                     <td>{{ o.supplier_name or '-' }}</td>
-                    <td><span class="badge bg-{{ 'success' if o.status == 'received' else 'warning' if o.status in ('draft','pending') else 'info' if o.status == 'sent' else 'danger' }}">{{ o.status }}</span></td>
+                    <td><span class="badge bg-{{ 'success' if o.status == 'received' else 'warning' if o.status in ('draft','pending') else 'info' if o.status == 'sent' else 'danger' }}">{{ _(o.status) }}</span></td>
                     <td class="text-end">{{ "%.2f"|format(o.total) }}</td>
                     <td><small>{{ o.created_at[:10] if o.created_at else '-' }}</small></td>
                     <td class="text-end">
@@ -23,7 +24,7 @@
                     </td>
                 </tr>
                 {% else %}
-                <tr><td colspan="6" class="text-center text-muted py-4">No purchase orders yet.</td></tr>
+                <tr><td colspan="6" class="text-center text-muted py-4">{{ _('No purchase orders yet.') }}</td></tr>
                 {% endfor %}
             </tbody>
         </table>

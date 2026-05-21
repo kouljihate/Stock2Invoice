@@ -1,5 +1,5 @@
-{% extends 'base/layout.html' %}
-{% block title %}{{ company.name }} — Admin{% endblock %}
+﻿{% extends 'base/layout.html' %}
+{% block title %}{{ company.name }} — {{ _('Admin') }}{% endblock %}
 {% block extra_head %}
 <style>
 .nav-tabs .nav-link { font-size: 0.9rem; padding: 0.5rem 1rem; }
@@ -16,7 +16,7 @@
     </h4>
     <div>
         <a href="{{ url_for('admin.companies') }}" class="btn btn-outline-secondary btn-sm">
-            <i class="bi bi-arrow-left me-1"></i>All Companies
+            <i class="bi bi-arrow-left me-1"></i>{{ _('All Companies') }}
         </a>
     </div>
 </div>
@@ -26,7 +26,7 @@
         <div class="card border-primary text-center h-100">
             <div class="card-body py-2">
                 <h5 class="text-primary mb-0">{{ stats.product_count }}</h5>
-                <small class="text-muted">Products</small>
+                <small class="text-muted">{{ _('Products') }}</small>
             </div>
         </div>
     </div>
@@ -34,7 +34,7 @@
         <div class="card border-success text-center h-100">
             <div class="card-body py-2">
                 <h5 class="text-success mb-0">{{ stats.order_count }}</h5>
-                <small class="text-muted">Orders</small>
+                <small class="text-muted">{{ _('Orders') }}</small>
             </div>
         </div>
     </div>
@@ -42,7 +42,7 @@
         <div class="card border-info text-center h-100">
             <div class="card-body py-2">
                 <h5 class="text-info mb-0">{{ stats.invoice_count }}</h5>
-                <small class="text-muted">Invoices</small>
+                <small class="text-muted">{{ _('Invoices') }}</small>
             </div>
         </div>
     </div>
@@ -50,7 +50,7 @@
         <div class="card border-warning text-center h-100">
             <div class="card-body py-2">
                 <h5 class="text-warning mb-0">{{ stats.movement_count }}</h5>
-                <small class="text-muted">Movements</small>
+                <small class="text-muted">{{ _('Movements') }}</small>
             </div>
         </div>
     </div>
@@ -58,7 +58,7 @@
         <div class="card border-secondary text-center h-100">
             <div class="card-body py-2">
                 <h5 class="text-secondary mb-0">{{ users|length }}</h5>
-                <small class="text-muted">Users</small>
+                <small class="text-muted">{{ _('Users') }}</small>
             </div>
         </div>
     </div>
@@ -66,7 +66,7 @@
         <div class="card border-dark text-center h-100">
             <div class="card-body py-2">
                 <a href="{{ url_for('admin.edit_company', company_id=company.id) }}" class="btn btn-outline-primary btn-sm">
-                    <i class="bi bi-pencil"></i> Edit
+                    <i class="bi bi-pencil"></i> {{ _('Edit') }}
                 </a>
             </div>
         </div>
@@ -74,11 +74,11 @@
 </div>
 
 <ul class="nav nav-tabs mb-3" id="companyTabs">
-    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabOverview">Overview</button></li>
-    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabProducts">Products <span class="badge bg-info">{{ stats.product_count }}</span></button></li>
-    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabOrders">Orders <span class="badge bg-warning text-dark">{{ stats.order_count }}</span></button></li>
-    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabInvoices">Invoices <span class="badge bg-secondary">{{ stats.invoice_count }}</span></button></li>
-    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabUsers">Users <span class="badge bg-success">{{ users|length }}</span></button></li>
+    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabOverview">{{ _('Overview') }}</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabProducts">{{ _('Products') }} <span class="badge bg-info">{{ stats.product_count }}</span></button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabOrders">{{ _('Orders') }} <span class="badge bg-warning text-dark">{{ stats.order_count }}</span></button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabInvoices">{{ _('Invoices') }} <span class="badge bg-secondary">{{ stats.invoice_count }}</span></button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabUsers">{{ _('Users') }} <span class="badge bg-success">{{ users|length }}</span></button></li>
 </ul>
 
 <div class="tab-content">
@@ -86,36 +86,36 @@
         <div class="row g-3">
             <div class="col-md-6">
                 <div class="card shadow-sm h-100">
-                    <div class="card-header"><strong><i class="bi bi-info-circle me-1"></i>Company Info</strong></div>
+                    <div class="card-header"><strong><i class="bi bi-info-circle me-1"></i>{{ _('Company Info') }}</strong></div>
                     <div class="card-body">
                         <dl class="row mb-0 small">
-                            <dt class="col-sm-4">Name</dt>
+                            <dt class="col-sm-4">{{ _('Name') }}</dt>
                             <dd class="col-sm-8">{{ company.name }}</dd>
                             {% if company.address %}
-                            <dt class="col-sm-4">Address</dt>
+                            <dt class="col-sm-4">{{ _('Address') }}</dt>
                             <dd class="col-sm-8">{{ company.address }}</dd>
                             {% endif %}
                             {% if company.city %}
-                            <dt class="col-sm-4">City</dt>
+                            <dt class="col-sm-4">{{ _('City') }}</dt>
                             <dd class="col-sm-8">{{ company.city }}</dd>
                             {% endif %}
                             {% if company.phone %}
-                            <dt class="col-sm-4">Phone</dt>
+                            <dt class="col-sm-4">{{ _('Phone') }}</dt>
                             <dd class="col-sm-8">{{ company.phone }}</dd>
                             {% endif %}
                             {% if company.email %}
-                            <dt class="col-sm-4">Email</dt>
+                            <dt class="col-sm-4">{{ _('Email') }}</dt>
                             <dd class="col-sm-8">{{ company.email }}</dd>
                             {% endif %}
                             {% if company.contact_name %}
-                            <dt class="col-sm-4">Contact</dt>
+                            <dt class="col-sm-4">{{ _('Contact') }}</dt>
                             <dd class="col-sm-8">{{ company.contact_name }}</dd>
                             {% endif %}
                             {% if company.website %}
-                            <dt class="col-sm-4">Website</dt>
+                            <dt class="col-sm-4">{{ _('Website') }}</dt>
                             <dd class="col-sm-8"><a href="{{ company.website }}" target="_blank">{{ company.website }}</a></dd>
                             {% endif %}
-                            <dt class="col-sm-4">Created</dt>
+                            <dt class="col-sm-4">{{ _('Created') }}</dt>
                             <dd class="col-sm-8"><small>{{ company.created_at[:10] if company.created_at else '-' }}</small></dd>
                         </dl>
                     </div>
@@ -123,41 +123,41 @@
             </div>
             <div class="col-md-6">
                 <div class="card shadow-sm h-100">
-                    <div class="card-header"><strong><i class="bi bi-file-earmark-text me-1"></i>Legal IDs</strong></div>
+                    <div class="card-header"><strong><i class="bi bi-file-earmark-text me-1"></i>{{ _('Legal IDs') }}</strong></div>
                     <div class="card-body">
                         <dl class="row mb-0 small">
                             {% if company.ice %}
-                            <dt class="col-sm-4">ICE</dt>
+                            <dt class="col-sm-4">{{ _('ICE') }}</dt>
                             <dd class="col-sm-8"><code>{{ company.ice }}</code></dd>
                             {% endif %}
                             {% if company.rc %}
-                            <dt class="col-sm-4">RC</dt>
+                            <dt class="col-sm-4">{{ _('RC') }}</dt>
                             <dd class="col-sm-8"><code>{{ company.rc }}</code></dd>
                             {% endif %}
                             {% if company.if_tax %}
-                            <dt class="col-sm-4">IF</dt>
+                            <dt class="col-sm-4">{{ _('IF') }}</dt>
                             <dd class="col-sm-8"><code>{{ company.if_tax }}</code></dd>
                             {% endif %}
                             {% if company.cnss %}
-                            <dt class="col-sm-4">CNSS</dt>
+                            <dt class="col-sm-4">{{ _('CNSS') }}</dt>
                             <dd class="col-sm-8"><code>{{ company.cnss }}</code></dd>
                             {% endif %}
                             {% if company.patente %}
-                            <dt class="col-sm-4">Patente</dt>
+                            <dt class="col-sm-4">{{ _('Patente') }}</dt>
                             <dd class="col-sm-8"><code>{{ company.patente }}</code></dd>
                             {% endif %}
                             {% if not company.ice and not company.rc and not company.if_tax and not company.cnss and not company.patente %}
-                            <dd class="text-muted mb-0">No legal IDs registered.</dd>
+                            <dd class="text-muted mb-0">{{ _('No legal IDs registered.') }}</dd>
                             {% endif %}
                         </dl>
                     </div>
                 </div>
                 <div class="card shadow-sm mt-3">
-                    <div class="card-header text-danger"><strong><i class="bi bi-exclamation-triangle me-1"></i>Danger Zone</strong></div>
+                    <div class="card-header text-danger"><strong><i class="bi bi-exclamation-triangle me-1"></i>{{ _('Danger Zone') }}</strong></div>
                     <div class="card-body">
-                        <p class="small text-muted mb-2">Delete this company and all associated data permanently.</p>
+                        <p class="small text-muted mb-2">{{ _('Delete this company and all associated data permanently.') }}</p>
                         <form method="POST" action="{{ url_for('admin.delete_company', company_id=company.id) }}" onsubmit="return confirm('Delete {{ company.name }}? This cannot be undone.')">
-                            <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash me-1"></i>Delete Company</button>
+                            <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash me-1"></i>{{ _('Delete Company') }}</button>
                         </form>
                     </div>
                 </div>
@@ -170,7 +170,7 @@
             <div class="card-body p-0">
                 <table class="table table-hover mb-0 small">
                     <thead class="table-light">
-                        <tr><th>Name</th><th>SKU</th><th>Category</th><th class="text-center">Qty</th><th class="text-end">Price</th><th class="text-end">Stock Value</th></tr>
+                        <tr><th>{{ _('Name') }}</th><th>{{ _('SKU') }}</th><th>{{ _('Category') }}</th><th class="text-center">{{ _('Qty') }}</th><th class="text-end">{{ _('Price') }}</th><th class="text-end">{{ _('Stock Value') }}</th></tr>
                     </thead>
                     <tbody>
                         {% for p in products %}
@@ -183,7 +183,7 @@
                             <td class="text-end">{{ "%.2f"|format(p.stock_value) }}</td>
                         </tr>
                         {% else %}
-                        <tr><td colspan="6" class="text-center text-muted py-4">No products.</td></tr>
+                        <tr><td colspan="6" class="text-center text-muted py-4">{{ _('No products.') }}</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -196,19 +196,19 @@
             <div class="card-body p-0">
                 <table class="table table-hover mb-0 small">
                     <thead class="table-light">
-                        <tr><th>Order #</th><th>Customer</th><th>Status</th><th class="text-end">Total</th><th>Date</th></tr>
+                        <tr><th>{{ _('Order #') }}</th><th>{{ _('Customer') }}</th><th>{{ _('Status') }}</th><th class="text-end">{{ _('Total') }}</th><th>{{ _('Date') }}</th></tr>
                     </thead>
                     <tbody>
                         {% for o in orders %}
                         <tr>
                             <td><code>{{ o.order_number }}</code></td>
                             <td>{{ o.customer_name }}</td>
-                            <td><span class="badge bg-{{ 'success' if o.status == 'delivered' else 'warning' if o.status == 'pending' else 'info' if o.status == 'confirmed' else 'primary' if o.status == 'shipped' else 'danger' }}">{{ o.status }}</span></td>
+                            <td><span class="badge bg-{{ 'success' if o.status == 'delivered' else 'warning' if o.status == 'pending' else 'info' if o.status == 'confirmed' else 'primary' if o.status == 'shipped' else 'danger' }}">{{ _(o.status) }}</span></td>
                             <td class="text-end">{{ "%.2f"|format(o.total) }}</td>
                             <td>{{ o.created_at }}</td>
                         </tr>
                         {% else %}
-                        <tr><td colspan="5" class="text-center text-muted py-4">No orders.</td></tr>
+                        <tr><td colspan="5" class="text-center text-muted py-4">{{ _('No orders.') }}</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -221,19 +221,19 @@
             <div class="card-body p-0">
                 <table class="table table-hover mb-0 small">
                     <thead class="table-light">
-                        <tr><th>Invoice #</th><th>Customer</th><th>Status</th><th class="text-end">Total</th><th>Date</th></tr>
+                        <tr><th>{{ _('Invoice #') }}</th><th>{{ _('Customer') }}</th><th>{{ _('Status') }}</th><th class="text-end">{{ _('Total') }}</th><th>{{ _('Date') }}</th></tr>
                     </thead>
                     <tbody>
                         {% for inv in invoices %}
                         <tr>
                             <td><code>{{ inv.invoice_number }}</code></td>
                             <td>{{ inv.customer_name }}</td>
-                            <td><span class="badge bg-{{ 'success' if inv.status == 'paid' else 'warning' if inv.status == 'draft' else 'info' if inv.status == 'sent' else 'danger' }}">{{ inv.status }}</span></td>
+                            <td><span class="badge bg-{{ 'success' if inv.status == 'paid' else 'warning' if inv.status == 'draft' else 'info' if inv.status == 'sent' else 'danger' }}">{{ _(inv.status) }}</span></td>
                             <td class="text-end">{{ "%.2f"|format(inv.total) }}</td>
                             <td>{{ inv.created_at }}</td>
                         </tr>
                         {% else %}
-                        <tr><td colspan="5" class="text-center text-muted py-4">No invoices.</td></tr>
+                        <tr><td colspan="5" class="text-center text-muted py-4">{{ _('No invoices.') }}</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -244,9 +244,9 @@
     <div class="tab-pane fade" id="tabUsers">
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <strong><i class="bi bi-people me-1"></i>Users</strong>
+                <strong><i class="bi bi-people me-1"></i>{{ _('Users') }}</strong>
                 <button class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#addUserForm">
-                    <i class="bi bi-plus-lg me-1"></i>Add User
+                    <i class="bi bi-plus-lg me-1"></i>{{ _('Add User') }}
                 </button>
             </div>
             <div class="collapse" id="addUserForm">
@@ -254,19 +254,19 @@
                     <form method="POST" action="{{ url_for('admin.add_user', company_id=company.id) }}">
                         <div class="row g-2">
                             <div class="col-md-4">
-                                <input type="text" name="name" class="form-control form-control-sm" placeholder="Full name">
+                                <input type="text" name="name" class="form-control form-control-sm" placeholder="{{ _('Full name') }}">
                             </div>
                             <div class="col-md-4">
-                                <input type="email" name="email" class="form-control form-control-sm" placeholder="Email" required>
+                                <input type="email" name="email" class="form-control form-control-sm" placeholder="{{ _('Email') }}" required>
                             </div>
                             <div class="col-md-2">
-                                <input type="password" name="password" class="form-control form-control-sm" placeholder="Password" required>
+                                <input type="password" name="password" class="form-control form-control-sm" placeholder="{{ _('Password') }}" required>
                             </div>
                             <div class="col-md-2">
                                 <div class="input-group input-group-sm">
                                     <select name="role" class="form-select form-select-sm">
-                                        <option value="user">User</option>
-                                        <option value="company_admin">Admin</option>
+                                        <option value="user">{{ _('User') }}</option>
+                                        <option value="company_admin">{{ _('Admin') }}</option>
                                     </select>
                                     <button class="btn btn-success btn-sm" type="submit"><i class="bi bi-check"></i></button>
                                 </div>
@@ -278,7 +278,7 @@
             <div class="card-body p-0">
                 <table class="table table-hover mb-0 small">
                     <thead class="table-light">
-                        <tr><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th class="text-end">Actions</th></tr>
+                        <tr><th>{{ _('Name') }}</th><th>{{ _('Email') }}</th><th>{{ _('Role') }}</th><th>{{ _('Joined') }}</th><th class="text-end">{{ _('Actions') }}</th></tr>
                     </thead>
                     <tbody>
                         {% for u in users %}
@@ -291,8 +291,8 @@
                                 {% else %}
                                 <form method="POST" action="{{ url_for('admin.set_user_role', user_id=u.id) }}" class="d-flex align-items-center gap-1">
                                     <select name="role" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
-                                        <option value="user" {{ 'selected' if u.role == 'user' }}>User</option>
-                                        <option value="company_admin" {{ 'selected' if u.role == 'company_admin' }}>Admin</option>
+                                        <option value="user" {{ 'selected' if u.role == 'user' }}>{{ _('User') }}</option>
+                                        <option value="company_admin" {{ 'selected' if u.role == 'company_admin' }}>{{ _('Admin') }}</option>
                                     </select>
                                 </form>
                                 {% endif %}
@@ -308,7 +308,7 @@
                             </td>
                         </tr>
                         {% else %}
-                        <tr><td colspan="5" class="text-center text-muted py-4">No users.</td></tr>
+                        <tr><td colspan="5" class="text-center text-muted py-4">{{ _('No users.') }}</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>

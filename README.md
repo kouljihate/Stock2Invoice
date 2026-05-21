@@ -1,33 +1,33 @@
-# ProcureFlow
+﻿# ProcureFlow
 
 Flask web application for the full **Procure-to-Pay** and **Quote-to-Cash** lifecycle with MongoDB Atlas.
 
 ## Procure-to-Pay (Inbound)
 
 ```
-Supplier → Purchase Order → Goods Receipt → Supplier Invoice → Payment
+Supplier â†’ Purchase Order â†’ Goods Receipt â†’ Supplier Invoice â†’ Payment
 ```
 
 | Module | Description | Status |
 |--------|-------------|--------|
-| **Suppliers** | Manage vendor information, contacts, legal IDs | ✅ Ready |
-| **Purchase Orders** | Create and send POs to suppliers | ⚙️ Skeleton |
-| **Goods Receipt** | Receive inventory against POs | ⚙️ Skeleton |
-| **Supplier Invoices** | Track bills from suppliers | ⚙️ Skeleton |
-| **Payments** | Record payments and close transactions | ⚙️ Skeleton |
+| **Suppliers** | Manage vendor information, contacts, legal IDs | âœ… Ready |
+| **Purchase Orders** | Create and send POs to suppliers | âš™ï¸ Skeleton |
+| **Goods Receipt** | Receive inventory against POs | âš™ï¸ Skeleton |
+| **Supplier Invoices** | Track bills from suppliers | âš™ï¸ Skeleton |
+| **Payments** | Record payments and close transactions | âš™ï¸ Skeleton |
 
 ## Quote-to-Cash (Outbound)
 
 ```
-Quote → Customer Order → Delivery Note → Customer Invoice
+Quote â†’ Customer Order â†’ Delivery Note â†’ Customer Invoice
 ```
 
 | Module | Description | Status |
 |--------|-------------|--------|
-| **Quotes** | Send quotes to customers | ⚙️ Skeleton |
-| **Customer Orders** | Manage sales orders from customers | ✅ Implemented |
-| **Delivery Notes** | Record goods dispatched to customers | ⚙️ Skeleton |
-| **Customer Invoices** | Bill customers with status workflow | ✅ Implemented |
+| **Quotes** | Send quotes to customers | âš™ï¸ Skeleton |
+| **Customer Orders** | Manage sales orders from customers | âœ… Implemented |
+| **Delivery Notes** | Record goods dispatched to customers | âš™ï¸ Skeleton |
+| **Customer Invoices** | Bill customers with status workflow | âœ… Implemented |
 
 ## Cross-Cutting
 
@@ -113,7 +113,7 @@ StockInvoice/
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `SECRET_KEY` | dev-secret-key | Flask session key |
-| `MONGO_URI` | `mongodb://localhost:27017/stockinvoice` | MongoDB connection string |
+| `MONGO_URI` | `mongodb://localhost:27017/maure_stc` | MongoDB connection string |
 | `JWT_SECRET_KEY` | jwt-dev-secret | JWT signing key |
 | `JWT_ACCESS_TOKEN_EXPIRES` | 86400 | Token lifetime (seconds) |
 | `FLASK_ENV` | development | runtime mode |

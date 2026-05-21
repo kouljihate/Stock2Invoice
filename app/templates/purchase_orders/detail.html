@@ -1,20 +1,20 @@
-{% extends 'base/layout.html' %}
-{% block title %}PO {{ order.po_number or order.id[:8] }} — StockInvoice{% endblock %}
+﻿{% extends 'base/layout.html' %}
+{% block title %}{{ _('PO #') }} {{ order.po_number or order.id[:8] }} — Maure STC{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-cart-check me-2"></i>Purchase Order {{ order.po_number or order.id[:8] }}</h4>
-    <a href="{{ url_for('web_purchase_orders.list_orders') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>Back</a>
+    <h4 class="mb-0"><i class="bi bi-cart-check me-2"></i>{{ _('Purchase Order') }} {{ order.po_number or order.id[:8] }}</h4>
+    <a href="{{ url_for('web_purchase_orders.list_orders') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>{{ _('Back') }}</a>
 </div>
 <div class="card shadow-sm">
     <div class="card-body">
         <dl class="row small mb-0">
-            <dt class="col-sm-2">Supplier</dt>
+            <dt class="col-sm-2">{{ _('Supplier') }}</dt>
             <dd class="col-sm-10">{{ order.supplier_name or '-' }}</dd>
-            <dt class="col-sm-2">Status</dt>
-            <dd class="col-sm-10"><span class="badge bg-{{ 'success' if order.status == 'received' else 'warning' }}">{{ order.status }}</span></dd>
-            <dt class="col-sm-2">Total</dt>
+            <dt class="col-sm-2">{{ _('Status') }}</dt>
+            <dd class="col-sm-10"><span class="badge bg-{{ 'success' if order.status == 'received' else 'warning' }}">{{ _(order.status) }}</span></dd>
+            <dt class="col-sm-2">{{ _('Total') }}</dt>
             <dd class="col-sm-10">{{ "%.2f"|format(order.total) }}</dd>
-            <dt class="col-sm-2">Created</dt>
+            <dt class="col-sm-2">{{ _('Created') }}</dt>
             <dd class="col-sm-10">{{ order.created_at[:10] if order.created_at else '-' }}</dd>
         </dl>
     </div>

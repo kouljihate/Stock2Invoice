@@ -1,9 +1,11 @@
 import logging
+from datetime import datetime, timezone
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.models.user_model import UserModel
 from app.core.models.supplier_invoice_model import SupplierInvoiceModel
-from app.core.utils.helpers import paginate
+from app.core.models.supplier_model import SupplierModel
+from app.core.utils.helpers import paginate, oid
 
 logger = logging.getLogger(__name__)
 web_supplier_invoices_bp = Blueprint('web_supplier_invoices', __name__, template_folder='../../../templates')
@@ -40,6 +42,65 @@ def list_invoices():
     except Exception:
         logger.exception('Supplier invoice list error')
         return render_template('supplier_invoices/list.html', mode='web', invoices=[], total=0, page=1, per_page=20, pages=0)
+
+
+@web_supplier_invoices_bp.route('/create', methods=['GET', 'POST'])
+@jwt_required()
+def create_invoice():
+    user = _get_user()
+    cid = _company_id()
+    if request.method == 'GET':
+        suppliers = SupplierModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else []
+        return render_template('supplier_invoices/form.html', mode='web',
+                               user=UserModel.to_dict(user) if user else None,
+                               invoice=None, suppliers=suppliers)
+    try:
+        cid = _company_id()
+        from datetime import datetime
+        data = request.form.to_dict(flat=False)
+        items = []
+        skus = data.get('sku', [])
+        qtys = data.get('quantity', [])
+        prices = data.get('unit_price', [])
+        names = data.get('name', [])
+        for i in range(len(skus)):
+            if skus[i] and qtys[i] and int(qtys[i]) > 0:
+                items.append({'sku': skus[i], 'quantity': int(qtys[i]),
+                              'unit_price': float(prices[i]) if prices[i] else 0,
+                              'name': names[i] if i < len(names) else ''})
+        count = SupplierInvoiceModel.count({'company_id': oid(cid)})
+        inv_number = f"SI-{datetime.now().strftime('%Y%m%d')}-{count + 1:04d}"
+        due_date_str = request.form.get('due_date', '')
+        due_date = datetime.strptime(due_date_str, '%Y-%m-%d') if due_date_str else None
+        payload = {
+            'invoice_number': inv_number,
+            'supplier_id': oid(request.form.get('supplier_id', '')),
+            'supplier_name': request.form.get('supplier_name', ''),
+            'po_id': oid(request.form.get('po_id', '')),
+            'po_number': request.form.get('po_number', ''),
+            'invoice_date': datetime.now(timezone.utc),
+            'due_date': due_date,
+            'items': items,
+            'subtotal': sum(it['quantity'] * it['unit_price'] for it in items),
+            'discount_percent': float(request.form.get('discount_percent', 0)),
+            'tax_percent': float(request.form.get('tax_percent', 0)),
+            'notes': request.form.get('notes', ''),
+            'status': 'draft',
+            'company_id': oid(cid),
+            'created_by': oid(get_jwt_identity()),
+        }
+        discount = payload['subtotal'] * payload['discount_percent'] / 100
+        taxable = payload['subtotal'] - discount
+        payload['discount_amount'] = discount
+        payload['tax_amount'] = taxable * payload['tax_percent'] / 100
+        payload['total'] = taxable + payload['tax_amount']
+        SupplierInvoiceModel.create(payload)
+        flash(f'Supplier invoice {inv_number} created.', 'success')
+        return redirect(url_for('web_supplier_invoices.list_invoices'))
+    except Exception as e:
+        logger.exception('Supplier invoice create error')
+        flash(f'Could not create supplier invoice: {e}', 'danger')
+        return redirect(url_for('web_supplier_invoices.list_invoices'))
 
 
 @web_supplier_invoices_bp.route('/<inv_id>')

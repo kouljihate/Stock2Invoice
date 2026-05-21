@@ -1,18 +1,18 @@
-{% extends 'base/layout.html' %}
-{% block title %}User Management — Admin{% endblock %}
+﻿{% extends 'base/layout.html' %}
+{% block title %}{{ _('User Management') }} — {{ _('Admin') }}{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-people me-2"></i>User Management</h4>
+    <h4 class="mb-0"><i class="bi bi-people me-2"></i>{{ _('User Management') }}</h4>
     <a href="{{ url_for('admin.index') }}" class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-arrow-left me-1"></i>Admin Panel
+        <i class="bi bi-arrow-left me-1"></i>{{ _('Admin Panel') }}
     </a>
 </div>
 
 <div class="card shadow-sm">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <strong><i class="bi bi-person-lines-fill me-1"></i>All Users ({{ total }})</strong>
+        <strong><i class="bi bi-person-lines-fill me-1"></i>{{ _('All Users') }} ({{ total }})</strong>
         <form method="GET" class="d-flex gap-1">
-            <input type="text" name="search" class="form-control form-control-sm" placeholder="Search name or email..." value="{{ search }}" style="width:240px;">
+            <input type="text" name="search" class="form-control form-control-sm" placeholder="{{ _('Search name or email...') }}" value="{{ search }}" style="width:240px;">
             <button type="submit" class="btn btn-sm btn-outline-primary"><i class="bi bi-search"></i></button>
             {% if search %}
             <a href="{{ url_for('admin.list_users') }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-x"></i></a>
@@ -23,12 +23,12 @@
         <table class="table table-hover mb-0">
             <thead class="table-light">
                 <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Company</th>
-                    <th>Joined</th>
-                    <th class="text-end">Actions</th>
+                    <th>{{ _('Name') }}</th>
+                    <th>{{ _('Email') }}</th>
+                    <th>{{ _('Role') }}</th>
+                    <th>{{ _('Company') }}</th>
+                    <th>{{ _('Joined') }}</th>
+                    <th class="text-end">{{ _('Actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -60,9 +60,9 @@
                 <tr>
                     <td colspan="6" class="text-center py-5 text-muted">
                         <i class="bi bi-people" style="font-size:2rem;"></i>
-                        <p class="mt-2 mb-0">No users found.</p>
+                        <p class="mt-2 mb-0">{{ _('No users found.') }}</p>
                         {% if search %}
-                        <small>Try a different search term.</small>
+                        <small>{{ _('Try a different search term.') }}</small>
                         {% endif %}
                     </td>
                 </tr>

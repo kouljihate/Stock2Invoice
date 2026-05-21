@@ -1,8 +1,8 @@
-{% extends 'base/layout.html' %}
-{% block title %}Admin Panel — StockInvoice{% endblock %}
+﻿{% extends 'base/layout.html' %}
+{% block title %}{{ _('Admin Panel') }} — Maure STC{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="mb-0"><i class="bi bi-shield-lock me-2"></i>Admin Panel</h4>
+    <h4 class="mb-0"><i class="bi bi-shield-lock me-2"></i>{{ _('Admin Panel') }}</h4>
 </div>
 
 <div class="row g-3 mb-4">
@@ -10,7 +10,7 @@
         <div class="card border-primary border-2 text-center h-100">
             <div class="card-body">
                 <h2 class="text-primary mb-1">{{ total_companies }}</h2>
-                <small class="text-muted">Total Companies</small>
+                <small class="text-muted">{{ _('Total Companies') }}</small>
             </div>
         </div>
     </div>
@@ -18,7 +18,7 @@
         <div class="card border-success border-2 text-center h-100">
             <div class="card-body">
                 <h2 class="text-success mb-1">{{ total_users }}</h2>
-                <small class="text-muted">Total Users</small>
+                <small class="text-muted">{{ _('Total Users') }}</small>
             </div>
         </div>
     </div>
@@ -26,7 +26,7 @@
         <div class="card border-info border-2 text-center h-100">
             <div class="card-body">
                 <h2 class="text-info mb-1">{{ companies|length }}</h2>
-                <small class="text-muted">Active Companies</small>
+                <small class="text-muted">{{ _('Active Companies') }}</small>
             </div>
         </div>
     </div>
@@ -34,22 +34,22 @@
 
 <div class="card shadow-sm">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <strong><i class="bi bi-building me-1"></i>Company Management</strong>
+        <strong><i class="bi bi-building me-1"></i>{{ _('Company Management') }}</strong>
         <a href="{{ url_for('admin.create_company') }}" class="btn btn-primary btn-sm">
-            <i class="bi bi-plus-lg me-1"></i>New Company
+            <i class="bi bi-plus-lg me-1"></i>{{ _('New Company') }}
         </a>
     </div>
     <div class="card-body p-0">
         <table class="table table-hover mb-0">
             <thead class="table-light">
                 <tr>
-                    <th>Company</th>
-                    <th>City</th>
-                    <th>Phone</th>
-                    <th>Contact</th>
-                    <th class="text-center">Users</th>
-                    <th>ICE</th>
-                    <th class="text-end">Actions</th>
+                    <th>{{ _('Company') }}</th>
+                    <th>{{ _('City') }}</th>
+                    <th>{{ _('Phone') }}</th>
+                    <th>{{ _('Contact') }}</th>
+                    <th class="text-center">{{ _('Users') }}</th>
+                    <th>{{ _('ICE') }}</th>
+                    <th class="text-end">{{ _('Actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,7 +58,7 @@
                     <td>
                         <div class="d-flex align-items-center gap-2">
                             {% if c.logo %}
-                            <img src="{{ url_for('static', filename='uploads/logos/'+c.logo) }}" alt="Logo" style="width:24px;height:24px;object-fit:contain;border-radius:3px;">
+                            <img src="{{ url_for('static', filename='uploads/logos/'+c.logo) }}" alt="" style="width:24px;height:24px;object-fit:contain;border-radius:3px;">
                             {% endif %}
                             <strong>{{ c.name }}</strong>
                         </div>
@@ -72,10 +72,10 @@
                     <td><small><code>{{ c.ice or '-' }}</code></small></td>
                     <td class="text-end">
                         <a href="{{ url_for('admin.company_detail', company_id=c.id) }}" class="btn btn-sm btn-outline-success">
-                            <i class="bi bi-gear me-1"></i> Manage
+                            <i class="bi bi-gear me-1"></i> {{ _('Manage') }}
                         </a>
                         <a href="{{ url_for('admin.company_users', company_id=c.id) }}" class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-people me-1"></i> Users
+                            <i class="bi bi-people me-1"></i> {{ _('Users') }}
                         </a>
                     </td>
                 </tr>
@@ -83,9 +83,9 @@
                 <tr>
                     <td colspan="7" class="text-center py-5">
                         <i class="bi bi-building text-muted" style="font-size: 2rem;"></i>
-                        <p class="text-muted mt-2 mb-3">No companies registered yet.</p>
+                        <p class="text-muted mt-2 mb-3">{{ _('No companies registered yet.') }}</p>
                         <a href="{{ url_for('admin.create_company') }}" class="btn btn-primary">
-                            <i class="bi bi-plus-lg me-1"></i>Create Your First Company
+                            <i class="bi bi-plus-lg me-1"></i>{{ _('Create Your First Company') }}
                         </a>
                     </td>
                 </tr>
@@ -97,14 +97,14 @@
 
 <div class="card shadow-sm mt-3">
     <div class="card-header">
-        <strong><i class="bi bi-info-circle me-1"></i>Quick Guide</strong>
+        <strong><i class="bi bi-info-circle me-1"></i>{{ _('Quick Guide') }}</strong>
     </div>
     <div class="card-body">
         <ol class="mb-0">
-            <li><strong>Create a Company</strong> — Click "New Company" and fill in the company details, legal IDs, and admin credentials.</li>
-            <li><strong>Company Admin Login</strong> — The newly created admin can log in at <code>/web/auth/login</code> with the credentials you set.</li>
-            <li><strong>Manage Resources</strong> — Each company admin manages their own products, orders, and invoices — fully isolated from other companies.</li>
-            <li><strong>View Users</strong> — Click "Users" on any company to see all users belonging to that company.</li>
+            <li><strong>{{ _('Create a Company') }}</strong> — {{ _('Click New Company and fill in the company details, legal IDs, and admin credentials.') }}</li>
+            <li><strong>{{ _('Company Admin Login') }}</strong> — {{ _('The newly created admin can log in at /web/auth/login with the credentials you set.') }}</li>
+            <li><strong>{{ _('Manage Resources') }}</strong> — {{ _('Each company admin manages their own products, orders, and invoices fully isolated from other companies.') }}</li>
+            <li><strong>{{ _('View Users') }}</strong> — {{ _('Click Users on any company to see all users belonging to that company.') }}</li>
         </ol>
     </div>
 </div>

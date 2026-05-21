@@ -1,14 +1,15 @@
-{% extends 'base/layout.html' %}
-{% block title %}Goods Receipts — StockInvoice{% endblock %}
+﻿{% extends 'base/layout.html' %}
+{% block title %}{{ _('Goods Receipts') }} — Maure STC{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-box-seam me-2"></i>Goods Receipts</h4>
+    <h4 class="mb-0"><i class="bi bi-box-seam me-2"></i>{{ _('Goods Receipts') }}</h4>
+    <a href="{{ url_for('web_goods_receipt.create_receipt') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>{{ _('Add Receipt') }}</a>
 </div>
 <div class="card shadow-sm">
     <div class="card-body p-0">
         <table class="table table-hover mb-0 small">
             <thead class="table-light">
-                <tr><th>Receipt #</th><th>PO #</th><th>Supplier</th><th>Date</th><th class="text-end">Actions</th></tr>
+                <tr><th>{{ _('Receipt #') }}</th><th>{{ _('PO #') }}</th><th>{{ _('Supplier') }}</th><th>{{ _('Date') }}</th><th class="text-end">{{ _('Actions') }}</th></tr>
             </thead>
             <tbody>
                 {% for r in receipts %}
@@ -20,7 +21,7 @@
                     <td class="text-end"><span class="text-muted small">—</span></td>
                 </tr>
                 {% else %}
-                <tr><td colspan="5" class="text-center text-muted py-4">No goods receipts yet.</td></tr>
+                <tr><td colspan="5" class="text-center text-muted py-4">{{ _('No goods receipts yet.') }}</td></tr>
                 {% endfor %}
             </tbody>
         </table>

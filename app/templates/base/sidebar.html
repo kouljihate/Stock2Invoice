@@ -1,76 +1,82 @@
-<div class="d-flex flex-column flex-shrink-0 pt-3 sidebar">
+﻿<div class="d-flex flex-column flex-shrink-0 pt-3 sidebar">
     <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
             <a href="{{ url_for('web_dashboard.index') }}" class="nav-link link-dark {% if request.endpoint and 'dashboard' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                <i class="bi bi-speedometer2 me-2"></i>{{ _('Dashboard') }}
             </a>
         </li>
 
-        <li class="nav-item mt-2">
-            <small class="text-muted text-uppercase px-3 fw-bold" style="font-size:0.65rem;letter-spacing:0.05em;">Procure-to-Pay</small>
+        <li class="nav-item mt-2 center">
+            <span class="material-symbols-outlined">
+                add_shopping_cart
+            </span>
+            <strong class="text-muted text-uppercase px-3 fw-bold" style="font-size:1.50rem;letter-spacing:0.05em;">{{ _('Procure-to-Pay') }}</strong>
         </li>
         <li>
             <a href="{{ url_for('web_suppliers.list_suppliers') }}" class="nav-link link-dark {% if request.endpoint and 'suppliers' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-truck me-2"></i>Suppliers
+                <i class="bi bi-truck me-2"></i>{{ _('Suppliers') }}
             </a>
         </li>
         <li>
             <a href="{{ url_for('web_purchase_orders.list_orders') }}" class="nav-link link-dark {% if request.endpoint and 'purchase_orders' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-cart-check me-2"></i>Purchase Orders
+                <i class="bi bi-cart-check me-2"></i>{{ _('Purchase Orders') }}
             </a>
         </li>
         <li>
             <a href="{{ url_for('web_goods_receipt.list_receipts') }}" class="nav-link link-dark {% if request.endpoint and 'goods_receipt' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-box-seam me-2"></i>Goods Receipt
+                <i class="bi bi-box-seam me-2"></i>{{ _('Goods Receipt') }}
             </a>
         </li>
         <li>
             <a href="{{ url_for('web_supplier_invoices.list_invoices') }}" class="nav-link link-dark {% if request.endpoint and 'supplier_invoices' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-receipt me-2"></i>Supplier Invoices
+                <i class="bi bi-receipt me-2"></i>{{ _('Supplier Invoices') }}
             </a>
         </li>
         <li>
             <a href="{{ url_for('web_payments.list_payments') }}" class="nav-link link-dark {% if request.endpoint and 'payments' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-credit-card me-2"></i>Payments
+                <i class="bi bi-credit-card me-2"></i>{{ _('Payments') }}
             </a>
         </li>
 
         <li class="nav-item mt-2">
-            <small class="text-muted text-uppercase px-3 fw-bold" style="font-size:0.65rem;letter-spacing:0.05em;">Quote-to-Cash</small>
+            <span class="material-symbols-outlined">
+                point_of_sale
+            </span>
+            <strong class="text-muted text-uppercase px-3 fw-bold" style="font-size:1.50rem;letter-spacing:0.05em;">{{ _('Quote-to-Cash') }}</strong>
         </li>
         <li>
             <a href="{{ url_for('web_customer_quotes.list_quotes') }}" class="nav-link link-dark {% if request.endpoint and 'customer_quotes' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-file-earmark-text me-2"></i>Quotes
+                <i class="bi bi-file-earmark-text me-2"></i>{{ _('Quotes') }}
             </a>
         </li>
         <li>
             <a href="{{ url_for('web_orders.list_orders') }}" class="nav-link link-dark {% if request.endpoint and 'orders' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-cart me-2"></i>Customer Orders
+                <i class="bi bi-cart me-2"></i>{{ _('Customer Orders') }}
             </a>
         </li>
         <li>
             <a href="{{ url_for('web_delivery_notes.list_delivery_notes') }}" class="nav-link link-dark {% if request.endpoint and 'delivery_notes' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-truck me-2"></i>Delivery Notes
+                <i class="bi bi-truck me-2"></i>{{ _('Delivery Notes') }}
             </a>
         </li>
         <li>
             <a href="{{ url_for('web_invoices.list_invoices') }}" class="nav-link link-dark {% if request.endpoint and 'invoices' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-file-text me-2"></i>Customer Invoices
+                <i class="bi bi-file-text me-2"></i>{{ _('Customer Invoices') }}
             </a>
         </li>
 
         <li class="nav-item mt-2">
-            <small class="text-muted text-uppercase px-3 fw-bold" style="font-size:0.65rem;letter-spacing:0.05em;">Administration</small>
+            <small class="text-muted text-uppercase px-3 fw-bold" style="font-size:0.65rem;letter-spacing:0.05em;">{{ _('Administration') }}</small>
         </li>
         {% if user and user.role == 'super_admin' %}
         <li>
             <a href="{{ url_for('admin.companies') }}" class="nav-link link-dark {% if request.endpoint and request.endpoint.startswith('admin.') %}active{% endif %}">
-                <i class="bi bi-buildings me-2"></i>Companies
+                <i class="bi bi-buildings me-2"></i>{{ _('Companies') }}
             </a>
         </li>
         <li>
             <a href="{{ url_for('admin.list_users') }}" class="nav-link link-dark {% if request.endpoint == 'admin.list_users' %}active{% endif %}">
-                <i class="bi bi-people me-2"></i>Users
+                <i class="bi bi-people me-2"></i>{{ _('Users') }}
             </a>
         </li>
         <li>
@@ -79,7 +85,7 @@
         {% endif %}
         <li>
             <a href="{{ url_for('web_stock.list_products') }}" class="nav-link link-dark {% if request.endpoint and 'stock' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-box me-2"></i>Products (Inventory)
+                <i class="bi bi-box me-2"></i>{{ _('Products (Inventory)') }}
             </a>
         </li>
     </ul>

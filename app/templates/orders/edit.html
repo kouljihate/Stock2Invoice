@@ -1,52 +1,52 @@
-{% extends 'base/layout.html' %}
-{% block title %}New Order — StockInvoice{% endblock %}
+﻿{% extends 'base/layout.html' %}
+{% block title %}{{ _('New Order') }} — Maure STC{% endblock %}
 {% block content %}
-<h4 class="mb-4"><i class="bi bi-plus-circle me-2"></i>New Order</h4>
+<h4 class="mb-4"><i class="bi bi-plus-circle me-2"></i>{{ _('New Order') }}</h4>
 
 <form method="POST" action="" class="card shadow-sm">
     <div class="card-body">
         <div class="row mb-3">
             <div class="col-md-4">
-                <label class="form-label">Customer Name *</label>
+                <label class="form-label">{{ _('Customer Name') }} *</label>
                 <input type="text" name="customer_name" class="form-control" value="{{ order.get('customer_name', '') if order else '' }}" required>
             </div>
             <div class="col-md-4">
-                <label class="form-label">Customer Email</label>
+                <label class="form-label">{{ _('Customer Email') }}</label>
                 <input type="email" name="customer_email" class="form-control" value="{{ order.get('customer_email', '') if order else '' }}">
             </div>
             <div class="col-md-4">
-                <label class="form-label">Status</label>
+                <label class="form-label">{{ _('Status') }}</label>
                 <select name="status" class="form-select">
-                    <option value="pending" {% if order and order.get('status') == 'pending' %}selected{% endif %}>Pending</option>
-                    <option value="confirmed" {% if order and order.get('status') == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                    <option value="pending" {% if order and order.get('status') == 'pending' %}selected{% endif %}>{{ _('Pending') }}</option>
+                    <option value="confirmed" {% if order and order.get('status') == 'confirmed' %}selected{% endif %}>{{ _('Confirmed') }}</option>
                 </select>
             </div>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Customer Address</label>
+            <label class="form-label">{{ _('Customer Address') }}</label>
             <textarea name="customer_address" class="form-control" rows="2">{{ order.get('customer_address', '') if order else '' }}</textarea>
         </div>
 
-        <h5 class="mt-4 mb-3">Line Items</h5>
+        <h5 class="mt-4 mb-3">{{ _('Line Items') }}</h5>
         <div id="line-items">
             <div class="row g-2 mb-2 line-item">
                 <div class="col-md-4">
                     <select name="sku" class="form-select product-select" required>
-                        <option value="">-- Select Product --</option>
+                        <option value="">{{ _('-- Select Product --') }}</option>
                         {% for p in products %}
                         <option value="{{ p.sku }}" data-name="{{ p.name }}" data-price="{{ p.unit_price }}" data-qty="{{ p.quantity }}">
-                            [{{ p.sku }}] {{ p.name }} — ${{ p.unit_price }} ({{ p.quantity }} in stock)
+                            [{{ p.sku }}] {{ p.name }} — ${{ p.unit_price }} ({{ p.quantity }} {{ _('in stock') }})
                         </option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="col-md-2">
                     <input type="hidden" name="name" class="product-name" value="">
-                    <input type="number" name="quantity" class="form-control product-qty" placeholder="Qty" min="1" required>
+                    <input type="number" name="quantity" class="form-control product-qty" placeholder="{{ _('Qty') }}" min="1" required>
                 </div>
                 <div class="col-md-2">
-                    <input type="number" step="0.01" name="unit_price" class="form-control product-price" placeholder="Price" min="0" required>
+                    <input type="number" step="0.01" name="unit_price" class="form-control product-price" placeholder="{{ _('Price') }}" min="0" required>
                 </div>
                 <div class="col-md-2">
                     <button type="button" class="btn btn-outline-danger remove-item"><i class="bi bi-x-lg"></i></button>
@@ -54,30 +54,30 @@
             </div>
         </div>
         <button type="button" class="btn btn-sm btn-outline-success mb-3" id="add-item">
-            <i class="bi bi-plus-lg me-1"></i>Add Item
+            <i class="bi bi-plus-lg me-1"></i>{{ _('Add Item') }}
         </button>
 
         <div class="row mb-3 mt-3">
             <div class="col-md-3">
-                <label class="form-label">Discount (%)</label>
+                <label class="form-label">{{ _('Discount') }} (%)</label>
                 <input type="number" step="0.01" name="discount_percent" class="form-control" value="{{ order.get('discount_percent', 0) if order else 0 }}" min="0" max="100">
             </div>
             <div class="col-md-3">
-                <label class="form-label">Tax (%)</label>
+                <label class="form-label">{{ _('Tax') }} (%)</label>
                 <input type="number" step="0.01" name="tax_percent" class="form-control" value="{{ order.get('tax_percent', 10) if order else 10 }}" min="0" max="100">
             </div>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Notes</label>
+            <label class="form-label">{{ _('Notes') }}</label>
             <textarea name="notes" class="form-control" rows="2">{{ order.get('notes', '') if order else '' }}</textarea>
         </div>
 
         <div class="d-flex gap-2">
             <button type="submit" class="btn btn-primary">
-                <i class="bi bi-check-lg me-1"></i>Create Order
+                <i class="bi bi-check-lg me-1"></i>{{ _('Create Order') }}
             </button>
-            <a href="{% if mode == 'mobile' %}{{ url_for('mobile_orders.list_orders') }}{% else %}{{ url_for('web_orders.list_orders') }}{% endif %}" class="btn btn-outline-secondary">Cancel</a>
+            <a href="{% if mode == 'mobile' %}{{ url_for('mobile_orders.list_orders') }}{% else %}{{ url_for('web_orders.list_orders') }}{% endif %}" class="btn btn-outline-secondary">{{ _('Cancel') }}</a>
         </div>
     </div>
 </form>

@@ -1,1 +1,1 @@
-console.log('StockInvoice Web loaded');
+﻿console.log('Maure STC Web loaded');
