@@ -150,6 +150,7 @@ def view_product(product_id):
 @web_stock_bp.route('/bulk-upload', methods=['GET', 'POST'])
 @jwt_required()
 def bulk_upload():
+    import json
     user = _get_user()
     cid = _company_id()
     user_id = get_jwt_identity()
@@ -157,26 +158,61 @@ def bulk_upload():
     if request.method == 'GET':
         return render_template('stock/bulk_upload.html', mode='web',
                                user=UserModel.to_dict(user) if user else None,
-                               results=None)
+                               preview=None, results=None)
+
+    json_data = request.form.get('json_data')
+    if json_data:
+        rows = json.loads(json_data)
+        from bson.objectid import ObjectId
+        results = []
+        success_count = 0
+        for idx, row in enumerate(rows):
+            entry = {'row': idx + 1, 'name': row.get('name', ''), 'sku': row.get('sku', ''), 'errors': [], 'status': ''}
+            data = {
+                'name': row.get('name', ''),
+                'sku': row.get('sku', ''),
+                'description': row.get('description', ''),
+                'quantity': row.get('quantity', '0'),
+                'unit_price': row.get('unit_price', '0'),
+                'category': row.get('category', ''),
+                'tax_rate': row.get('tax_rate', '0'),
+                'low_stock_threshold': row.get('low_stock_threshold', '5'),
+            }
+            errs = StockService.validate(data, cid)
+            if errs:
+                entry['errors'] = errs
+                entry['status'] = 'error'
+                results.append(entry)
+                continue
+            try:
+                StockService.create(data, user_id, cid)
+                entry['status'] = 'success'
+                success_count += 1
+            except Exception as e:
+                entry['errors'] = [str(e)]
+                entry['status'] = 'error'
+            results.append(entry)
+        flash(f'{success_count} of {len(rows)} products imported successfully.', 'success')
+        return render_template('stock/bulk_upload.html', mode='web',
+                               user=UserModel.to_dict(user) if user else None,
+                               preview=None, results=results)
 
     if 'file' not in request.files:
         flash('No file selected.', 'danger')
         return render_template('stock/bulk_upload.html', mode='web',
                                user=UserModel.to_dict(user) if user else None,
-                               results=None)
+                               preview=None, results=None)
 
     file = request.files['file']
     if not file.filename:
         flash('No file selected.', 'danger')
         return render_template('stock/bulk_upload.html', mode='web',
                                user=UserModel.to_dict(user) if user else None,
-                               results=None)
+                               preview=None, results=None)
 
     ext = file.filename.rsplit('.', 1)[-1].lower() if '.' in file.filename else ''
-
     rows = []
     if ext == 'json':
-        import json
         try:
             raw = json.load(file.stream)
             rows = raw if isinstance(raw, list) else [raw]
@@ -184,7 +220,7 @@ def bulk_upload():
             flash(f'Invalid JSON file: {e}', 'danger')
             return render_template('stock/bulk_upload.html', mode='web',
                                    user=UserModel.to_dict(user) if user else None,
-                                   results=None)
+                                   preview=None, results=None)
     elif ext == 'csv':
         import csv, io
         try:
@@ -195,53 +231,32 @@ def bulk_upload():
                 flash('CSV file is empty.', 'danger')
                 return render_template('stock/bulk_upload.html', mode='web',
                                        user=UserModel.to_dict(user) if user else None,
-                                       results=None)
+                                       preview=None, results=None)
         except Exception as e:
             flash(f'Invalid CSV file: {e}', 'danger')
             return render_template('stock/bulk_upload.html', mode='web',
                                    user=UserModel.to_dict(user) if user else None,
-                                   results=None)
+                                   preview=None, results=None)
     else:
         flash('Unsupported format. Please upload a JSON or CSV file.', 'danger')
         return render_template('stock/bulk_upload.html', mode='web',
                                user=UserModel.to_dict(user) if user else None,
-                               results=None)
+                               preview=None, results=None)
 
-    from bson.objectid import ObjectId
-    results = []
-    success_count = 0
-    for idx, row in enumerate(rows):
-        row = {k.strip(): (v.strip() if isinstance(v, str) else v) for k, v in row.items()}
-        entry = {'row': idx + 1, 'name': row.get('name', ''), 'sku': row.get('sku', ''), 'errors': [], 'status': ''}
+    cleaned = []
+    for row in rows:
+        r = {k.strip(): (v.strip() if isinstance(v, str) else v) for k, v in row.items()}
+        cleaned.append({
+            'name': r.get('name', ''),
+            'sku': r.get('sku', ''),
+            'description': r.get('description', ''),
+            'quantity': r.get('quantity', '0'),
+            'unit_price': r.get('unit_price', '0'),
+            'category': r.get('category', ''),
+            'tax_rate': r.get('tax_rate', '0'),
+            'low_stock_threshold': r.get('low_stock_threshold', '5'),
+        })
 
-        data = {
-            'name': row.get('name', ''),
-            'sku': row.get('sku', ''),
-            'description': row.get('description', ''),
-            'quantity': row.get('quantity', '0'),
-            'unit_price': row.get('unit_price', '0'),
-            'category': row.get('category', ''),
-            'tax_rate': row.get('tax_rate', '0'),
-            'low_stock_threshold': row.get('low_stock_threshold', '5'),
-        }
-
-        errs = StockService.validate(data, cid)
-        if errs:
-            entry['errors'] = errs
-            entry['status'] = 'error'
-            results.append(entry)
-            continue
-
-        try:
-            StockService.create(data, user_id, cid)
-            entry['status'] = 'success'
-            success_count += 1
-        except Exception as e:
-            entry['errors'] = [str(e)]
-            entry['status'] = 'error'
-        results.append(entry)
-
-    flash(f'{success_count} of {len(rows)} products imported successfully.', 'success')
     return render_template('stock/bulk_upload.html', mode='web',
                            user=UserModel.to_dict(user) if user else None,
-                           results=results)
+                           preview=cleaned, results=None)

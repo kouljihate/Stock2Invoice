@@ -1,7 +1,7 @@
 :root {
   --font-default: 'Comfortaa', sans-serif;
   --font-arabic: 'Ruwudu', sans-serif;
-  --font-french: 'Tangerine', cursive;
+  --font-french: 'Comfortaa', sans-serif;
 }
 
 html[data-lang="en"] body {

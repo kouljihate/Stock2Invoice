@@ -2,51 +2,14 @@
 {% block title %}Bulk Upload Products — StockInvoice{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-upload me-2"></i>Bulk Upload Products</h4>
+    <h4 class="mb-0"><i class="bi bi-upload me-2"></i>Add Bulk Products</h4>
     <a href="{{ url_for('web_stock.list_products') }}" class="btn btn-outline-secondary btn-sm">
         <i class="bi bi-arrow-left me-1"></i>Back to Products
     </a>
 </div>
 
-<div class="row g-3">
-    <div class="col-md-6">
-        <div class="card shadow-sm">
-            <div class="card-header"><strong>Upload File</strong></div>
-            <div class="card-body">
-                <form method="POST" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label class="form-label">Select JSON or CSV file</label>
-                        <input type="file" name="file" class="form-control" accept=".json,.csv" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-upload me-1"></i>Upload & Import
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="card shadow-sm">
-            <div class="card-header"><strong>File Format</strong></div>
-            <div class="card-body small">
-                <p class="mb-2"><strong>CSV</strong> — Include headers row:</p>
-                <pre class="bg-light p-2 rounded"><code>name,sku,description,quantity,unit_price,category,tax_rate,low_stock_threshold
-Product A,SKU001,Description,10,15.99,General,20,5</code></pre>
-                <p class="mb-0 mt-2"><strong>JSON</strong> — Array of objects:</p>
-                <pre class="bg-light p-2 rounded"><code>[{
-  "name": "Product A",
-  "sku": "SKU001",
-  "quantity": 10,
-  "unit_price": 15.99
-}]</code></pre>
-                <p class="text-muted mt-2 mb-0">Only <code>name</code> and <code>sku</code> are required. Other fields default to 0 or empty.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
 {% if results %}
-<div class="card shadow-sm mt-3">
+<div class="card shadow-sm">
     <div class="card-header"><strong>Import Results</strong></div>
     <div class="card-body p-0">
         <table class="table table-hover mb-0 small">
@@ -87,6 +50,107 @@ Product A,SKU001,Description,10,15.99,General,20,5</code></pre>
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+    <div class="card-footer">
+        <a href="{{ url_for('web_stock.bulk_upload') }}" class="btn btn-primary btn-sm">
+            <i class="bi bi-upload me-1"></i>Upload Another File
+        </a>
+    </div>
+</div>
+
+{% elif preview %}
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <strong><i class="bi bi-eye me-1"></i>Preview — {{ preview|length }} product(s) loaded</strong>
+    </div>
+    <div class="card-body p-0">
+        <form method="POST" id="saveForm">
+            <input type="hidden" name="json_data" id="jsonData" value="">
+            <table class="table table-hover mb-0 small">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>SKU</th>
+                        <th>Description</th>
+                        <th class="text-center">Qty</th>
+                        <th class="text-end">Price</th>
+                        <th>Category</th>
+                        <th class="text-center">Tax %</th>
+                        <th class="text-center">Threshold</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in preview %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ p.name }}</td>
+                        <td><code>{{ p.sku }}</code></td>
+                        <td><small class="text-muted">{{ p.description[:40] if p.description else '-' }}</small></td>
+                        <td class="text-center">{{ p.quantity }}</td>
+                        <td class="text-end">{{ p.unit_price }}</td>
+                        <td>{{ p.category or '-' }}</td>
+                        <td class="text-center">{{ p.tax_rate }}</td>
+                        <td class="text-center">{{ p.low_stock_threshold }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+        <a href="{{ url_for('web_stock.bulk_upload') }}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-x me-1"></i>Cancel
+        </a>
+        <button type="button" class="btn btn-success" onclick="saveAll()">
+            <i class="bi bi-check-lg me-1"></i>Validate & Save All
+        </button>
+    </div>
+</div>
+
+<script>
+function saveAll() {
+    const preview = {{ preview|tojson|safe }};
+    document.getElementById('jsonData').value = JSON.stringify(preview);
+    document.getElementById('saveForm').submit();
+}
+</script>
+
+{% else %}
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header"><strong>Upload File</strong></div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label">Select JSON or CSV file</label>
+                        <input type="file" name="file" class="form-control" accept=".json,.csv" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-upload me-1"></i>Load File
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header"><strong>File Format</strong></div>
+            <div class="card-body small">
+                <p class="mb-2"><strong>CSV</strong> — Include headers row:</p>
+                <pre class="bg-light p-2 rounded"><code>name,sku,description,quantity,unit_price,category,tax_rate,low_stock_threshold
+Product A,SKU001,Description,10,15.99,General,20,5</code></pre>
+                <p class="mb-0 mt-2"><strong>JSON</strong> — Array of objects:</p>
+                <pre class="bg-light p-2 rounded"><code>[{
+  "name": "Product A",
+  "sku": "SKU001",
+  "quantity": 10,
+  "unit_price": 15.99
+}]</code></pre>
+                <p class="text-muted mt-2 mb-0">Only <code>name</code> and <code>sku</code> are required.</p>
+            </div>
+        </div>
     </div>
 </div>
 {% endif %}
