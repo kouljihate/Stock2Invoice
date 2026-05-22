@@ -75,11 +75,12 @@
                         <th>{{ _('Category') }}</th>
                         <th>{{ _('Subcategory') }}</th>
                         <th>{{ _('Brand') }}</th>
-                        <th>{{ _('Pack Size') }}</th>
-                        <th>{{ _('Pack Unit') }}</th>
+                        <th>{{ _('Pack Type') }}</th>
+                        <th>{{ _('Pack Size / Unit') }}</th>
                         <th>{{ _('Packs') }}</th>
-                        <th class="text-center">{{ _('Qty') }}</th>
-                        <th class="text-end">{{ _('Price') }}</th>
+                        <th class="text-center">{{ _('Stock Qty') }}</th>
+                        <th class="text-end">{{ _('Sale Price') }}</th>
+                        <th class="text-end">{{ _('Purchase Price') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -91,11 +92,12 @@
                         <td>{{ p.category or '-' }}</td>
                         <td>{{ p.subcategory or '-' }}</td>
                         <td>{{ p.brand or '-' }}</td>
-                        <td>{{ p.pack_size or '0' }}</td>
-                        <td>{{ p.pack_size_unit or '-' }}</td>
+                        <td>{{ p.package_type or '-' }}</td>
+                        <td>{{ p.pack_size or '0' }}{% if p.pack_size_unit %} / {{ p.pack_size_unit }}{% endif %}</td>
                         <td>{{ p.number_of_pack or '0' }}</td>
                         <td class="text-center">{{ p.quantity }}</td>
                         <td class="text-end">{{ p.price }}</td>
+                        <td class="text-end">{{ p.purchase_price or '0' }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -143,24 +145,27 @@ function saveAll() {
             <div class="card-header"><strong>{{ _('File Format') }}</strong></div>
             <div class="card-body small">
                 <p class="mb-2"><strong>{{ _('CSV') }}</strong> — {{ _('Include headers row:') }}</p>
-                <pre class="bg-light p-2 rounded"><code>name,sku,description,quantity,price,category,subcategory,package_type,brand,pack_size,pack_size_unit,number_of_pack,quantity_min
-Product A,SKU001,Description,10,15.99,General,SubA,Package,BrandX,5,kg,2,5</code></pre>
+                <pre class="bg-light p-2 rounded"><code>name,sku,description,stock_quantity,sale_price,purchase_price,category,subcategory,package_type,brand,pack_size,pack_size_unit,number_of_pack,stock_min_quantity,status
+Product A,SKU001,Description,10,15.99,8.50,General,SubA,Package,BrandX,5,kg,2,5,actif</code></pre>
                 <p class="mb-0 mt-2"><strong>{{ _('JSON') }}</strong> — {{ _('Array of objects:') }}</p>
                 <pre class="bg-light p-2 rounded"><code>[{
-  "name": "Product A",
-  "sku": "SKU001",
-  "quantity": 10,
-  "price": 15.99,
-  "category": "General",
-  "subcategory": "SubA",
-  "package_type": "Package",
-  "brand": "BrandX",
-  "pack_size": 5,
-  "pack_size_unit": "kg",
-  "number_of_pack": 2,
-  "quantity_min": 5
+  "sku": "PRD-0050",
+  "name": "Raccord coudé 90°",
+  "category": "Accessoires",
+  "subcategory": "Raccord",
+  "package_type": "pièce",
+  "brand": "FlexPool",
+  "description": "Raccord coudé pour tuyauterie de piscine.",
+  "pack_size": 1,
+  "pack_size_unit": "pc",
+  "number_of_pack": 60,
+  "stock_quantity": 60,
+  "stock_min_quantity": 20,
+  "purchase_price": 1.4,
+  "sale_price": 2.8,
+  "status": "actif"
 }]</code></pre>
-                <p class="text-muted mt-2 mb-0">{{ _('Only name and sku are required.') }}</p>
+                <p class="text-muted mt-2 mb-0">{{ _('Only name and sku are required. Other fields default to 0 or empty.') }}</p>
             </div>
         </div>
     </div>

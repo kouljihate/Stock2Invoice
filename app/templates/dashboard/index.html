@@ -7,7 +7,7 @@
 </div>
 
 <div class="row g-3 mb-4">
-    <div class="col-6 col-md-3">
+    <div class="col-6 col-md-2">
         <div class="card border-primary border-2 text-center h-100">
             <div class="card-body">
                 <h5 class="text-primary mb-1">{{ product_count }}</h5>
@@ -15,7 +15,7 @@
             </div>
         </div>
     </div>
-    <div class="col-6 col-md-3">
+    <div class="col-6 col-md-2">
         <div class="card border-success border-2 text-center h-100">
             <div class="card-body">
                 <h5 class="text-success mb-1">{{  "{:,.2f}".format(valuation.total_value)|replace(",", " ")  }} MAD</h5>
@@ -23,7 +23,7 @@
             </div>
         </div>
     </div>
-    <div class="col-6 col-md-3">
+    <div class="col-6 col-md-2">
         <div class="card border-warning border-2 text-center h-100">
             <div class="card-body">
                 <h5 class="text-warning mb-1">{{ low_stock_count }}</h5>
@@ -31,11 +31,27 @@
             </div>
         </div>
     </div>
-    <div class="col-6 col-md-3">
+    <div class="col-6 col-md-2">
         <div class="card border-info border-2 text-center h-100">
             <div class="card-body">
                 <h5 class="text-info mb-1">{{ invoice_counts.open if invoice_counts.open is defined else invoice_counts.draft + invoice_counts.sent }}</h5>
                 <small class="text-muted">{{ _('Open Invoices') }}</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="card border-secondary border-2 text-center h-100">
+            <div class="card-body">
+                <h5 class="text-secondary mb-1">{{ "{:,.2f}".format(month_sales)|replace(",", " ") }} MAD</h5>
+                <small class="text-muted">{{ _('Sales (Month)') }}</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-2">
+        <div class="card border-dark border-2 text-center h-100">
+            <div class="card-body">
+                <h5 class="text-dark mb-1">{{ "{:,.2f}".format(year_sales)|replace(",", " ") }} MAD</h5>
+                <small class="text-muted">{{ _('Sales (Year)') }}</small>
             </div>
         </div>
     </div>
@@ -67,7 +83,7 @@
                         <div class="text-end">
                             <span class="badge bg-{% if inv.status == 'paid' %}success{% elif inv.status == 'draft' %}secondary{% elif inv.status == 'sent' %}info{% else %}danger{% endif %}">{{ _(inv.status) }}</span>
                             <br>
-                            <small>${{ inv.total }}</small>
+                            <small>{{ inv.total }} MAD</small>
                         </div>
                     </a>
                     {% else %}

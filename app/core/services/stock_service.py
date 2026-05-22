@@ -25,6 +25,8 @@ class StockService:
         errors.append(validate_string_length(data.get('sku'), 'SKU', 1, 100))
         errors.append(validate_integer(data.get('quantity'), 'Quantity', 0))
         errors.append(validate_numeric(data.get('price'), 'Price', 0))
+        if data.get('purchase_price') is not None:
+            errors.append(validate_numeric(data.get('purchase_price'), 'Purchase price', 0))
         
         if data.get('quantity_min') is not None:
             errors.append(validate_integer(data.get('quantity_min'), 'Min quantity', 0))
@@ -42,6 +44,7 @@ class StockService:
             'description': (data.get('description') or '').strip(),
             'quantity': int(data.get('quantity', 0)),
             'price': float(data.get('price', 0)),
+            'purchase_price': float(data.get('purchase_price', 0)),
             'category': (data.get('category') or '').strip(),
             'subcategory': (data.get('subcategory') or '').strip(),
             'package_type': (data.get('package_type') or '').strip(),
@@ -91,6 +94,7 @@ class StockService:
             'description': (data.get('description') or '').strip(),
             'quantity': int(data.get('quantity', old_qty)),
             'price': float(data.get('price', product.get('price', 0))),
+            'purchase_price': float(data.get('purchase_price', product.get('purchase_price', 0))),
             'category': (data.get('category') or '').strip(),
             'subcategory': (data.get('subcategory') or '').strip(),
             'package_type': (data.get('package_type') or '').strip(),

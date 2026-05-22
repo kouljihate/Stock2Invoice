@@ -55,6 +55,15 @@ def create_app(config_class=Config):
             lang = 'en'
         return render_template('base/token_expired.html', current_lang=lang, _=lambda key: _translate(key, lang)), 401
 
+    @jwt.unauthorized_loader
+    def unauthorized_callback(reason):
+        from flask import request, redirect, url_for, jsonify
+        if request.path.startswith('/web/') or request.path.startswith('/mobile/'):
+            if request.path.endswith('/api/lookup') or request.is_json or request.accept_mimetypes.accept_json:
+                return jsonify({'msg': str(reason)}), 401
+            return redirect(url_for('web_auth.login'))
+        return jsonify({'msg': str(reason)}), 401
+
     setup_logging(app)
     register_error_handlers(app)
 

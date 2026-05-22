@@ -80,6 +80,7 @@ class ProductModel:
             'description': item.get('description', ''),
             'quantity': item.get('quantity', 0),
             'price': float(item.get('price', 0)),
+            'purchase_price': float(item.get('purchase_price', 0)),
             'category': item.get('category', ''),
             'subcategory': item.get('subcategory', ''),
             'package_type': item.get('package_type', ''),

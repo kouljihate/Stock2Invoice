@@ -1187,4 +1187,19 @@ _fr['Size'] = 'Taille'
 _ar['Unit'] = 'الوحدة'
 _fr['Unit'] = 'Unité'
 
+_ar['Stock Qty'] = 'الكمية المخزنة'
+_fr['Stock Qty'] = 'Qté en stock'
+
+_ar['Sale Price'] = 'سعر البيع'
+_fr['Sale Price'] = 'Prix de vente'
+
+_ar['Purchase Price'] = 'سعر الشراء'
+_fr['Purchase Price'] = "Prix d'achat"
+
+_ar['Sales (Month)'] = 'المبيعات (الشهر)'
+_fr['Sales (Month)'] = 'Ventes (Mois)'
+
+_ar['Sales (Year)'] = 'المبيعات (السنة)'
+_fr['Sales (Year)'] = 'Ventes (Année)'
+
 

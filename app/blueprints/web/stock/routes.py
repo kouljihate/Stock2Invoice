@@ -181,12 +181,16 @@ def bulk_upload():
         success_count = 0
         for idx, row in enumerate(rows):
             entry = {'row': idx + 1, 'name': row.get('name', ''), 'sku': row.get('sku', ''), 'errors': [], 'status': ''}
+            def _status(v):
+                if not v: return 'active'
+                return 'active' if v.strip().lower() in ('actif', 'active', '') else v.strip().lower()
             data = {
                 'name': row.get('name', ''),
                 'sku': row.get('sku', ''),
                 'description': row.get('description', ''),
-                'quantity': row.get('quantity', '0'),
-                'price': row.get('price', '0'),
+                'quantity': row.get('stock_quantity', row.get('quantity', '0')),
+                'price': row.get('sale_price', row.get('price', '0')),
+                'purchase_price': row.get('purchase_price', '0'),
                 'category': row.get('category', ''),
                 'subcategory': row.get('subcategory', ''),
                 'package_type': row.get('package_type', ''),
@@ -194,7 +198,8 @@ def bulk_upload():
                 'pack_size': row.get('pack_size', '0'),
                 'pack_size_unit': row.get('pack_size_unit', ''),
                 'number_of_pack': row.get('number_of_pack', '0'),
-                'quantity_min': row.get('quantity_min', '5'),
+                'quantity_min': row.get('stock_min_quantity', row.get('quantity_min', '5')),
+                'status': _status(row.get('status', '')),
             }
             errs = StockService.validate(data, cid)
             if errs:
@@ -268,8 +273,9 @@ def bulk_upload():
             'name': r.get('name', ''),
             'sku': r.get('sku', ''),
             'description': r.get('description', ''),
-            'quantity': r.get('quantity', '0'),
-            'price': r.get('price', '0'),
+            'quantity': r.get('stock_quantity', r.get('quantity', '0')),
+            'price': r.get('sale_price', r.get('price', '0')),
+            'purchase_price': r.get('purchase_price', '0'),
             'category': r.get('category', ''),
             'subcategory': r.get('subcategory', ''),
             'package_type': r.get('package_type', ''),
@@ -277,7 +283,8 @@ def bulk_upload():
             'pack_size': r.get('pack_size', '0'),
             'pack_size_unit': r.get('pack_size_unit', ''),
             'number_of_pack': r.get('number_of_pack', '0'),
-            'quantity_min': r.get('quantity_min', '5'),
+            'quantity_min': r.get('stock_min_quantity', r.get('quantity_min', '5')),
+            'status': r.get('status', 'active'),
         })
 
     return render_template('stock/bulk_upload.html', mode='web',

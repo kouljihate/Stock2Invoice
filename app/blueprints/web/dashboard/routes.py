@@ -35,6 +35,8 @@ def index():
         recent_movements = StockService.get_recent_movements(10, cid)
         valuation = StockService.get_total_valuation(cid)
         category_summary = StockService.get_category_summary(cid)
+        month_sales = InvoiceService.get_month_sales(cid)
+        year_sales = InvoiceService.get_year_sales(cid)
 
         return render_template('dashboard/index.html',
                                mode='web',
@@ -46,7 +48,9 @@ def index():
                                recent_invoices=recent_invoices,
                                recent_movements=recent_movements,
                                valuation=valuation,
-                               category_summary=category_summary)
+                               category_summary=category_summary,
+                               month_sales=month_sales,
+                               year_sales=year_sales)
     except Exception as e:
         logger.exception('Dashboard load error')
         return render_template('base/error.html', code=500, message='Could not load dashboard.'), 500

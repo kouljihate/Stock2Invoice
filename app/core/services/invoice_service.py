@@ -1,7 +1,8 @@
 import logging
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from bson.objectid import ObjectId
 from app.core.models.invoice_model import InvoiceModel
+from app.extensions.db import mongo
 from app.core.models.product_model import ProductModel
 from app.core.services.stock_service import StockService
 from app.core.validators.common_validators import (
@@ -187,3 +188,29 @@ class InvoiceService:
             'paid': paid,
             'cancelled': cancelled,
         }
+
+    @staticmethod
+    def get_month_sales(company_id=None):
+        now = datetime.now(timezone.utc)
+        start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        match = {'status': 'paid', 'created_at': {'$gte': start}}
+        if company_id:
+            match['company_id'] = ObjectId(company_id)
+        result = list(mongo.db[InvoiceModel.collection].aggregate([
+            {'$match': match},
+            {'$group': {'_id': None, 'total': {'$sum': '$total'}}},
+        ]))
+        return round(result[0]['total'], 2) if result else 0.0
+
+    @staticmethod
+    def get_year_sales(company_id=None):
+        now = datetime.now(timezone.utc)
+        start = now.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
+        match = {'status': 'paid', 'created_at': {'$gte': start}}
+        if company_id:
+            match['company_id'] = ObjectId(company_id)
+        result = list(mongo.db[InvoiceModel.collection].aggregate([
+            {'$match': match},
+            {'$group': {'_id': None, 'total': {'$sum': '$total'}}},
+        ]))
+        return round(result[0]['total'], 2) if result else 0.0
