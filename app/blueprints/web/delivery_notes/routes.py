@@ -4,6 +4,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.models.user_model import UserModel
 from app.core.models.delivery_note_model import DeliveryNoteModel
 from app.core.models.order_model import OrderModel
+from app.core.services.event_service import EventService
 from app.core.utils.helpers import paginate, oid
 
 logger = logging.getLogger(__name__)
@@ -56,6 +57,10 @@ def create_delivery_note():
             'created_by': oid(get_jwt_identity()),
         }
         DeliveryNoteModel.create(payload)
+        user_id = get_jwt_identity()
+        user_obj = UserModel.find_by_id(user_id)
+        EventService.record(cid, 'delivery_note', str(payload.get('_id','')), dn_number, 'created',
+                            user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash(f'Delivery note {dn_number} created.', 'success')
         return redirect(url_for('web_delivery_notes.list_delivery_notes'))
     except Exception as e:
@@ -71,7 +76,12 @@ def delete_delivery_note(dn_id):
     if not dn:
         flash('Delivery note not found.', 'danger')
     else:
+        cid = _company_id()
+        user_id = get_jwt_identity()
+        user_obj = UserModel.find_by_id(user_id)
         DeliveryNoteModel.delete(dn_id)
+        EventService.record(cid, 'delivery_note', dn_id, dn.get('dn_number',''), 'deleted',
+                            user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash('Delivery note deleted.', 'success')
     return redirect(url_for('web_delivery_notes.list_delivery_notes'))
 

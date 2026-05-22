@@ -1,0 +1,91 @@
+{% extends 'base/layout.html' %}
+{% block title %}{{ _('Activity Log') }} — Maure STC{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><i class="bi bi-activity me-2"></i>{{ _('Activity Log') }}</h4>
+</div>
+
+<form method="GET" class="row g-2 mb-3">
+    <div class="col-md-4">
+        <select name="entity_type" class="form-select" onchange="this.form.submit()">
+            <option value="">{{ _('All Entities') }}</option>
+            <option value="order" {{ 'selected' if request.args.get('entity_type') == 'order' }}>{{ _('Order') }}</option>
+            <option value="invoice" {{ 'selected' if request.args.get('entity_type') == 'invoice' }}>{{ _('Invoice') }}</option>
+            <option value="quote" {{ 'selected' if request.args.get('entity_type') == 'quote' }}>{{ _('Quote') }}</option>
+            <option value="delivery_note" {{ 'selected' if request.args.get('entity_type') == 'delivery_note' }}>{{ _('Delivery Note') }}</option>
+            <option value="product" {{ 'selected' if request.args.get('entity_type') == 'product' }}>{{ _('Product') }}</option>
+            <option value="customer" {{ 'selected' if request.args.get('entity_type') == 'customer' }}>{{ _('Customer') }}</option>
+            <option value="supplier" {{ 'selected' if request.args.get('entity_type') == 'supplier' }}>{{ _('Supplier') }}</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select name="action" class="form-select" onchange="this.form.submit()">
+            <option value="">{{ _('All Actions') }}</option>
+            <option value="created" {{ 'selected' if request.args.get('action') == 'created' }}>{{ _('Created') }}</option>
+            <option value="updated" {{ 'selected' if request.args.get('action') == 'updated' }}>{{ _('Updated') }}</option>
+            <option value="status_changed" {{ 'selected' if request.args.get('action') == 'status_changed' }}>{{ _('Status Changed') }}</option>
+            <option value="sent" {{ 'selected' if request.args.get('action') == 'sent' }}>{{ _('Sent') }}</option>
+            <option value="validated" {{ 'selected' if request.args.get('action') == 'validated' }}>{{ _('Validated') }}</option>
+            <option value="deleted" {{ 'selected' if request.args.get('action') == 'deleted' }}>{{ _('Deleted') }}</option>
+            <option value="stock_movement" {{ 'selected' if request.args.get('action') == 'stock_movement' }}>{{ _('Stock Movement') }}</option>
+        </select>
+    </div>
+</form>
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0 small align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>{{ _('Date') }}</th>
+                    <th>{{ _('Entity') }}</th>
+                    <th>{{ _('Reference') }}</th>
+                    <th>{{ _('Action') }}</th>
+                    <th>{{ _('Details') }}</th>
+                    <th>{{ _('User') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ev in events %}
+                <tr>
+                    <td><small>{{ ev.created_at[:19] if ev.created_at else '-' }}</small></td>
+                    <td><span class="badge bg-secondary">{{ _(ev.entity_type|replace('_', ' ')|title) }}</span></td>
+                    <td><code>{{ ev.entity_number or ev.entity_id[:8] }}</code></td>
+                    <td><span class="badge bg-{{ 'success' if ev.action in ('created', 'sent') else 'warning' if ev.action in ('status_changed', 'updated') else 'danger' if ev.action == 'deleted' else 'info' }}">{{ _(ev.action|replace('_', ' ')|title) }}</span></td>
+                    <td>
+                        {% if ev.action == 'status_changed' %}
+                            {{ ev.changes.from }} → {{ ev.changes.to }}
+                        {% elif ev.action == 'stock_movement' %}
+                            {{ _('Qty:') }} {{ ev.changes.quantity }} ({{ ev.changes.reason }})
+                        {% elif ev.action == 'updated' %}
+                            {{ ev.changes.field }}: {{ ev.changes.old_value }} → {{ ev.changes.new_value }}
+                        {% elif ev.action == 'deleted' %}
+                            <span class="text-danger">{{ _('Deleted') }}</span>
+                        {% elif ev.action == 'validated' %}
+                            <span class="text-success">{{ _('Converted to order') }}</span>
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                    </td>
+                    <td><small>{{ ev.user_name or '-' }}</small></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" class="text-center text-muted py-4">{{ _('No events yet.') }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if pages > 1 %}
+<nav class="mt-3">
+    <ul class="pagination justify-content-center">
+        {% for p in range(1, pages + 1) %}
+        <li class="page-item {{ 'active' if p == page }}">
+            <a class="page-link" href="?page={{ p }}&per_page={{ per_page }}&entity_type={{ request.args.get('entity_type', '') }}&action={{ request.args.get('action', '') }}">{{ p }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

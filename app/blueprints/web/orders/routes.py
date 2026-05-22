@@ -5,6 +5,7 @@ from app.core.services.order_service import OrderService
 from app.core.models.order_model import OrderModel
 from app.core.models.product_model import ProductModel
 from app.core.models.user_model import UserModel
+from app.core.services.event_service import EventService
 from app.core.utils.helpers import paginate, oid
 
 logger = logging.getLogger(__name__)
@@ -90,6 +91,8 @@ def create_order():
 
         user_id = get_jwt_identity()
         order_id, order_number = OrderService.create(payload, user_id, cid)
+        user_obj = UserModel.find_by_id(user_id)
+        EventService.record(cid, 'order', order_id, order_number, 'created', user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash(f'Order {order_number} created.', 'success')
         return redirect(url_for('web_orders.view_order', order_id=order_id))
     except Exception as e:
@@ -124,7 +127,13 @@ def update_status(order_id):
             return redirect(url_for('web_orders.view_order', order_id=order_id))
         user_id = get_jwt_identity()
         cid = _company_id()
+        order = OrderService.get_by_id(order_id)
+        old_status = order.get('status') if order else ''
         OrderService.update(order_id, {'status': status}, user_id, cid)
+        user_obj = UserModel.find_by_id(user_id)
+        EventService.record(cid, 'order', order_id, order.get('order_number',''), 'status_changed',
+                            changes={'from': old_status, 'to': status},
+                            user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash('Order status updated.', 'success')
     except Exception as e:
         logger.exception('Order status update error')
@@ -139,7 +148,12 @@ def delete_order(order_id):
     if not order:
         flash('Order not found.', 'danger')
     else:
+        cid = _company_id()
+        user_id = get_jwt_identity()
+        user_obj = UserModel.find_by_id(user_id)
+        order_number = order.get('order_number', '')
         OrderModel.delete(order_id)
+        EventService.record(cid, 'order', order_id, order_number, 'deleted', user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash('Order deleted.', 'success')
     return redirect(url_for('web_orders.list_orders'))
 

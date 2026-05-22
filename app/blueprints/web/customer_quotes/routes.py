@@ -7,6 +7,7 @@ from app.core.models.user_model import UserModel
 from app.core.models.customer_model import CustomerModel
 from app.core.models.customer_quote_model import CustomerQuoteModel
 from app.core.services.order_service import OrderService
+from app.core.services.event_service import EventService
 from app.core.utils.helpers import paginate, oid
 
 logger = logging.getLogger(__name__)
@@ -95,6 +96,9 @@ def create_quote():
         payload['tax_amount'] = taxable * payload['tax_percent'] / 100
         payload['total'] = taxable + payload['tax_amount']
         CustomerQuoteModel.create(payload)
+        user_obj = UserModel.find_by_id(get_jwt_identity())
+        EventService.record(cid, 'quote', str(payload.get('_id','')), quote_number, 'created',
+                            user_id=get_jwt_identity(), user_name=user_obj.get('name','') if user_obj else '')
         flash(f'Quote {quote_number} created.', 'success')
         return redirect(url_for('web_customer_quotes.list_quotes'))
     except Exception as e:
@@ -180,6 +184,11 @@ def send_quote(quote_id):
         return redirect(url_for('web_customer_quotes.list_quotes'))
     try:
         CustomerQuoteModel.update(quote_id, {'status': 'sent'})
+        cid = _company_id()
+        user_id = get_jwt_identity()
+        user_obj = UserModel.find_by_id(user_id)
+        EventService.record(cid, 'quote', quote_id, quote.get('quote_number',''), 'sent',
+                            user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash('Quote sent to customer.', 'success')
     except Exception as e:
         logger.exception('Quote send error')
@@ -213,6 +222,11 @@ def validate_quote(quote_id):
             'generated_order_id': oid(order_id),
             'generated_order_number': order_number,
         })
+        user_obj = UserModel.find_by_id(user_id)
+        EventService.record(cid, 'quote', quote_id, quote.get('quote_number',''), 'validated',
+                            user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
+        EventService.record(cid, 'order', order_id, order_number, 'created',
+                            user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash(f'Quote converted to order {order_number}.', 'success')
         return redirect(url_for('web_orders.view_order', order_id=order_id))
     except Exception as e:
@@ -228,7 +242,12 @@ def delete_quote(quote_id):
     if not quote:
         flash('Quote not found.', 'danger')
     else:
+        cid = _company_id()
+        user_id = get_jwt_identity()
+        user_obj = UserModel.find_by_id(user_id)
         CustomerQuoteModel.delete(quote_id)
+        EventService.record(cid, 'quote', quote_id, quote.get('quote_number',''), 'deleted',
+                            user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash('Quote deleted.', 'success')
     return redirect(url_for('web_customer_quotes.list_quotes'))
 

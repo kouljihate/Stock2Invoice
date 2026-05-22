@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.models.user_model import UserModel
 from app.core.models.supplier_model import SupplierModel
+from app.core.services.event_service import EventService
 from app.core.utils.helpers import paginate
 
 logger = logging.getLogger(__name__)
@@ -68,6 +69,11 @@ def create_supplier():
             return render_template('suppliers/form.html', mode='web',
                                    user=UserModel.to_dict(user) if user else None, supplier=request.form)
         SupplierModel.create(data)
+        user_id = get_jwt_identity()
+        cid = _company_id()
+        user_obj = UserModel.find_by_id(user_id)
+        EventService.record(cid, 'supplier', '', data.get('name',''), 'created',
+                            user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash('Supplier created.', 'success')
         return redirect(url_for('web_suppliers.list_suppliers'))
     except Exception as e:
@@ -221,6 +227,12 @@ def edit_supplier(supplier_id):
             return render_template('suppliers/form.html', mode='web',
                                    user=UserModel.to_dict(user) if user else None, supplier=request.form)
         SupplierModel.update(supplier_id, data)
+        user_id = get_jwt_identity()
+        cid = _company_id()
+        user_obj = UserModel.find_by_id(user_id)
+        EventService.record(cid, 'supplier', supplier_id, data.get('name',''), 'updated',
+                            changes={'field': 'details', 'old_value': '', 'new_value': 'updated'},
+                            user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash('Supplier updated.', 'success')
         return redirect(url_for('web_suppliers.list_suppliers'))
     except Exception as e:
@@ -237,6 +249,11 @@ def delete_supplier(supplier_id):
     if not supplier:
         flash('Supplier not found.', 'danger')
     else:
+        cid = _company_id()
+        user_id = get_jwt_identity()
+        user_obj = UserModel.find_by_id(user_id)
         SupplierModel.delete(supplier_id)
+        EventService.record(cid, 'supplier', supplier_id, supplier.get('name',''), 'deleted',
+                            user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash('Supplier deleted.', 'success')
     return redirect(url_for('web_suppliers.list_suppliers'))

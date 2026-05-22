@@ -5,6 +5,7 @@ from app.core.services.invoice_service import InvoiceService
 from app.core.models.invoice_model import InvoiceModel
 from app.core.models.product_model import ProductModel
 from app.core.models.user_model import UserModel
+from app.core.services.event_service import EventService
 from app.core.utils.helpers import paginate, oid
 
 logger = logging.getLogger(__name__)
@@ -88,6 +89,8 @@ def create_invoice():
 
         user_id = get_jwt_identity()
         invoice_id, invoice_number = InvoiceService.create(payload, user_id, cid)
+        user_obj = UserModel.find_by_id(user_id)
+        EventService.record(cid, 'invoice', invoice_id, invoice_number, 'created', user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash(f'Invoice {invoice_number} created.', 'success')
         return redirect(url_for('web_invoices.view_invoice', invoice_id=invoice_id))
     except Exception as e:
@@ -119,7 +122,12 @@ def delete_invoice(invoice_id):
     if not inv:
         flash('Invoice not found.', 'danger')
     else:
+        cid = _company_id()
+        user_id = get_jwt_identity()
+        user_obj = UserModel.find_by_id(user_id)
+        inv_number = inv.get('invoice_number', '')
         InvoiceModel.delete(invoice_id)
+        EventService.record(cid, 'invoice', invoice_id, inv_number, 'deleted', user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash('Invoice deleted.', 'success')
     return redirect(url_for('web_invoices.list_invoices'))
 
@@ -147,7 +155,13 @@ def update_status(invoice_id):
             return redirect(url_for('web_invoices.view_invoice', invoice_id=invoice_id))
         user_id = get_jwt_identity()
         cid = _company_id()
+        inv = InvoiceService.get_by_id(invoice_id)
+        old_status = inv.get('status') if inv else ''
         InvoiceService.update(invoice_id, {'status': status}, user_id, cid)
+        user_obj = UserModel.find_by_id(user_id)
+        EventService.record(cid, 'invoice', invoice_id, inv.get('invoice_number','') if inv else '', 'status_changed',
+                            changes={'from': old_status, 'to': status},
+                            user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash('Invoice status updated.', 'success')
     except Exception as e:
         logger.exception('Invoice status update error')

@@ -1,4 +1,5 @@
 import logging
+import contextlib
 from bson.objectid import ObjectId
 from app.core.models.product_model import ProductModel
 from app.core.models.stock_movement_model import StockMovementModel
@@ -188,16 +189,10 @@ class StockService:
 
     @staticmethod
     def _record_movement(product_id, product_name, sku, mv_type, quantity, qty_before, qty_after, reason, user_id, company_id):
-        StockMovementModel.create({
-            'product_id': ObjectId(product_id) if isinstance(product_id, str) else product_id,
-            'product_name': product_name,
-            'sku': sku,
-            'type': mv_type,
-            'quantity': quantity,
-            'quantity_before': qty_before,
-            'quantity_after': qty_after,
-            'reason': reason,
-            'reference': '',
-            'company_id': ObjectId(company_id),
-            'created_by': ObjectId(user_id) if user_id and isinstance(user_id, str) else user_id,
-        })
+        from app.core.services.event_service import EventService
+        with contextlib.suppress(Exception):
+            EventService.record(company_id, 'product', product_id, sku, 'stock_movement',
+                                changes={'quantity': quantity, 'reason': reason,
+                                         'quantity_before': qty_before, 'quantity_after': qty_after,
+                                         'type': mv_type},
+                                user_id=user_id, user_name='')

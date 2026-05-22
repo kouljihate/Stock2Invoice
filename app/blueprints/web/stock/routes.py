@@ -4,6 +4,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.services.stock_service import StockService
 from app.core.models.user_model import UserModel
 from app.core.models.product_model import ProductModel
+from app.core.services.event_service import EventService
 from app.core.utils.helpers import paginate
 
 logger = logging.getLogger(__name__)
@@ -67,6 +68,9 @@ def create_product():
 
         user_id = get_jwt_identity()
         StockService.create(request.form.to_dict(), user_id, cid)
+        user_obj = UserModel.find_by_id(user_id)
+        EventService.record(cid, 'product', '', request.form.get('sku',''), 'created',
+                            user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash('Product created successfully.', 'success')
         return redirect(url_for('web_stock.list_products'))
     except Exception as e:
@@ -101,6 +105,10 @@ def edit_product(product_id):
 
         user_id = get_jwt_identity()
         StockService.update(product_id, data, user_id, cid)
+        user_obj = UserModel.find_by_id(user_id)
+        EventService.record(cid, 'product', product_id, product.get('sku',''), 'updated',
+                            changes={'field': 'details', 'old_value': '', 'new_value': 'updated'},
+                            user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash('Product updated successfully.', 'success')
         return redirect(url_for('web_stock.list_products'))
     except Exception as e:
@@ -116,7 +124,11 @@ def delete_product(product_id):
     try:
         user_id = get_jwt_identity()
         cid = _company_id()
+        product = StockService.get_by_id(product_id)
         if StockService.delete(product_id, user_id, cid):
+            user_obj = UserModel.find_by_id(user_id)
+            EventService.record(cid, 'product', product_id, product.get('sku','') if product else '', 'deleted',
+                                user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
             flash('Product deleted.', 'success')
         else:
             flash('Product not found.', 'danger')

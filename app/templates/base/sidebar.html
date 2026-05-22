@@ -93,6 +93,11 @@
                 <i class="bi bi-people me-2"></i>{{ _('Customers') }}
             </a>
         </li>
+        <li>
+            <a href="{{ url_for('web_events.list_events') }}" class="nav-link link-dark {% if request.endpoint and 'events' in request.endpoint %}active{% endif %}">
+                <i class="bi bi-activity me-2"></i>{{ _('Activity Log') }}
+            </a>
+        </li>
     </ul>
     <footer class="mt-auto pt-2 pb-2 border-top text-muted small text-center sidebar-footer">
         v{{ version }}

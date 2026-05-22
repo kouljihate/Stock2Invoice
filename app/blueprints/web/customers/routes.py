@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.models.user_model import UserModel
 from app.core.models.customer_model import CustomerModel
+from app.core.services.event_service import EventService
 from app.core.utils.helpers import paginate
 
 logger = logging.getLogger(__name__)
@@ -69,6 +70,11 @@ def create_customer():
             return render_template('customers/form.html', mode='web',
                                    user=UserModel.to_dict(user) if user else None, customer=request.form)
         CustomerModel.create(data)
+        user_id = get_jwt_identity()
+        cid = _company_id()
+        user_obj = UserModel.find_by_id(user_id)
+        EventService.record(cid, 'customer', '', data.get('name',''), 'created',
+                            user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash('Customer created.', 'success')
         return redirect(url_for('web_customers.list_customers'))
     except Exception as e:
@@ -229,6 +235,12 @@ def edit_customer(customer_id):
             return render_template('customers/form.html', mode='web',
                                    user=UserModel.to_dict(user) if user else None, customer=request.form)
         CustomerModel.update(customer_id, data)
+        user_id = get_jwt_identity()
+        cid = _company_id()
+        user_obj = UserModel.find_by_id(user_id)
+        EventService.record(cid, 'customer', customer_id, data.get('name',''), 'updated',
+                            changes={'field': 'details', 'old_value': '', 'new_value': 'updated'},
+                            user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash('Customer updated.', 'success')
         return redirect(url_for('web_customers.list_customers'))
     except Exception as e:
@@ -245,6 +257,11 @@ def delete_customer(customer_id):
     if not customer:
         flash('Customer not found.', 'danger')
     else:
+        cid = _company_id()
+        user_id = get_jwt_identity()
+        user_obj = UserModel.find_by_id(user_id)
         CustomerModel.delete(customer_id)
+        EventService.record(cid, 'customer', customer_id, customer.get('name',''), 'deleted',
+                            user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash('Customer deleted.', 'success')
     return redirect(url_for('web_customers.list_customers'))

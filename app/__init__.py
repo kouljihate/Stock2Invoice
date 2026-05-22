@@ -22,6 +22,7 @@ from .blueprints.web.payments.routes import web_payments_bp
 from .blueprints.web.customer_quotes.routes import web_customer_quotes_bp
 from .blueprints.web.delivery_notes.routes import web_delivery_notes_bp
 from .blueprints.web.customers.routes import web_customers_bp
+from .blueprints.web.events.routes import web_events_bp
 
 from .blueprints.mobile.auth.routes import mobile_auth_bp
 from .blueprints.mobile.dashboard.routes import mobile_dashboard_bp
@@ -72,6 +73,7 @@ def create_app(config_class=Config):
     app.register_blueprint(web_customer_quotes_bp, url_prefix='/web/quotes')
     app.register_blueprint(web_delivery_notes_bp, url_prefix='/web/delivery-notes')
     app.register_blueprint(web_customers_bp, url_prefix='/web/customers')
+    app.register_blueprint(web_events_bp, url_prefix='/web/events')
 
     app.register_blueprint(mobile_auth_bp, url_prefix='/mobile/auth')
     app.register_blueprint(mobile_dashboard_bp, url_prefix='/mobile/dashboard')
