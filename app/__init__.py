@@ -21,6 +21,7 @@ from .blueprints.web.payments.routes import web_payments_bp
 
 from .blueprints.web.customer_quotes.routes import web_customer_quotes_bp
 from .blueprints.web.delivery_notes.routes import web_delivery_notes_bp
+from .blueprints.web.customers.routes import web_customers_bp
 
 from .blueprints.mobile.auth.routes import mobile_auth_bp
 from .blueprints.mobile.dashboard.routes import mobile_dashboard_bp
@@ -29,7 +30,7 @@ from .blueprints.mobile.invoices.routes import mobile_invoices_bp
 from .blueprints.mobile.orders.routes import mobile_orders_bp
 
 from .blueprints.admin.routes import admin_bp
-from .version import VERSION
+from .version import VERSION, BUILD_DATE
 from .translations import _ as _translate
 
 
@@ -70,6 +71,7 @@ def create_app(config_class=Config):
 
     app.register_blueprint(web_customer_quotes_bp, url_prefix='/web/quotes')
     app.register_blueprint(web_delivery_notes_bp, url_prefix='/web/delivery-notes')
+    app.register_blueprint(web_customers_bp, url_prefix='/web/customers')
 
     app.register_blueprint(mobile_auth_bp, url_prefix='/mobile/auth')
     app.register_blueprint(mobile_dashboard_bp, url_prefix='/mobile/dashboard')
@@ -113,6 +115,7 @@ def create_app(config_class=Config):
             'current_lang': lang,
             'available_langs': LANGS,
             'version': VERSION,
+            'build_date': BUILD_DATE,
             'current_company': current_company,
             '_': lambda key: _translate(key, lang),
         }

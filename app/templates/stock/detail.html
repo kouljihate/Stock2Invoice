@@ -1,4 +1,4 @@
-﻿{% extends 'base/layout.html' %}
+{% extends 'base/layout.html' %}
 {% block title %}{{ product.name }} — Maure STC{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -20,13 +20,18 @@
             <div class="card-body">
                 <table class="table table-sm">
                     <tr><th style="width:150px">{{ _('SKU') }}</th><td><code>{{ product.sku }}</code></td></tr>
+                    <tr><th>{{ _('Brand') }}</th><td>{{ product.brand or '-' }}</td></tr>
                     <tr><th>{{ _('Category') }}</th><td>{{ product.category or '-' }}</td></tr>
+                    <tr><th>{{ _('Subcategory') }}</th><td>{{ product.subcategory or '-' }}</td></tr>
+                    <tr><th>{{ _('Package Type') }}</th><td>{{ product.package_type or '-' }}</td></tr>
+                    <tr><th>{{ _('Pack Size') }}</th><td>{% if product.pack_size %}{{ product.pack_size }} {{ product.pack_size_unit or '' }}{% else %}-{% endif %}</td></tr>
+                    <tr><th>{{ _('Number of Pack') }}</th><td>{{ product.number_of_pack or '-' }}</td></tr>
                     <tr><th>{{ _('Description') }}</th><td>{{ product.description or '-' }}</td></tr>
-                    <tr><th>{{ _('Quantity') }}</th><td><span class="badge bg-{{ 'success' if product.quantity > product.low_stock_threshold else 'warning' }} fs-6">{{ product.quantity }}</span></td></tr>
-                    <tr><th>{{ _('Unit Price') }}</th><td>${{ product.unit_price }}</td></tr>
-                    <tr><th>{{ _('Total Value') }}</th><td>${{ (product.quantity * product.unit_price)|round(2) }}</td></tr>
-                    <tr><th>{{ _('Tax Rate') }}</th><td>{{ product.tax_rate }}%</td></tr>
-                    <tr><th>{{ _('Low Stock Threshold') }}</th><td>{{ product.low_stock_threshold }}</td></tr>
+                    <tr><th>{{ _('Quantity') }}</th><td><span class="badge bg-{{ 'success' if product.quantity > product.quantity_min else 'warning' }} fs-6">{{ product.quantity }}</span></td></tr>
+                    <tr><th>{{ _('Min Quantity') }}</th><td>{{ product.quantity_min }}</td></tr>
+                    <tr><th>{{ _('Price') }}</th><td>${{ product.price }}</td></tr>
+                    <tr><th>{{ _('Total Value') }}</th><td>${{ (product.quantity * product.price)|round(2) }}</td></tr>
+                    <tr><th>{{ _('Status') }}</th><td><span class="badge bg-{{ 'success' if product.status == 'active' else 'secondary' }}">{{ product.status or 'active' }}</span></td></tr>
                 </table>
             </div>
         </div>

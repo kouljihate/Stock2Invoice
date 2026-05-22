@@ -33,6 +33,11 @@ class CustomerQuoteModel:
         return mongo.db[CustomerQuoteModel.collection].count_documents(filters or {})
 
     @staticmethod
+    def delete(quote_id):
+        from bson.objectid import ObjectId
+        mongo.db[CustomerQuoteModel.collection].delete_one({'_id': ObjectId(quote_id)})
+
+    @staticmethod
     def to_dict(q):
         return {
             'id': str(q['_id']),
@@ -53,4 +58,6 @@ class CustomerQuoteModel:
             'company_id': str(q.get('company_id')) if q.get('company_id') else None,
             'created_by': str(q.get('created_by')) if q.get('created_by') else None,
             'created_at': q.get('created_at').isoformat() if q.get('created_at') else None,
+            'generated_order_id': str(q.get('generated_order_id')) if q.get('generated_order_id') else None,
+            'generated_order_number': q.get('generated_order_number'),
         }

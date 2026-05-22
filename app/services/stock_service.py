@@ -22,7 +22,7 @@ class StockService:
         except (ValueError, TypeError):
             errors.append('Quantity must be an integer.')
 
-        price = data.get('unit_price', 0)
+        price = data.get('price', 0)
         try:
             price = float(price)
             if price < 0:
@@ -35,7 +35,7 @@ class StockService:
             'sku': sku,
             'description': (data.get('description') or '').strip(),
             'quantity': qty,
-            'unit_price': price,
+            'price': price,
             'category': (data.get('category') or '').strip(),
         }
 

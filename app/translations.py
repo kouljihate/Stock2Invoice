@@ -58,11 +58,13 @@ _fr['Company'] = 'Société'
 _ar['Procure-to-Pay'] = 'P2P'
 # _fr['Procure-to-Pay'] = 'Approvisionnement à Paiement'
 _fr['Procure-to-Pay'] = 'P2P'
+_en['Procure-to-Pay'] = 'P2P'
 
 # _ar['Quote-to-Cash'] = 'من العرض إلى التحصيل'
 _ar['Quote-to-Cash'] = 'Q2C'
 # _fr['Quote-to-Cash'] = 'Devis à Encaissement'
 _fr['Quote-to-Cash'] = 'Q2C'
+_en['Quote-to-Cash'] = 'Q2C'
 
 _ar['Administration'] = 'الإدارة العامة'
 _fr['Administration'] = 'Administration générale'
@@ -728,6 +730,80 @@ _fr['Add Supplier'] = 'Ajouter un fournisseur'
 
 _ar['No suppliers yet.'] = 'لا يوجد موردون بعد.'
 _fr['No suppliers yet.'] = 'Aucun fournisseur pour l\'instant.'
+
+_ar['Add Bulk Suppliers'] = 'إضافة موردين بالجملة'
+_fr['Add Bulk Suppliers'] = 'Ajouter des fournisseurs en masse'
+
+_ar['supplier(s)'] = 'مورد(ون)'
+_fr['supplier(s)'] = 'fournisseur(s)'
+
+_ar['Back to Suppliers'] = 'العودة إلى الموردين'
+_fr['Back to Suppliers'] = 'Retour aux fournisseurs'
+
+_ar['Only name is required.'] = 'الاسم فقط مطلوب.'
+_fr['Only name is required.'] = 'Seul le nom est requis.'
+
+_ar['Headers:'] = 'العناوين:'
+_fr['Headers:'] = 'En-têtes :'
+
+_ar['Customers'] = 'العملاء'
+_fr['Customers'] = 'Clients'
+
+_ar['Add Customer'] = 'إضافة عميل'
+_fr['Add Customer'] = 'Ajouter un client'
+
+_ar['Add Bulk Customers'] = 'إضافة عملاء بالجملة'
+_fr['Add Bulk Customers'] = 'Ajouter des clients en masse'
+
+_ar['No customers yet.'] = 'لا يوجد عملاء بعد.'
+_fr['No customers yet.'] = 'Aucun client pour l\'instant.'
+
+_ar['Back to Customers'] = 'العودة إلى العملاء'
+_fr['Back to Customers'] = 'Retour aux clients'
+
+_ar['Create Customer'] = 'إنشاء العميل'
+_fr['Create Customer'] = 'Créer le client'
+
+_ar['Edit Customer'] = 'تعديل العميل'
+_fr['Edit Customer'] = 'Modifier le client'
+
+_ar['Customer'] = 'العميل'
+_fr['Customer'] = 'Client'
+
+_ar['customer(s)'] = 'عميل(اء)'
+_fr['customer(s)'] = 'client(s)'
+
+_ar['Edit Quote'] = 'تعديل عرض السعر'
+_fr['Edit Quote'] = 'Modifier le devis'
+_ar['Delete Quote'] = 'حذف عرض السعر'
+_fr['Delete Quote'] = 'Supprimer le devis'
+_ar['Send to Customer'] = 'إرسال إلى العميل'
+_fr['Send to Customer'] = 'Envoyer au client'
+_ar['Quote sent.'] = 'تم إرسال عرض السعر.'
+_fr['Quote sent.'] = 'Devis envoyé.'
+_ar['Quote deleted.'] = 'تم حذف عرض السعر.'
+_fr['Quote deleted.'] = 'Devis supprimé.'
+_ar['Quote updated.'] = 'تم تحديث عرض السعر.'
+_fr['Quote updated.'] = 'Devis mis à jour.'
+_ar['Accepted'] = 'مقبول'
+_fr['Accepted'] = 'Accepté'
+
+_ar['Private'] = 'فرد'
+_fr['Private'] = 'Privé'
+
+_ar['Share'] = 'مشاركة'
+_fr['Share'] = 'Partager'
+_ar['Download PDF'] = 'تحميل PDF'
+_fr['Download PDF'] = 'Télécharger PDF'
+_ar['ORDER'] = 'الطلب'
+_fr['ORDER'] = 'COMMANDE'
+_ar['Generated on'] = 'تم الإنشاء في'
+_fr['Generated on'] = 'Généré le'
+
+_ar['Validate Quote'] = 'التحقق من عرض السعر'
+_fr['Validate Quote'] = 'Valider le devis'
+_ar['Quote converted to order:'] = 'تم تحويل عرض السعر إلى طلب:'
+_fr['Quote converted to order:'] = 'Devis converti en commande :'
 
 _ar['e.g. Net 30'] = 'مثل: صافي 30'
 _fr['e.g. Net 30'] = 'ex. Net 30'

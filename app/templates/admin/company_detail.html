@@ -179,7 +179,7 @@
                             <td><code>{{ p.sku }}</code></td>
                             <td>{{ p.category or '-' }}</td>
                             <td class="text-center">{{ p.quantity }}</td>
-                            <td class="text-end">{{ "%.2f"|format(p.unit_price) }}</td>
+                            <td class="text-end">{{ "%.2f"|format(p.price) }}</td>
                             <td class="text-end">{{ "%.2f"|format(p.stock_value) }}</td>
                         </tr>
                         {% else %}

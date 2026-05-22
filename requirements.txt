@@ -6,3 +6,4 @@ Flask-CORS==5.0.1
 python-dotenv==1.1.0
 email-validator==2.2.0
 bleach==6.2.0
+weasyprint

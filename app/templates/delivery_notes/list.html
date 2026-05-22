@@ -18,7 +18,11 @@
                     <td>{{ dn.order_number or '-' }}</td>
                     <td>{{ dn.customer_name or '-' }}</td>
                     <td><small>{{ dn.created_at[:10] if dn.created_at else '-' }}</small></td>
-                    <td class="text-end"><span class="text-muted small">—</span></td>
+                    <td class="text-end">
+                        <form method="POST" action="{{ url_for('web_delivery_notes.delete_delivery_note', dn_id=dn.id) }}" class="d-inline" onsubmit="return confirm('{{ _('Delete') }} {{ dn.dn_number or dn.id[:8] }}?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger btn-icon-circle" title="{{ _('Delete') }}"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </td>
                 </tr>
                 {% else %}
                 <tr><td colspan="5" class="text-center text-muted py-4">{{ _('No delivery notes yet.') }}</td></tr>

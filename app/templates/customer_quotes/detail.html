@@ -3,7 +3,22 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>{{ _('Quote') }} {{ quote.quote_number or quote.id[:8] }}</h4>
-    <a href="{{ url_for('web_customer_quotes.list_quotes') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>{{ _('Back') }}</a>
+    <div class="d-flex gap-2 align-items-center">
+        {% if not quote.generated_order_id %}
+        <a href="{{ url_for('web_customer_quotes.edit_quote', quote_id=quote.id) }}" class="btn btn-sm btn-outline-primary btn-icon-circle" title="{{ _('Edit') }}"><i class="bi bi-pencil"></i></a>
+        {% endif %}
+        {% if quote.status == 'draft' %}
+        <form method="POST" action="{{ url_for('web_customer_quotes.send_quote', quote_id=quote.id) }}" class="d-inline">
+            <button type="submit" class="btn btn-sm btn-outline-success btn-icon-circle" title="{{ _('Send to Customer') }}"><i class="bi bi-send"></i></button>
+        </form>
+        {% endif %}
+        {% if quote.status == 'sent' and not quote.generated_order_id %}
+        <form method="POST" action="{{ url_for('web_customer_quotes.validate_quote', quote_id=quote.id) }}" class="d-inline">
+            <button type="submit" class="btn btn-sm btn-outline-warning btn-icon-circle" title="{{ _('Validate Quote') }}"><i class="bi bi-check-lg"></i></button>
+        </form>
+        {% endif %}
+        <a href="{{ url_for('web_customer_quotes.list_quotes') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>{{ _('Back') }}</a>
+    </div>
 </div>
 <div class="card shadow-sm">
     <div class="card-body">

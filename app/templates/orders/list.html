@@ -45,7 +45,7 @@
                         {{ _(o.status) }}
                     </span>
                 </td>
-                <td class="text-end">${{ o.total }}</td>
+                <td class="text-end">{{ o.total }} MAD</td>
                 <td class="text-end">
                     {% if o.generated_invoice_number %}
                         <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.view_invoice', invoice_id=o.generated_invoice_id) }}{% else %}{{ url_for('web_invoices.view_invoice', invoice_id=o.generated_invoice_id) }}{% endif %}" class="btn btn-sm btn-outline-success">
@@ -56,9 +56,14 @@
                     {% endif %}
                 </td>
                 <td class="text-end">
-                    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_orders.view_order', order_id=o.id) }}{% else %}{{ url_for('web_orders.view_order', order_id=o.id) }}{% endif %}" class="btn btn-sm btn-outline-primary">
-                        <i class="bi bi-eye"></i>
-                    </a>
+                    <div class="d-flex gap-1 justify-content-end">
+                        <a href="{% if mode == 'mobile' %}{{ url_for('mobile_orders.view_order', order_id=o.id) }}{% else %}{{ url_for('web_orders.view_order', order_id=o.id) }}{% endif %}" class="btn btn-sm btn-outline-primary btn-icon-circle" title="{{ _('View') }}"><i class="bi bi-eye"></i></a>
+                        <button type="button" class="btn btn-sm btn-outline-info btn-icon-circle" title="{{ _('Share') }}" onclick="shareOrder('{{ o.order_number }}', '{% if mode == 'mobile' %}{{ url_for('mobile_orders.view_order', order_id=o.id, _external=True) }}{% else %}{{ url_for('web_orders.view_order', order_id=o.id, _external=True) }}{% endif %}')"><i class="bi bi-share"></i></button>
+                        <a href="{% if mode == 'mobile' %}{{ url_for('mobile_orders.download_pdf', order_id=o.id) }}{% else %}{{ url_for('web_orders.download_pdf', order_id=o.id) }}{% endif %}" class="btn btn-sm btn-outline-danger btn-icon-circle" title="{{ _('Download PDF') }}"><i class="bi bi-filetype-pdf"></i></a>
+                        <form method="POST" action="{% if mode == 'mobile' %}{{ url_for('mobile_orders.delete_order', order_id=o.id) }}{% else %}{{ url_for('web_orders.delete_order', order_id=o.id) }}{% endif %}" class="d-inline" onsubmit="return confirm('{{ _('Delete') }} {{ o.order_number }}?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger btn-icon-circle" title="{{ _('Delete') }}"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </div>
                 </td>
             </tr>
             {% else %}
@@ -79,4 +84,17 @@
     </ul>
 </nav>
 {% endif %}
+{% block extra_scripts %}
+<script>
+function shareOrder(orderNumber, url) {
+    if (navigator.share) {
+        navigator.share({ title: 'Order ' + orderNumber, url: url });
+    } else {
+        navigator.clipboard.writeText(url).then(function () {
+            alert('Link copied: ' + url);
+        });
+    }
+}
+</script>
+{% endblock %}
 {% endblock %}

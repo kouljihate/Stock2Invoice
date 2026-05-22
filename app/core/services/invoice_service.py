@@ -58,7 +58,7 @@ class InvoiceService:
         for it in data['items']:
             product = ProductModel.find_by_sku(it['sku'], company_id)
             qty = int(it['quantity'])
-            up = float(it.get('unit_price', product['unit_price']))
+            up = float(it.get('unit_price', product['price']))
             line_total = round(qty * up, 2)
             items.append({
                 'sku': it['sku'],

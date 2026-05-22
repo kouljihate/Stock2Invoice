@@ -43,11 +43,14 @@
                         {{ _(inv.status) }}
                     </span>
                 </td>
-                <td class="text-end">${{ inv.total }}</td>
+                <td class="text-end">{{ inv.total }} MAD</td>
                 <td class="text-end">
-                    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.view_invoice', invoice_id=inv.id) }}{% else %}{{ url_for('web_invoices.view_invoice', invoice_id=inv.id) }}{% endif %}" class="btn btn-sm btn-outline-primary">
-                        <i class="bi bi-eye"></i>
-                    </a>
+                    <div class="d-flex gap-1 justify-content-end">
+                        <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.view_invoice', invoice_id=inv.id) }}{% else %}{{ url_for('web_invoices.view_invoice', invoice_id=inv.id) }}{% endif %}" class="btn btn-sm btn-outline-primary btn-icon-circle" title="{{ _('View') }}"><i class="bi bi-eye"></i></a>
+                        <form method="POST" action="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.delete_invoice', invoice_id=inv.id) }}{% else %}{{ url_for('web_invoices.delete_invoice', invoice_id=inv.id) }}{% endif %}" class="d-inline" onsubmit="return confirm('{{ _('Delete') }} {{ inv.invoice_number or inv.id[:8] }}?')">
+                            <button type="submit" class="btn btn-sm btn-outline-danger btn-icon-circle" title="{{ _('Delete') }}"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </div>
                 </td>
             </tr>
             {% else %}

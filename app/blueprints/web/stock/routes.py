@@ -1,8 +1,9 @@
 import logging
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.services.stock_service import StockService
 from app.core.models.user_model import UserModel
+from app.core.models.product_model import ProductModel
 from app.core.utils.helpers import paginate
 
 logger = logging.getLogger(__name__)
@@ -173,10 +174,10 @@ def bulk_upload():
                 'sku': row.get('sku', ''),
                 'description': row.get('description', ''),
                 'quantity': row.get('quantity', '0'),
-                'unit_price': row.get('unit_price', '0'),
+                'price': row.get('price', '0'),
                 'category': row.get('category', ''),
-                'tax_rate': row.get('tax_rate', '0'),
-                'low_stock_threshold': row.get('low_stock_threshold', '5'),
+                
+                'quantity_min': row.get('quantity_min', '5'),
             }
             errs = StockService.validate(data, cid)
             if errs:
@@ -251,12 +252,28 @@ def bulk_upload():
             'sku': r.get('sku', ''),
             'description': r.get('description', ''),
             'quantity': r.get('quantity', '0'),
-            'unit_price': r.get('unit_price', '0'),
+            'price': r.get('price', '0'),
             'category': r.get('category', ''),
-            'tax_rate': r.get('tax_rate', '0'),
-            'low_stock_threshold': r.get('low_stock_threshold', '5'),
+            
+            'quantity_min': r.get('quantity_min', '5'),
         })
 
     return render_template('stock/bulk_upload.html', mode='web',
                            user=UserModel.to_dict(user) if user else None,
                            preview=cleaned, results=None)
+
+
+@web_stock_bp.route('/api/lookup')
+@jwt_required()
+def api_lookup():
+    q = request.args.get('q', '').strip()
+    if not q:
+        return jsonify([])
+    cid = _company_id()
+    products = ProductModel.search_by_sku_or_name(q, cid, limit=10)
+    return jsonify([{
+        'sku': p.get('sku', ''),
+        'name': p.get('name', ''),
+        'price': float(p.get('price', 0)),
+        'quantity': p.get('quantity', 0),
+    } for p in products])

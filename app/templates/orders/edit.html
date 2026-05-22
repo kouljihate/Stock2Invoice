@@ -36,7 +36,7 @@
                         <option value="">{{ _('-- Select Product --') }}</option>
                         {% for p in products %}
                         <option value="{{ p.sku }}" data-name="{{ p.name }}" data-price="{{ p.unit_price }}" data-qty="{{ p.quantity }}">
-                            [{{ p.sku }}] {{ p.name }} — ${{ p.unit_price }} ({{ p.quantity }} {{ _('in stock') }})
+                            [{{ p.sku }}] {{ p.name }} — {{ p.unit_price }} MAD ({{ p.quantity }} {{ _('in stock') }})
                         </option>
                         {% endfor %}
                     </select>

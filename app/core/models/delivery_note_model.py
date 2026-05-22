@@ -28,6 +28,11 @@ class DeliveryNoteModel:
         return mongo.db[DeliveryNoteModel.collection].count_documents(filters or {})
 
     @staticmethod
+    def delete(dn_id):
+        from bson.objectid import ObjectId
+        mongo.db[DeliveryNoteModel.collection].delete_one({'_id': ObjectId(dn_id)})
+
+    @staticmethod
     def to_dict(dn):
         return {
             'id': str(dn['_id']),

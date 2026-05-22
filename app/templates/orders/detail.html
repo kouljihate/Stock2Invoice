@@ -3,9 +3,11 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="mb-0"><i class="bi bi-cart me-2"></i>{{ _('Order') }} {{ order.order_number }}</h4>
-    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_orders.list_orders') }}{% else %}{{ url_for('web_orders.list_orders') }}{% endif %}" class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-arrow-left me-1"></i>{{ _('Back') }}
-    </a>
+    <div class="d-flex gap-2 align-items-center">
+        <button type="button" class="btn btn-sm btn-outline-info btn-icon-circle" title="{{ _('Share') }}" onclick="shareOrder('{{ order.order_number }}', window.location.href)"><i class="bi bi-share"></i></button>
+        <a href="{% if mode == 'mobile' %}{{ url_for('mobile_orders.download_pdf', order_id=order.id) }}{% else %}{{ url_for('web_orders.download_pdf', order_id=order.id) }}{% endif %}" class="btn btn-sm btn-outline-danger btn-icon-circle" title="{{ _('Download PDF') }}"><i class="bi bi-filetype-pdf"></i></a>
+        <a href="{% if mode == 'mobile' %}{{ url_for('mobile_orders.list_orders') }}{% else %}{{ url_for('web_orders.list_orders') }}{% endif %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>{{ _('Back') }}</a>
+    </div>
 </div>
 
 <div class="row g-3">
@@ -53,13 +55,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for item in order.items %}
+                            {% for item in order.get('items', []) %}
                             <tr>
                                 <td><code>{{ item.sku }}</code></td>
                                 <td>{{ item.name }}</td>
                                 <td class="text-end">{{ item.quantity }}</td>
-                                <td class="text-end">${{ item.unit_price }}</td>
-                                <td class="text-end">${{ item.total }}</td>
+                                <td class="text-end">{{ item.unit_price }} MAD</td>
+                                <td class="text-end">{{ item.total }} MAD</td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -69,12 +71,12 @@
                 <div class="row">
                     <div class="col-md-6 offset-md-6">
                         <table class="table table-sm table-borderless mb-0">
-                            <tr><td>{{ _('Subtotal') }}</td><td class="text-end">${{ order.subtotal }}</td></tr>
+                            <tr><td>{{ _('Subtotal') }}</td><td class="text-end">{{ order.subtotal }} MAD</td></tr>
                             {% if order.discount_percent > 0 %}
-                            <tr><td>{{ _('Discount') }} ({{ order.discount_percent }}%)</td><td class="text-end text-danger">-${{ order.discount_amount }}</td></tr>
+                            <tr><td>{{ _('Discount') }} ({{ order.discount_percent }}%)</td><td class="text-end text-danger">-{{ order.discount_amount }} MAD</td></tr>
                             {% endif %}
-                            <tr><td>{{ _('Tax') }} ({{ order.tax_percent }}%)</td><td class="text-end">${{ order.tax_amount }}</td></tr>
-                            <tr class="fw-bold"><td>{{ _('Total') }}</td><td class="text-end fs-5">${{ order.total }}</td></tr>
+                            <tr><td>{{ _('Tax') }} ({{ order.tax_percent }}%)</td><td class="text-end">{{ order.tax_amount }} MAD</td></tr>
+                            <tr class="fw-bold"><td>{{ _('Total') }}</td><td class="text-end fs-5">{{ order.total }} MAD</td></tr>
                         </table>
                     </div>
                 </div>
@@ -114,8 +116,27 @@
                     <i class="bi bi-file-text me-1"></i>{{ _('View Invoice') }}
                 </a>
                 {% endif %}
+                <hr>
+                <form method="POST" action="{% if mode == 'mobile' %}{{ url_for('mobile_orders.delete_order', order_id=order.id) }}{% else %}{{ url_for('web_orders.delete_order', order_id=order.id) }}{% endif %}" onsubmit="return confirm('{{ _('Delete') }} {{ order.order_number }}?')">
+                    <button type="submit" class="btn btn-outline-danger w-100 btn-sm">
+                        <i class="bi bi-trash me-1"></i>{{ _('Delete') }}
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 </div>
+{% block extra_scripts %}
+<script>
+function shareOrder(orderNumber, url) {
+    if (navigator.share) {
+        navigator.share({ title: 'Order ' + orderNumber, url: url });
+    } else {
+        navigator.clipboard.writeText(url).then(function () {
+            alert('Link copied: ' + url);
+        });
+    }
+}
+</script>
+{% endblock %}
 {% endblock %}

@@ -33,7 +33,7 @@ class InvoiceService:
                 errors.append(f'Item {idx + 1}: Quantity must be an integer.')
 
             try:
-                price = float(item.get('unit_price', 0))
+                price = float(item.get('price', 0))
                 if price < 0:
                     errors.append(f'Item {idx + 1}: Unit price cannot be negative.')
             except (ValueError, TypeError):
@@ -50,12 +50,12 @@ class InvoiceService:
         items = []
         subtotal = 0.0
         for it in data['items']:
-            line_total = int(it['quantity']) * float(it['unit_price'])
+            line_total = int(it['quantity']) * float(it['price'])
             items.append({
                 'sku': it['sku'],
                 'name': it.get('name', ''),
                 'quantity': int(it['quantity']),
-                'unit_price': float(it['unit_price']),
+                'unit_price': float(it['price']),
                 'total': line_total,
             })
             subtotal += line_total

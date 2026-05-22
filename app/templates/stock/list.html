@@ -1,4 +1,4 @@
-﻿{% extends 'base/layout.html' %}
+{% extends 'base/layout.html' %}
 {% block title %}{{ _('Products') }} — Maure STC{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -16,11 +16,18 @@
 </div>
 
 <form method="GET" class="row g-2 mb-3">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <input type="text" name="search" class="form-control" placeholder="{{ _('Search by name or SKU...') }}" value="{{ request.args.get('search', '') }}">
     </div>
     <div class="col-md-3">
         <input type="text" name="category" class="form-control" placeholder="{{ _('Filter by category...') }}" value="{{ request.args.get('category', '') }}">
+    </div>
+    <div class="col-md-2">
+        <select name="status" class="form-select">
+            <option value="">{{ _('All statuses') }}</option>
+            <option value="active" {% if request.args.get('status') == 'active' %}selected{% endif %}>{{ _('Active') }}</option>
+            <option value="inactive" {% if request.args.get('status') == 'inactive' %}selected{% endif %}>{{ _('Inactive') }}</option>
+        </select>
     </div>
     <div class="col-md-3">
         <button type="submit" class="btn btn-outline-primary w-100"><i class="bi bi-search me-1"></i>{{ _('Search') }}</button>
@@ -33,40 +40,44 @@
             <tr>
                 <th>{{ _('SKU') }}</th>
                 <th>{{ _('Name') }}</th>
+                <th>{{ _('Brand') }}</th>
                 <th>{{ _('Category') }}</th>
+                <th>{{ _('Package') }}</th>
                 <th class="text-end">{{ _('Qty') }}</th>
                 <th class="text-end">{{ _('Price') }}</th>
-                <th class="text-end">{{ _('Value') }}</th>
+                <th>{{ _('Status') }}</th>
                 <th class="text-end">{{ _('Actions') }}</th>
             </tr>
         </thead>
         <tbody>
             {% for p in products %}
-            <tr class="{% if p.quantity <= p.low_stock_threshold %}table-warning{% endif %}">
+            <tr class="{% if p.quantity <= p.quantity_min %}table-warning{% endif %}">
                 <td><code>{{ p.sku }}</code></td>
                 <td>
                     <a href="{% if mode == 'mobile' %}{{ url_for('mobile_stock.view_product', product_id=p.id) }}{% else %}{{ url_for('web_stock.view_product', product_id=p.id) }}{% endif %}">
                         {{ p.name }}
                     </a>
-                    {% if p.quantity <= p.low_stock_threshold %}
+                    {% if p.quantity <= p.quantity_min %}
                         <span class="badge bg-warning text-dark">{{ _('Low') }}</span>
                     {% endif %}
                 </td>
+                <td>{{ p.brand or '-' }}</td>
                 <td>{{ p.category or '-' }}</td>
+                <td><small>{% if p.pack_size %}{{ p.pack_size }} {{ p.pack_size_unit or '' }}{% else %}-{% endif %}</small></td>
                 <td class="text-end">{{ p.quantity }}</td>
-                <td class="text-end">${{ p.unit_price }}</td>
-                <td class="text-end">${{ (p.quantity * p.unit_price)|round(2) }}</td>
+                <td class="text-end">{{ p.price }} MAD</td>
+                <td><span class="badge bg-{{ 'success' if p.status == 'active' else 'secondary' }}">{{ p.status or 'active' }}</span></td>
                 <td class="text-end">
-                    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_stock.edit_product', product_id=p.id) }}{% else %}{{ url_for('web_stock.edit_product', product_id=p.id) }}{% endif %}" class="btn btn-sm btn-outline-primary">
+                    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_stock.edit_product', product_id=p.id) }}{% else %}{{ url_for('web_stock.edit_product', product_id=p.id) }}{% endif %}" class="btn btn-sm btn-outline-primary rounded-circle">
                         <i class="bi bi-pencil"></i>
                     </a>
-                    <form method="POST" action="{% if mode == 'mobile' %}{{ url_for('mobile_stock.delete_product', product_id=p.id) }}{% else %}{{ url_for('web_stock.delete_product', product_id=p.id) }}{% endif %}" class="d-inline" onsubmit="return confirm('Delete {{ p.name }}---')">
-                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                    <form method="POST" action="{% if mode == 'mobile' %}{{ url_for('mobile_stock.delete_product', product_id=p.id) }}{% else %}{{ url_for('web_stock.delete_product', product_id=p.id) }}{% endif %}" class="d-inline" onsubmit="return confirm('{{ _('Delete') }} {{ p.name }}?')">
+                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle"><i class="bi bi-trash"></i></button>
                     </form>
                 </td>
             </tr>
             {% else %}
-            <tr><td colspan="7" class="text-center text-muted py-4">{{ _('No products found.') }}</td></tr>
+            <tr><td colspan="9" class="text-center text-muted py-4">{{ _('No products found.') }}</td></tr>
             {% endfor %}
         </tbody>
     </table>
@@ -77,7 +88,7 @@
     <ul class="pagination justify-content-center">
         {% for p in range(1, pages + 1) %}
         <li class="page-item {{ 'active' if p == page }}">
-            <a class="page-link" href="---page={{ p }}&per_page={{ per_page }}&search={{ request.args.get('search', '') }}&category={{ request.args.get('category', '') }}">{{ p }}</a>
+            <a class="page-link" href="?page={{ p }}&per_page={{ per_page }}&search={{ request.args.get('search', '') }}&category={{ request.args.get('category', '') }}">{{ p }}</a>
         </li>
         {% endfor %}
     </ul>

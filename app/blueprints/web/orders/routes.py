@@ -1,7 +1,8 @@
 import logging
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.services.order_service import OrderService
+from app.core.models.order_model import OrderModel
 from app.core.models.product_model import ProductModel
 from app.core.models.user_model import UserModel
 from app.core.utils.helpers import paginate, oid
@@ -129,3 +130,52 @@ def update_status(order_id):
         logger.exception('Order status update error')
         flash('Could not update status.', 'danger')
     return redirect(url_for('web_orders.view_order', order_id=order_id))
+
+
+@web_orders_bp.route('/<order_id>/delete', methods=['POST'])
+@jwt_required()
+def delete_order(order_id):
+    order = OrderModel.find_by_id(order_id)
+    if not order:
+        flash('Order not found.', 'danger')
+    else:
+        OrderModel.delete(order_id)
+        flash('Order deleted.', 'success')
+    return redirect(url_for('web_orders.list_orders'))
+
+
+@web_orders_bp.route('/<order_id>/pdf')
+@jwt_required()
+def download_pdf(order_id):
+    try:
+        import io
+        from weasyprint import HTML
+        user = _get_user()
+        order = OrderService.get_by_id(order_id)
+        if not order:
+            flash('Order not found.', 'danger')
+            return redirect(url_for('web_orders.list_orders'))
+
+        cid = _company_id()
+        current_company = None
+        if cid:
+            from app.core.models.company_model import CompanyModel
+            company = CompanyModel.find_by_id(cid)
+            if company:
+                current_company = CompanyModel.to_dict(company)
+
+        from datetime import datetime
+        html = render_template('orders/printable.html', mode='web',
+                               user=UserModel.to_dict(user) if user else None,
+                               order=order, current_company=current_company,
+                               current_lang=request.cookies.get('lang', 'en'),
+                               now=datetime.now)
+        pdf = HTML(string=html).write_pdf()
+        buf = io.BytesIO(pdf)
+        buf.seek(0)
+        return send_file(buf, mimetype='application/pdf', as_attachment=True,
+                         download_name=f'order-{order["order_number"]}.pdf')
+    except Exception as e:
+        logger.exception('Order PDF generation error')
+        flash(f'Could not generate PDF: {e}', 'danger')
+        return redirect(url_for('web_orders.view_order', order_id=order_id))

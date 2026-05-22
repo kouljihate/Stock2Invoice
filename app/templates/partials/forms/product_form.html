@@ -17,7 +17,7 @@
     </div>
     <div class="col-md-4">
         <label class="form-label">Unit Price *</label>
-        <input type="number" step="0.01" name="unit_price" class="form-control" value="{{ product.get('unit_price', 0) if product else 0 }}" min="0" required>
+        <input type="number" step="0.01" name="price" class="form-control" value="{{ product.get('unit_price', 0) if product else 0 }}" min="0" required>
     </div>
     <div class="col-md-4">
         <label class="form-label">Category</label>
@@ -27,10 +27,10 @@
 <div class="row mb-3">
     <div class="col-md-6">
         <label class="form-label">Tax Rate (%)</label>
-        <input type="number" step="0.01" name="tax_rate" class="form-control" value="{{ product.get('tax_rate', 0) if product else 0 }}" min="0" max="100">
+        <input type="number" step="0.01" name="status" class="form-control" value=""active">
     </div>
     <div class="col-md-6">
         <label class="form-label">Low Stock Threshold</label>
-        <input type="number" name="low_stock_threshold" class="form-control" value="{{ product.get('low_stock_threshold', 5) if product else 5 }}" min="0">
+        <input type="number" name="quantity_min" class="form-control" value="{{ product.get('quantity_min', 5) if product else 5 }}" min="0">
     </div>
 </div>

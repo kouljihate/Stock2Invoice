@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="{{ current_lang }}">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ _('Order') }} {{ order.order_number }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Comfortaa', sans-serif; padding: 40px; color: #333; }
+        .header { border-bottom: 2px solid #2563EB; padding-bottom: 20px; margin-bottom: 30px; }
+        .header h1 { color: #2563EB; margin: 0; font-size: 24px; }
+        .header .order-number { font-size: 18px; color: #666; }
+        table.items { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        table.items th { background: #2563EB; color: white; padding: 10px 12px; text-align: left; font-size: 13px; }
+        table.items td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; font-size: 13px; }
+        table.items tr:nth-child(even) { background: #f9fafb; }
+        table.items .text-end { text-align: right; }
+        .totals { width: 300px; margin-left: auto; }
+        .totals td { padding: 6px 12px; font-size: 13px; }
+        .totals .grand-total { font-weight: bold; font-size: 16px; border-top: 2px solid #333; }
+        .footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #999; text-align: center; }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="header d-flex justify-content-between">
+        <div>
+            <h1>{{ _('ORDER') }}</h1>
+            <div class="order-number">{{ order.order_number }}</div>
+        </div>
+        <div class="text-end">
+            {% if current_company %}
+            <strong>{{ current_company.name }}</strong><br>
+            <small>{{ current_company.address }}<br>{{ current_company.city }}<br>{{ current_company.phone }}<br>{{ current_company.email }}</small>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-6">
+            <strong>{{ _('Customer') }}:</strong>
+            <p class="mb-0">{{ order.customer_name }}</p>
+            {% if order.customer_email %}<p class="mb-0"><small>{{ order.customer_email }}</small></p>{% endif %}
+            {% if order.customer_address %}<p class="mb-0"><small>{{ order.customer_address }}</small></p>{% endif %}
+        </div>
+        <div class="col-6 text-end">
+            <strong>{{ _('Order Date') }}:</strong>
+            <p class="mb-0">{{ order.created_at[:10] if order.created_at else '-' }}</p>
+            <strong>{{ _('Status') }}:</strong>
+            <p class="mb-0"><span class="badge" style="background:#2563EB;color:#fff;">{{ _(order.status)|upper }}</span></p>
+        </div>
+    </div>
+
+    {% if order.generated_invoice_number %}
+    <div class="alert alert-info py-2">
+        <i class="bi bi-file-text me-1"></i>
+        {{ _('Invoice generated:') }} {{ order.generated_invoice_number }}
+    </div>
+    {% endif %}
+
+    <table class="items">
+        <thead>
+            <tr>
+                <th>{{ _('SKU') }}</th>
+                <th>{{ _('Item') }}</th>
+                <th class="text-end">{{ _('Qty') }}</th>
+                <th class="text-end">{{ _('Price') }}</th>
+                <th class="text-end">{{ _('Total') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in order.get('items', []) %}
+            <tr>
+                <td><code>{{ item.sku }}</code></td>
+                <td>{{ item.name }}</td>
+                <td class="text-end">{{ item.quantity }}</td>
+                <td class="text-end">{{ "%.2f"|format(item.unit_price) }} MAD</td>
+                <td class="text-end">{{ "%.2f"|format(item.total) }} MAD</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <table class="totals">
+        <tr><td>{{ _('Subtotal') }}</td><td class="text-end">{{ "%.2f"|format(order.subtotal) }} MAD</td></tr>
+        {% if order.discount_percent > 0 %}
+        <tr><td>{{ _('Discount') }} ({{ "%.0f"|format(order.discount_percent) }}%)</td><td class="text-end" style="color:#dc3545;">-{{ "%.2f"|format(order.discount_amount) }} MAD</td></tr>
+        {% endif %}
+        <tr><td>{{ _('Tax') }} ({{ "%.0f"|format(order.tax_percent) }}%)</td><td class="text-end">{{ "%.2f"|format(order.tax_amount) }} MAD</td></tr>
+        <tr class="grand-total"><td>{{ _('Total') }}</td><td class="text-end">{{ "%.2f"|format(order.total) }} MAD</td></tr>
+    </table>
+
+    {% if order.notes %}
+    <div style="margin-top:30px;padding:15px;background:#f9fafb;border-radius:8px;">
+        <strong>{{ _('Notes:') }}</strong>
+        <p class="mb-0">{{ order.notes }}</p>
+    </div>
+    {% endif %}
+
+    <div class="footer">
+        <p>{{ _('Thank you for your business!') }}</p>
+        <p>{{ _('Generated on') }} {{ now().strftime('%Y-%m-%d %H:%M') if now else '' }}</p>
+    </div>
+</body>
+</html>

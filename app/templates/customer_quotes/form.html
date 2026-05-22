@@ -1,39 +1,79 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('New Customer Quote') }} — Maure STC{% endblock %}
+{% block title %}{% if quote and quote.id %}{{ _('Edit Quote') }}{% else %}{{ _('New Customer Quote') }}{% endif %} — Maure STC{% endblock %}
 {% block content %}
-<h4 class="mb-4"><i class="bi bi-plus-circle me-2"></i>{{ _('New Customer Quote') }}</h4>
+<h4 class="mb-4"><i class="bi bi-{% if quote and quote.id %}pencil{% else %}plus-circle{% endif %} me-2"></i>{% if quote and quote.id %}{{ _('Edit Quote') }}{% else %}{{ _('New Customer Quote') }}{% endif %}</h4>
 <form method="POST" action="" class="card shadow-sm">
     <div class="card-body">
         <div class="row mb-3">
             <div class="col-md-4">
-                <label class="form-label">{{ _('Customer Name') }} *</label>
-                <input type="text" name="customer_name" class="form-control" required>
+                <label class="form-label">{{ _('Customer') }} *</label>
+                <div class="input-group">
+                    <select name="customer_name" id="customerSelect" class="form-select" required>
+                        <option value="">{{ _('-- Select Customer --') }}</option>
+                        {% for c in customers %}
+                        <option value="{{ c.name }}" data-email="{{ c.email }}" data-address="{{ c.address }}" {% if quote and quote.customer_name == c.name %}selected{% endif %}>{{ c.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+                </div>
             </div>
             <div class="col-md-4">
                 <label class="form-label">{{ _('Customer Email') }}</label>
-                <input type="email" name="customer_email" class="form-control">
+                <input type="email" name="customer_email" id="customerEmail" class="form-control" readonly value="{{ quote.customer_email if quote else '' }}">
             </div>
             <div class="col-md-4">
                 <label class="form-label">{{ _('Valid Until') }}</label>
-                <input type="date" name="valid_until" class="form-control">
+                <input type="date" name="valid_until" class="form-control" value="{{ quote.valid_until[:10] if quote and quote.valid_until else '' }}">
             </div>
         </div>
         <div class="mb-3">
             <label class="form-label">{{ _('Customer Address') }}</label>
-            <textarea name="customer_address" class="form-control" rows="2"></textarea>
+            <textarea name="customer_address" id="customerAddress" class="form-control" rows="2" readonly>{{ quote.customer_address if quote else '' }}</textarea>
         </div>
         <div class="row mb-3">
             <div class="col-md-3">
                 <label class="form-label">{{ _('Discount') }} (%)</label>
-                <input type="number" step="0.01" name="discount_percent" class="form-control" value="0" min="0" max="100">
+                <input type="number" step="0.01" name="discount_percent" class="form-control" value="{{ '%.2f'|format(quote.discount_percent) if quote and quote.discount_percent else '0' }}" min="0" max="100">
             </div>
             <div class="col-md-3">
                 <label class="form-label">{{ _('Tax') }} (%)</label>
-                <input type="number" step="0.01" name="tax_percent" class="form-control" value="0" min="0" max="100">
+                <input type="number" step="0.01" name="tax_percent" class="form-control" value="{{ '%.2f'|format(quote.tax_percent) if quote and quote.tax_percent else '0' }}" min="0" max="100">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">{{ _('Status') }}</label>
+                <select name="status" class="form-select">
+                    <option value="draft" {% if quote and quote.status == 'draft' %}selected{% endif %}>{{ _('Draft') }}</option>
+                    <option value="sent" {% if quote and quote.status == 'sent' %}selected{% endif %}>{{ _('Sent') }}</option>
+                    <option value="accepted" {% if quote and quote.status == 'accepted' %}selected{% endif %}>{{ _('Accepted') }}</option>
+                    <option value="cancelled" {% if quote and quote.status == 'cancelled' %}selected{% endif %}>{{ _('Cancelled') }}</option>
+                </select>
             </div>
         </div>
         <h5 class="mt-4 mb-3">{{ _('Line Items') }}</h5>
         <div id="line-items">
+            {% if quote and quote.get('items') %}
+            {% for item in quote.get('items', []) %}
+            <div class="row g-2 mb-2 line-item">
+                <div class="col-md-2">
+                    <input type="text" name="sku" class="form-control" placeholder="{{ _('SKU') }}" required value="{{ item.sku }}">
+                </div>
+                <div class="col-md-4">
+                    <input type="text" name="name" class="form-control" placeholder="{{ _('Item name') }}" value="{{ item.name }}">
+                </div>
+                <div class="col-md-2">
+                    <input type="number" name="quantity" class="form-control" placeholder="{{ _('Qty') }}" min="1" required value="{{ item.quantity }}">
+                </div>
+                <div class="col-md-2">
+                    <input type="number" step="0.01" name="unit_price" class="form-control" placeholder="{{ _('Price') }}" min="0" required value="{{ '%.2f'|format(item.unit_price) }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-outline-danger remove-item"><i class="bi bi-x-lg"></i></button>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
             <div class="row g-2 mb-2 line-item">
                 <div class="col-md-2">
                     <input type="text" name="sku" class="form-control" placeholder="{{ _('SKU') }}" required>
@@ -51,23 +91,101 @@
                     <button type="button" class="btn btn-outline-danger remove-item"><i class="bi bi-x-lg"></i></button>
                 </div>
             </div>
+            {% endif %}
         </div>
         <button type="button" class="btn btn-sm btn-outline-success mb-3" id="add-item">
             <i class="bi bi-plus-lg me-1"></i>{{ _('Add Item') }}
         </button>
         <div class="mb-3">
             <label class="form-label">{{ _('Notes') }}</label>
-            <textarea name="notes" class="form-control" rows="2"></textarea>
+            <textarea name="notes" class="form-control" rows="2">{{ quote.notes if quote else '' }}</textarea>
         </div>
         <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>{{ _('Create Quote') }}</button>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>{% if quote and quote.id %}{{ _('Save Changes') }}{% else %}{{ _('Create Quote') }}{% endif %}</button>
             <a href="{{ url_for('web_customer_quotes.list_quotes') }}" class="btn btn-outline-secondary">{{ _('Cancel') }}</a>
         </div>
     </div>
 </form>
+
+{% import 'base/components.html' as components %}
+{{ components.modal_start('addCustomerModal', _('Add Customer')) }}
+<form id="addCustomerForm">
+    <div class="row g-3">
+        <div class="col-md-3">
+            <label class="form-label">{{ _('Type') }} <span class="text-danger">*</span></label>
+            <select name="type" class="form-select">
+                <option value="prive">{{ _('Private') }}</option>
+                <option value="company">{{ _('Company') }}</option>
+            </select>
+        </div>
+        <div class="col-md-9">
+            <label class="form-label">{{ _('Name') }} <span class="text-danger">*</span></label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">{{ _('Contact') }}</label>
+            <input type="text" name="contact" class="form-control">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">{{ _('Email') }}</label>
+            <input type="email" name="email" class="form-control">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">{{ _('Phone') }}</label>
+            <input type="text" name="phone" class="form-control">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">{{ _('Address') }}</label>
+            <input type="text" name="address" class="form-control">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">{{ _('City') }}</label>
+            <input type="text" name="city" class="form-control">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">{{ _('Payment Terms') }}</label>
+            <input type="text" name="paiement_terms" class="form-control" placeholder="{{ _('e.g. Net 30') }}">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">ICE</label>
+            <input type="text" name="ICE" class="form-control">
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">RC</label>
+            <input type="text" name="RC" class="form-control">
+        </div>
+    </div>
+    <div id="addCustomerError" class="alert alert-danger d-none mt-3"></div>
+</form>
+{% set modal_footer %}
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Cancel') }}</button>
+<button type="button" class="btn btn-primary" id="saveCustomerBtn">{{ _('Save') }}</button>
+{% endset %}
+{{ components.modal_end(modal_footer) }}
 {% endblock %}
 {% block extra_scripts %}
 <script>
+var LOOKUP_URL = '{{ url_for("web_stock.api_lookup") }}';
+
+function lookupProduct(input, row) {
+    var q = input.value.trim();
+    if (!q) return;
+    var skuIn = row.querySelector('input[name="sku"]');
+    var nameIn = row.querySelector('input[name="name"]');
+    var priceIn = row.querySelector('input[name="unit_price"]');
+    fetch(LOOKUP_URL + '?q=' + encodeURIComponent(q))
+        .then(function (r) { return r.json(); })
+        .then(function (products) {
+            if (products.length === 1) {
+                var p = products[0];
+                if (skuIn && p.sku) skuIn.value = p.sku;
+                if (nameIn && p.name) nameIn.value = p.name;
+                if (priceIn && p.price) priceIn.value = p.price;
+            }
+        })
+        .catch(function () {});
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('add-item').addEventListener('click', function () {
         var template = document.querySelector('.line-item');
@@ -80,6 +198,50 @@ document.addEventListener('DOMContentLoaded', function () {
             var items = document.querySelectorAll('.line-item');
             if (items.length > 1) e.target.closest('.line-item').remove();
         }
+    });
+
+    var debounceTimers = {};
+    document.getElementById('line-items').addEventListener('input', function (e) {
+        var input = e.target;
+        if (input.name !== 'sku' && input.name !== 'name') return;
+        var row = input.closest('.line-item');
+        if (!row) return;
+        var key = row.dataset.index || Array.from(row.parentNode.children).indexOf(row);
+        row.dataset.index = key;
+        clearTimeout(debounceTimers[key]);
+        debounceTimers[key] = setTimeout(function () { lookupProduct(input, row); }, 300);
+    });
+
+    var sel = document.getElementById('customerSelect');
+    sel.addEventListener('change', function () {
+        var opt = sel.options[sel.selectedIndex];
+        document.getElementById('customerEmail').value = opt.dataset.email || '';
+        document.getElementById('customerAddress').value = opt.dataset.address || '';
+    });
+
+    document.getElementById('saveCustomerBtn').addEventListener('click', function () {
+        var form = document.getElementById('addCustomerForm');
+        var data = new FormData(form);
+        var errDiv = document.getElementById('addCustomerError');
+        errDiv.classList.add('d-none');
+        fetch('{{ url_for("web_customer_quotes.ajax_create_customer") }}', { method: 'POST', body: data })
+            .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+            .then(function (res) {
+                if (!res.ok) { errDiv.textContent = res.body.error; errDiv.classList.remove('d-none'); return; }
+                var c = res.body.customer;
+                var opt = document.createElement('option');
+                opt.value = c.name;
+                opt.textContent = c.name;
+                opt.dataset.email = c.email || '';
+                opt.dataset.address = c.address || '';
+                sel.appendChild(opt);
+                sel.value = c.name;
+                sel.dispatchEvent(new Event('change'));
+                var modal = bootstrap.Modal.getInstance(document.getElementById('addCustomerModal'));
+                modal.hide();
+                form.reset();
+            })
+            .catch(function (err) { errDiv.textContent = err.message; errDiv.classList.remove('d-none'); });
     });
 });
 </script>

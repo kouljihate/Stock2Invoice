@@ -217,8 +217,8 @@ def company_detail(company_id):
     products_raw = mongo.db['products'].find({'company_id': cid}).sort('created_at', -1).limit(50)
     products = [{
         'id': str(p['_id']), 'name': p.get('name'), 'sku': p.get('sku'),
-        'quantity': p.get('quantity', 0), 'unit_price': float(p.get('unit_price', 0)),
-        'category': p.get('category', ''), 'stock_value': float(p.get('quantity', 0)) * float(p.get('unit_price', 0)),
+        'quantity': p.get('quantity', 0), 'price': float(p.get('price', 0)),
+        'category': p.get('category', ''), 'stock_value': float(p.get('quantity', 0)) * float(p.get('price', 0)),
     } for p in products_raw]
 
     orders_raw = mongo.db['orders'].find({'company_id': cid}).sort('created_at', -1).limit(50)

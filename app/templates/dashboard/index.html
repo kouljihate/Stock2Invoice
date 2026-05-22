@@ -18,7 +18,7 @@
     <div class="col-6 col-md-3">
         <div class="card border-success border-2 text-center h-100">
             <div class="card-body">
-                <h5 class="text-success mb-1">{{ valuation.total_value|round(2) }}</h5>
+                <h5 class="text-success mb-1">{{  "{:,.2f}".format(valuation.total_value)|replace(",", " ")  }} MAD</h5>
                 <small class="text-muted">{{ _('Stock Value') }}</small>
             </div>
         </div>

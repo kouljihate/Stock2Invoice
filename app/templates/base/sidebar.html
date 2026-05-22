@@ -88,8 +88,14 @@
                 <i class="bi bi-box me-2"></i>{{ _('Products (Inventory)') }}
             </a>
         </li>
+        <li>
+            <a href="{{ url_for('web_customers.list_customers') }}" class="nav-link link-dark {% if request.endpoint and 'customers' in request.endpoint %}active{% endif %}">
+                <i class="bi bi-people me-2"></i>{{ _('Customers') }}
+            </a>
+        </li>
     </ul>
     <footer class="mt-auto pt-2 pb-2 border-top text-muted small text-center sidebar-footer">
         v{{ version }}
+        <br><small>{{ build_date }}</small>
     </footer>
 </div>

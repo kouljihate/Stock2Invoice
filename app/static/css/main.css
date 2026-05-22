@@ -81,6 +81,15 @@ footer {
   object-fit: cover;     /* fill the circle, may crop edges */
   display: block;
 }
+.btn-icon-circle {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
 @media print {
   .navbar, .sidebar-col, .no-print {
     display: none !important;

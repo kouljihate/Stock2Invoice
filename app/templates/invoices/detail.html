@@ -48,7 +48,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for item in invoice.items %}
+                            {% for item in invoice.get('items', []) %}
                             <tr>
                                 <td><code>{{ item.sku }}</code></td>
                                 <td>{{ item.name }}</td>
@@ -118,6 +118,12 @@
                 <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.print_invoice', invoice_id=invoice.id) }}{% else %}{{ url_for('web_invoices.print_invoice', invoice_id=invoice.id) }}{% endif %}" class="btn btn-outline-primary w-100 btn-sm" target="_blank">
                     <i class="bi bi-printer me-1"></i>{{ _('Print / PDF') }}
                 </a>
+                <hr>
+                <form method="POST" action="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.delete_invoice', invoice_id=invoice.id) }}{% else %}{{ url_for('web_invoices.delete_invoice', invoice_id=invoice.id) }}{% endif %}" onsubmit="return confirm('{{ _('Delete') }} {{ invoice.invoice_number or invoice.id[:8] }}?')">
+                    <button type="submit" class="btn btn-outline-danger w-100 btn-sm">
+                        <i class="bi bi-trash me-1"></i>{{ _('Delete') }}
+                    </button>
+                </form>
             </div>
         </div>
     </div>

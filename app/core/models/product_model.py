@@ -26,6 +26,15 @@ class ProductModel:
         return mongo.db[ProductModel.collection].find_one(query)
 
     @staticmethod
+    def search_by_sku_or_name(q, company_id=None, limit=10):
+        import re
+        query = {'$or': [{'sku': re.compile(re.escape(q), re.IGNORECASE)}, {'name': re.compile(re.escape(q), re.IGNORECASE)}]}
+        if company_id:
+            from bson.objectid import ObjectId
+            query['company_id'] = ObjectId(company_id)
+        return list(mongo.db[ProductModel.collection].find(query).limit(limit))
+
+    @staticmethod
     def find_all(page=1, per_page=20, filters=None):
         query = filters or {}
         total = mongo.db[ProductModel.collection].count_documents(query)
@@ -70,10 +79,16 @@ class ProductModel:
             'sku': item.get('sku'),
             'description': item.get('description', ''),
             'quantity': item.get('quantity', 0),
-            'unit_price': float(item.get('unit_price', 0)),
+            'price': float(item.get('price', 0)),
             'category': item.get('category', ''),
-            'tax_rate': float(item.get('tax_rate', 0)),
-            'low_stock_threshold': int(item.get('low_stock_threshold', 5)),
+            'subcategory': item.get('subcategory', ''),
+            'package_type': item.get('package_type', ''),
+            'brand': item.get('brand', ''),
+            'pack_size': float(item.get('pack_size', 0)),
+            'pack_size_unit': item.get('pack_size_unit', ''),
+            'number_of_pack': int(item.get('number_of_pack', 0)),
+            'quantity_min': int(item.get('quantity_min', 5)),
+            'status': item.get('status', 'active'),
             'company_id': str(item.get('company_id')) if item.get('company_id') else None,
             'created_at': item.get('created_at').isoformat() if item.get('created_at') else None,
             'updated_at': item.get('updated_at').isoformat() if item.get('updated_at') else None,

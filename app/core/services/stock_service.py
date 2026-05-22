@@ -23,11 +23,10 @@ class StockService:
         errors.append(validate_required(data.get('sku'), 'SKU'))
         errors.append(validate_string_length(data.get('sku'), 'SKU', 1, 100))
         errors.append(validate_integer(data.get('quantity'), 'Quantity', 0))
-        errors.append(validate_numeric(data.get('unit_price'), 'Unit price', 0))
-        if data.get('tax_rate') is not None:
-            errors.append(validate_numeric(data.get('tax_rate'), 'Tax rate', 0, 100))
-        if data.get('low_stock_threshold') is not None:
-            errors.append(validate_integer(data.get('low_stock_threshold'), 'Low stock threshold', 0))
+        errors.append(validate_numeric(data.get('price'), 'Price', 0))
+        
+        if data.get('quantity_min') is not None:
+            errors.append(validate_integer(data.get('quantity_min'), 'Min quantity', 0))
         if not is_update:
             existing = ProductModel.find_by_sku(data.get('sku', '').strip(), company_id)
             if existing:
@@ -41,10 +40,16 @@ class StockService:
             'sku': data['sku'].strip(),
             'description': (data.get('description') or '').strip(),
             'quantity': int(data.get('quantity', 0)),
-            'unit_price': float(data.get('unit_price', 0)),
+            'price': float(data.get('price', 0)),
             'category': (data.get('category') or '').strip(),
-            'tax_rate': float(data.get('tax_rate', 0)),
-            'low_stock_threshold': int(data.get('low_stock_threshold', 5)),
+            'subcategory': (data.get('subcategory') or '').strip(),
+            'package_type': (data.get('package_type') or '').strip(),
+            'brand': (data.get('brand') or '').strip(),
+            'pack_size': float(data.get('pack_size', 0)),
+            'pack_size_unit': (data.get('pack_size_unit') or '').strip(),
+            'number_of_pack': int(data.get('number_of_pack', 0)),
+            'quantity_min': int(data.get('quantity_min', 5)),
+            'status': (data.get('status') or 'active').strip(),
             'company_id': ObjectId(company_id),
         }
         product_id = ProductModel.create(clean)
@@ -78,15 +83,22 @@ class StockService:
         if str(product.get('company_id', '')) != company_id:
             return None
         old_qty = product.get('quantity', 0)
+        clean = {}
         clean = {
             'name': data['name'].strip(),
             'sku': data['sku'].strip(),
             'description': (data.get('description') or '').strip(),
             'quantity': int(data.get('quantity', old_qty)),
-            'unit_price': float(data.get('unit_price', product.get('unit_price', 0))),
+            'price': float(data.get('price', product.get('price', 0))),
             'category': (data.get('category') or '').strip(),
-            'tax_rate': float(data.get('tax_rate', product.get('tax_rate', 0))),
-            'low_stock_threshold': int(data.get('low_stock_threshold', product.get('low_stock_threshold', 5))),
+            'subcategory': (data.get('subcategory') or '').strip(),
+            'package_type': (data.get('package_type') or '').strip(),
+            'brand': (data.get('brand') or '').strip(),
+            'pack_size': float(data.get('pack_size', product.get('pack_size', 0))),
+            'pack_size_unit': (data.get('pack_size_unit') or '').strip(),
+            'number_of_pack': int(data.get('number_of_pack', product.get('number_of_pack', 0))),
+            'quantity_min': int(data.get('quantity_min', product.get('quantity_min', 5))),
+            'status': (data.get('status') or 'active').strip(),
         }
         ProductModel.update(product_id, clean)
         new_qty = clean['quantity']
@@ -116,14 +128,14 @@ class StockService:
         if company_id:
             filters['company_id'] = ObjectId(company_id)
         products = ProductModel.find_all_unpaginated(filters)
-        return [ProductModel.to_dict(p) for p in products if p.get('quantity', 0) <= p.get('low_stock_threshold', 5)]
+        return [ProductModel.to_dict(p) for p in products if p.get('quantity', 0) <= p.get('quantity_min', 5)]
 
     @staticmethod
     def get_category_summary(company_id=None):
         pipeline = [
             {'$match': {'company_id': ObjectId(company_id)}} if company_id else {'$match': {}},
             {'$group': {'_id': '$category', 'count': {'$sum': 1}, 'total_qty': {'$sum': '$quantity'},
-                        'total_value': {'$sum': {'$multiply': ['$quantity', '$unit_price']}}}},
+                        'total_value': {'$sum': {'$multiply': ['$quantity', '$price']}}}},
             {'$sort': {'_id': 1}},
         ]
         if company_id:
@@ -137,7 +149,7 @@ class StockService:
         pipeline = []
         if company_id:
             pipeline.append({'$match': {'company_id': ObjectId(company_id)}})
-        pipeline.append({'$group': {'_id': None, 'total_value': {'$sum': {'$multiply': ['$quantity', '$unit_price']}},
+        pipeline.append({'$group': {'_id': None, 'total_value': {'$sum': {'$multiply': ['$quantity', '$price']}},
                                     'total_products': {'$sum': 1}, 'total_qty': {'$sum': '$quantity'}}})
         result = ProductModel.aggregate(pipeline)
         return result[0] if result else {'total_value': 0, 'total_products': 0, 'total_qty': 0}

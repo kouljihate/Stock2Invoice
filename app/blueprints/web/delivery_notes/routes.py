@@ -64,6 +64,18 @@ def create_delivery_note():
         return redirect(url_for('web_delivery_notes.list_delivery_notes'))
 
 
+@web_delivery_notes_bp.route('/<dn_id>/delete', methods=['POST'])
+@jwt_required()
+def delete_delivery_note(dn_id):
+    dn = DeliveryNoteModel.find_by_id(dn_id)
+    if not dn:
+        flash('Delivery note not found.', 'danger')
+    else:
+        DeliveryNoteModel.delete(dn_id)
+        flash('Delivery note deleted.', 'success')
+    return redirect(url_for('web_delivery_notes.list_delivery_notes'))
+
+
 @web_delivery_notes_bp.route('')
 @web_delivery_notes_bp.route('/')
 @jwt_required()

@@ -57,7 +57,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for item in invoice.items %}
+                {% for item in invoice.get('items', []) %}
                 <tr>
                     <td><code>{{ item.sku }}</code></td>
                     <td>{{ item.name }}</td>

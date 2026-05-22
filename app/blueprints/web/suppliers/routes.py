@@ -1,4 +1,5 @@
 import logging
+import json
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.models.user_model import UserModel
@@ -74,6 +75,131 @@ def create_supplier():
         flash(f'Could not create supplier: {e}', 'danger')
         return render_template('suppliers/form.html', mode='web',
                                user=UserModel.to_dict(user) if user else None, supplier=request.form)
+
+
+@web_suppliers_bp.route('/bulk-upload', methods=['GET', 'POST'])
+@jwt_required()
+def bulk_upload():
+    user = _get_user()
+    cid = _company_id()
+
+    if request.method == 'GET':
+        return render_template('suppliers/bulk_upload.html', mode='web',
+                               user=UserModel.to_dict(user) if user else None,
+                               preview=None, results=None)
+
+    json_data = request.form.get('json_data')
+    if json_data:
+        rows = json.loads(json_data)
+        from bson.objectid import ObjectId
+        results = []
+        success_count = 0
+        for idx, row in enumerate(rows):
+            entry = {'row': idx + 1, 'name': row.get('name', ''), 'errors': [], 'status': ''}
+            if not row.get('name', '').strip():
+                entry['errors'] = ['Supplier name is required.']
+                entry['status'] = 'error'
+                results.append(entry)
+                continue
+            data = {
+                'name': row.get('name', '').strip(),
+                'contact_name': row.get('contact_name', '').strip(),
+                'email': row.get('email', '').strip(),
+                'phone': row.get('phone', '').strip(),
+                'address': row.get('address', '').strip(),
+                'city': row.get('city', '').strip(),
+                'ice': row.get('ice', '').strip(),
+                'rc': row.get('rc', '').strip(),
+                'payment_terms': row.get('payment_terms', '').strip(),
+                'company_id': ObjectId(cid),
+            }
+            try:
+                SupplierModel.create(data)
+                entry['status'] = 'success'
+                success_count += 1
+            except Exception as e:
+                entry['errors'] = [str(e)]
+                entry['status'] = 'error'
+            results.append(entry)
+        flash(f'{success_count} of {len(rows)} suppliers imported successfully.', 'success')
+        return render_template('suppliers/bulk_upload.html', mode='web',
+                               user=UserModel.to_dict(user) if user else None,
+                               preview=None, results=results)
+
+    if 'file' not in request.files:
+        flash('No file selected.', 'danger')
+        return render_template('suppliers/bulk_upload.html', mode='web',
+                               user=UserModel.to_dict(user) if user else None,
+                               preview=None, results=None)
+
+    file = request.files['file']
+    if not file.filename:
+        flash('No file selected.', 'danger')
+        return render_template('suppliers/bulk_upload.html', mode='web',
+                               user=UserModel.to_dict(user) if user else None,
+                               preview=None, results=None)
+
+    ext = file.filename.rsplit('.', 1)[-1].lower() if '.' in file.filename else ''
+    rows = []
+    if ext == 'json':
+        try:
+            raw = json.load(file.stream)
+            rows = raw if isinstance(raw, list) else [raw]
+        except Exception as e:
+            flash(f'Invalid JSON file: {e}', 'danger')
+            return render_template('suppliers/bulk_upload.html', mode='web',
+                                   user=UserModel.to_dict(user) if user else None,
+                                   preview=None, results=None)
+    elif ext == 'csv':
+        import csv, io
+        try:
+            text = io.StringIO(file.stream.read().decode('utf-8-sig'))
+            reader = csv.DictReader(text)
+            rows = [r for r in reader if any(v.strip() for v in r.values())]
+            if not rows:
+                flash('CSV file is empty.', 'danger')
+                return render_template('suppliers/bulk_upload.html', mode='web',
+                                       user=UserModel.to_dict(user) if user else None,
+                                       preview=None, results=None)
+        except Exception as e:
+            flash(f'Invalid CSV file: {e}', 'danger')
+            return render_template('suppliers/bulk_upload.html', mode='web',
+                                   user=UserModel.to_dict(user) if user else None,
+                                   preview=None, results=None)
+    else:
+        flash('Unsupported format. Please upload a JSON or CSV file.', 'danger')
+        return render_template('suppliers/bulk_upload.html', mode='web',
+                               user=UserModel.to_dict(user) if user else None,
+                               preview=None, results=None)
+
+    cleaned = []
+    HEADER_MAP = {
+        'name': 'name', 'contact': 'contact_name', 'email': 'email',
+        'phone': 'phone', 'city': 'city', 'payment_terms': 'payment_terms',
+        'payment terms': 'payment_terms', 'address': 'address',
+        'ice': 'ice', 'rc': 'rc',
+    }
+    for row in rows:
+        r = {}
+        for csv_key, val in row.items():
+            key = csv_key.strip().lower()
+            mapped = HEADER_MAP.get(key, key)
+            r[mapped] = val.strip() if isinstance(val, str) else val
+        cleaned.append({
+            'name': r.get('name', ''),
+            'contact_name': r.get('contact_name', ''),
+            'email': r.get('email', ''),
+            'phone': r.get('phone', ''),
+            'address': r.get('address', ''),
+            'city': r.get('city', ''),
+            'ice': r.get('ice', ''),
+            'rc': r.get('rc', ''),
+            'payment_terms': r.get('payment_terms', ''),
+        })
+
+    return render_template('suppliers/bulk_upload.html', mode='web',
+                           user=UserModel.to_dict(user) if user else None,
+                           preview=cleaned, results=None)
 
 
 @web_suppliers_bp.route('/<supplier_id>/edit', methods=['GET', 'POST'])
