@@ -66,11 +66,28 @@ def create_quote():
         qtys = data.get('quantity', [])
         prices = data.get('unit_price', [])
         names = data.get('name', [])
+        package_types = data.get('package_type', [])
+        pack_sizes = data.get('pack_size', [])
+        pack_size_units = data.get('pack_size_unit', [])
+        existing_qtys = data.get('existing_qty', [])
+        qty_errors = []
         for i in range(len(skus)):
             if skus[i] and qtys[i] and int(qtys[i]) > 0:
-                items.append({'sku': skus[i], 'quantity': int(qtys[i]),
+                qty = int(qtys[i])
+                exist_qty = int(existing_qtys[i]) if i < len(existing_qtys) and existing_qtys[i] else 0
+                item_name = names[i] if i < len(names) else skus[i]
+                if exist_qty > 0 and qty > exist_qty:
+                    qty_errors.append(f"'{item_name}': qty {qty} exceeds stock {exist_qty}")
+                items.append({'sku': skus[i], 'quantity': qty,
                               'unit_price': float(prices[i]) if prices[i] else 0,
-                              'name': names[i] if i < len(names) else ''})
+                              'name': names[i] if i < len(names) else '',
+                              'package_type': package_types[i] if i < len(package_types) else '',
+                              'pack_size': pack_sizes[i] if i < len(pack_sizes) else '',
+                              'pack_size_unit': pack_size_units[i] if i < len(pack_size_units) else '',
+                              'existing_qty': exist_qty})
+        if qty_errors:
+            flash('Quantity exceeds available stock', 'danger')
+            return redirect(url_for('web_customer_quotes.create_quote'))
         count = CustomerQuoteModel.count({'company_id': oid(cid)})
         quote_number = f"Q-{datetime.now().strftime('%Y%m%d')}-{count + 1:04d}"
         valid_until_str = request.form.get('valid_until', '')
@@ -142,11 +159,28 @@ def edit_quote(quote_id):
         qtys = data.get('quantity', [])
         prices = data.get('unit_price', [])
         names = data.get('name', [])
+        package_types = data.get('package_type', [])
+        pack_sizes = data.get('pack_size', [])
+        pack_size_units = data.get('pack_size_unit', [])
+        existing_qtys = data.get('existing_qty', [])
+        qty_errors = []
         for i in range(len(skus)):
             if skus[i] and qtys[i] and int(qtys[i]) > 0:
-                items.append({'sku': skus[i], 'quantity': int(qtys[i]),
+                qty = int(qtys[i])
+                exist_qty = int(existing_qtys[i]) if i < len(existing_qtys) and existing_qtys[i] else 0
+                item_name = names[i] if i < len(names) else skus[i]
+                if exist_qty > 0 and qty > exist_qty:
+                    qty_errors.append(f"'{item_name}': qty {qty} exceeds stock {exist_qty}")
+                items.append({'sku': skus[i], 'quantity': qty,
                               'unit_price': float(prices[i]) if prices[i] else 0,
-                              'name': names[i] if i < len(names) else ''})
+                              'name': names[i] if i < len(names) else '',
+                              'package_type': package_types[i] if i < len(package_types) else '',
+                              'pack_size': pack_sizes[i] if i < len(pack_sizes) else '',
+                              'pack_size_unit': pack_size_units[i] if i < len(pack_size_units) else '',
+                              'existing_qty': exist_qty})
+        if qty_errors:
+            flash('Quantity exceeds available stock', 'danger')
+            return redirect(url_for('web_customer_quotes.edit_quote', quote_id=quote_id))
         valid_until_str = request.form.get('valid_until', '')
         valid_until = datetime.strptime(valid_until_str, '%Y-%m-%d') if valid_until_str else None
         payload = {

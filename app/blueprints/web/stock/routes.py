@@ -188,7 +188,12 @@ def bulk_upload():
                 'quantity': row.get('quantity', '0'),
                 'price': row.get('price', '0'),
                 'category': row.get('category', ''),
-                
+                'subcategory': row.get('subcategory', ''),
+                'package_type': row.get('package_type', ''),
+                'brand': row.get('brand', ''),
+                'pack_size': row.get('pack_size', '0'),
+                'pack_size_unit': row.get('pack_size_unit', ''),
+                'number_of_pack': row.get('number_of_pack', '0'),
                 'quantity_min': row.get('quantity_min', '5'),
             }
             errs = StockService.validate(data, cid)
@@ -266,7 +271,12 @@ def bulk_upload():
             'quantity': r.get('quantity', '0'),
             'price': r.get('price', '0'),
             'category': r.get('category', ''),
-            
+            'subcategory': r.get('subcategory', ''),
+            'package_type': r.get('package_type', ''),
+            'brand': r.get('brand', ''),
+            'pack_size': r.get('pack_size', '0'),
+            'pack_size_unit': r.get('pack_size_unit', ''),
+            'number_of_pack': r.get('number_of_pack', '0'),
             'quantity_min': r.get('quantity_min', '5'),
         })
 
@@ -288,4 +298,7 @@ def api_lookup():
         'name': p.get('name', ''),
         'price': float(p.get('price', 0)),
         'quantity': p.get('quantity', 0),
+        'package_type': p.get('package_type', ''),
+        'pack_size': p.get('pack_size', ''),
+        'pack_size_unit': p.get('pack_size_unit', ''),
     } for p in products])

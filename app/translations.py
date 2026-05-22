@@ -1168,5 +1168,23 @@ _fr['Delete User'] = 'Supprimer l\'utilisateur'
 _ar['Remove this user permanently.'] = 'احذف هذا المستخدم نهائياً.'
 _fr['Remove this user permanently.'] = 'Supprimez cet utilisateur définitivement.'
 
+# ─── Customer Quote Labels ──────────────────────────────────
+_ar['QTY'] = 'الكمية'
+_fr['QTY'] = 'Qté'
+
+_ar['Pack Type'] = 'نوع التعبئة'
+_fr['Pack Type'] = 'Type d\'emballage'
+
+_ar['Pack Size / Unit'] = 'الحجم / الوحدة'
+_fr['Pack Size / Unit'] = 'Taille / Unité'
+
+_ar['Stock'] = 'المخزون'
+_fr['Stock'] = 'Stock'
+
+_ar['Size'] = 'الحجم'
+_fr['Size'] = 'Taille'
+
+_ar['Unit'] = 'الوحدة'
+_fr['Unit'] = 'Unité'
 
 

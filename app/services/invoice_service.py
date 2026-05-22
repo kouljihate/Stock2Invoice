@@ -125,8 +125,8 @@ class InvoiceService:
                 item['sku'],
                 item['name'],
                 str(item['quantity']),
-                f"${item['unit_price']:.2f}",
-                f"${item['total']:.2f}",
+                f"{item['unit_price']:.2f} MAD",
+                f"{item['total']:.2f} MAD",
             ])
 
         table = Table(table_data, colWidths=[60, 180, 50, 80, 80])
@@ -144,9 +144,9 @@ class InvoiceService:
         elements.append(Spacer(1, 20))
 
         summary_data = [
-            ['Subtotal:', f"${inv['subtotal']:.2f}"],
-            ['Tax (10%):', f"${inv['tax']:.2f}"],
-            ['Total:', f"${inv['total']:.2f}"],
+            ['Subtotal:', f"{inv['subtotal']:.2f} MAD"],
+            ['Tax (10%):', f"{inv['tax']:.2f} MAD"],
+            ['Total:', f"{inv['total']:.2f} MAD"],
         ]
         summary_table = Table(summary_data, colWidths=[370, 80])
         summary_table.setStyle(TableStyle([

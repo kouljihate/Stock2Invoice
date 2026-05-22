@@ -62,8 +62,8 @@
                     <td><code>{{ item.sku }}</code></td>
                     <td>{{ item.name }}</td>
                     <td class="text-end">{{ item.quantity }}</td>
-                    <td class="text-end">${{ item.unit_price }}</td>
-                    <td class="text-end">${{ item.total }}</td>
+                    <td class="text-end">{{ item.unit_price }} MAD</td>
+                    <td class="text-end">{{ item.total }} MAD</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -77,12 +77,12 @@
             </div>
             <div class="col-6">
                 <table class="table table-sm table-borderless">
-                    <tr><td>{{ _('Subtotal') }}</td><td class="text-end">${{ invoice.subtotal }}</td></tr>
+                    <tr><td>{{ _('Subtotal') }}</td><td class="text-end">{{ invoice.subtotal }} MAD</td></tr>
                     {% if invoice.discount_percent > 0 %}
-                    <tr><td>{{ _('Discount') }} ({{ invoice.discount_percent }}%)</td><td class="text-end text-danger">-${{ invoice.discount_amount }}</td></tr>
+                    <tr><td>{{ _('Discount') }} ({{ invoice.discount_percent }}%)</td><td class="text-end text-danger">-{{ invoice.discount_amount }} MAD</td></tr>
                     {% endif %}
-                    <tr><td>{{ _('Tax') }} ({{ invoice.tax_percent }}%)</td><td class="text-end">${{ invoice.tax_amount }}</td></tr>
-                    <tr class="fw-bold"><td>{{ _('Total') }}</td><td class="text-end fs-4">${{ invoice.total }}</td></tr>
+                    <tr><td>{{ _('Tax') }} ({{ invoice.tax_percent }}%)</td><td class="text-end">{{ invoice.tax_amount }} MAD</td></tr>
+                    <tr class="fw-bold"><td>{{ _('Total') }}</td><td class="text-end fs-4">{{ invoice.total }} MAD</td></tr>
                 </table>
             </div>
         </div>

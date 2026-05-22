@@ -34,4 +34,42 @@
         </dl>
     </div>
 </div>
+
+{% if quote and quote.get('items') %}
+<div class="card shadow-sm mt-3">
+    <div class="card-body">
+        <h5 class="mb-3">{{ _('Line Items') }}</h5>
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>{{ _('SKU') }}</th>
+                        <th>{{ _('Name') }}</th>
+                        <th class="text-end">{{ _('QTY') }}</th>
+                        <th class="text-end">{{ _('Price') }}</th>
+                        <th>{{ _('Pack Type') }}</th>
+                        <th>{{ _('Pack Size / Unit') }}</th>
+                        <th class="text-end">{{ _('Stock') }}</th>
+                        <th class="text-end">{{ _('Total') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in quote.get('items', []) %}
+                    <tr>
+                        <td>{{ item.sku }}</td>
+                        <td>{{ item.name }}</td>
+                        <td class="text-end">{{ item.quantity }}</td>
+                        <td class="text-end">{{ "%.2f"|format(item.unit_price) }}</td>
+                        <td>{{ item.get('package_type', '-') }}</td>
+                        <td>{{ item.get('pack_size', '-') }}{% if item.get('pack_size_unit') %} / {{ item.get('pack_size_unit') }}{% endif %}</td>
+                        <td class="text-end">{{ item.get('existing_qty', '-') }}</td>
+                        <td class="text-end">{{ "%.2f"|format(item.quantity * item.unit_price) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

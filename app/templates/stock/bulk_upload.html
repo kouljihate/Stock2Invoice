@@ -72,11 +72,14 @@
                         <th>#</th>
                         <th>{{ _('Name') }}</th>
                         <th>{{ _('SKU') }}</th>
-                        <th>{{ _('Description') }}</th>
+                        <th>{{ _('Category') }}</th>
+                        <th>{{ _('Subcategory') }}</th>
+                        <th>{{ _('Brand') }}</th>
+                        <th>{{ _('Pack Size') }}</th>
+                        <th>{{ _('Pack Unit') }}</th>
+                        <th>{{ _('Packs') }}</th>
                         <th class="text-center">{{ _('Qty') }}</th>
                         <th class="text-end">{{ _('Price') }}</th>
-                        <th>{{ _('Category') }}</th>
-                        <th class="text-center">{{ _('Status') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -85,11 +88,14 @@
                         <td>{{ loop.index }}</td>
                         <td>{{ p.name }}</td>
                         <td><code>{{ p.sku }}</code></td>
-                        <td><small class="text-muted">{{ p.description[:40] if p.description else '-' }}</small></td>
+                        <td>{{ p.category or '-' }}</td>
+                        <td>{{ p.subcategory or '-' }}</td>
+                        <td>{{ p.brand or '-' }}</td>
+                        <td>{{ p.pack_size or '0' }}</td>
+                        <td>{{ p.pack_size_unit or '-' }}</td>
+                        <td>{{ p.number_of_pack or '0' }}</td>
                         <td class="text-center">{{ p.quantity }}</td>
                         <td class="text-end">{{ p.price }}</td>
-                        <td>{{ p.category or '-' }}</td>
-                        <td class="text-center">{{ p.status or 'active' }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -137,14 +143,22 @@ function saveAll() {
             <div class="card-header"><strong>{{ _('File Format') }}</strong></div>
             <div class="card-body small">
                 <p class="mb-2"><strong>{{ _('CSV') }}</strong> — {{ _('Include headers row:') }}</p>
-                <pre class="bg-light p-2 rounded"><code>name,sku,description,quantity,price,category
-Product A,SKU001,Description,10,15.99,General</code></pre>
+                <pre class="bg-light p-2 rounded"><code>name,sku,description,quantity,price,category,subcategory,package_type,brand,pack_size,pack_size_unit,number_of_pack,quantity_min
+Product A,SKU001,Description,10,15.99,General,SubA,Package,BrandX,5,kg,2,5</code></pre>
                 <p class="mb-0 mt-2"><strong>{{ _('JSON') }}</strong> — {{ _('Array of objects:') }}</p>
                 <pre class="bg-light p-2 rounded"><code>[{
   "name": "Product A",
   "sku": "SKU001",
   "quantity": 10,
-  "price": 15.99
+  "price": 15.99,
+  "category": "General",
+  "subcategory": "SubA",
+  "package_type": "Package",
+  "brand": "BrandX",
+  "pack_size": 5,
+  "pack_size_unit": "kg",
+  "number_of_pack": 2,
+  "quantity_min": 5
 }]</code></pre>
                 <p class="text-muted mt-2 mb-0">{{ _('Only name and sku are required.') }}</p>
             </div>

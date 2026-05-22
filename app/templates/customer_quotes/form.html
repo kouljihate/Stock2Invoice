@@ -2,8 +2,9 @@
 {% block title %}{% if quote and quote.id %}{{ _('Edit Quote') }}{% else %}{{ _('New Customer Quote') }}{% endif %} — Maure STC{% endblock %}
 {% block content %}
 <h4 class="mb-4"><i class="bi bi-{% if quote and quote.id %}pencil{% else %}plus-circle{% endif %} me-2"></i>{% if quote and quote.id %}{{ _('Edit Quote') }}{% else %}{{ _('New Customer Quote') }}{% endif %}</h4>
-<form method="POST" action="" class="card shadow-sm">
+<form method="POST" action="" class="card shadow-sm" id="quoteForm">
     <div class="card-body">
+        <div id="quoteFormError" class="alert alert-danger d-none"></div>
         <div class="row mb-3">
             <div class="col-md-4">
                 <label class="form-label">{{ _('Customer') }} *</label>
@@ -53,43 +54,80 @@
         </div>
         <h5 class="mt-4 mb-3">{{ _('Line Items') }}</h5>
         <div id="line-items">
+            <div class="row g-2 mb-1 small fw-bold text-muted">
+                <div class="col-md-2">{{ _('SKU') }}</div>
+                <div class="col-md-3">{{ _('Name') }}</div>
+                <div class="col-md-1 text-end">{{ _('QTY') }}</div>
+                <div class="col-md-1 text-end">{{ _('Price') }}</div>
+                <div class="col-md-2">{{ _('Pack Type') }}</div>
+                <div class="col-md-2">{{ _('Pack Size / Unit') }}</div>
+                <div class="col-md-1 text-end">{{ _('Stock') }}</div>
+            </div>
             {% if quote and quote.get('items') %}
             {% for item in quote.get('items', []) %}
-            <div class="row g-2 mb-2 line-item">
+            <div class="row g-2 mb-2 line-item position-relative">
                 <div class="col-md-2">
-                    <input type="text" name="sku" class="form-control" placeholder="{{ _('SKU') }}" required value="{{ item.sku }}">
+                    <input type="text" name="sku" class="form-control form-control-sm" placeholder="{{ _('SKU') }}" required value="{{ item.sku }}">
                 </div>
-                <div class="col-md-4">
-                    <input type="text" name="name" class="form-control" placeholder="{{ _('Item name') }}" value="{{ item.name }}">
+                <div class="col-md-3">
+                    <input type="text" name="name" class="form-control form-control-sm" placeholder="{{ _('Name') }}" value="{{ item.name }}">
+                </div>
+                <div class="col-md-1">
+                    <input type="number" name="quantity" class="form-control form-control-sm text-end" placeholder="{{ _('Qty') }}" min="1" required value="{{ item.quantity }}">
+                </div>
+                <div class="col-md-1">
+                    <input type="number" step="0.01" name="unit_price" class="form-control form-control-sm text-end" placeholder="{{ _('Price') }}" min="0" required value="{{ '%.2f'|format(item.unit_price) }}">
                 </div>
                 <div class="col-md-2">
-                    <input type="number" name="quantity" class="form-control" placeholder="{{ _('Qty') }}" min="1" required value="{{ item.quantity }}">
+                    <input type="text" name="package_type" class="form-control form-control-sm" placeholder="{{ _('Pack Type') }}" value="{{ item.get('package_type', '') }}">
                 </div>
                 <div class="col-md-2">
-                    <input type="number" step="0.01" name="unit_price" class="form-control" placeholder="{{ _('Price') }}" min="0" required value="{{ '%.2f'|format(item.unit_price) }}">
+                    <div class="row g-1">
+                        <div class="col-6">
+                            <input type="text" name="pack_size" class="form-control form-control-sm" placeholder="{{ _('Size') }}" value="{{ item.get('pack_size', '') }}">
+                        </div>
+                        <div class="col-6">
+                            <input type="text" name="pack_size_unit" class="form-control form-control-sm" placeholder="{{ _('Unit') }}" value="{{ item.get('pack_size_unit', '') }}">
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    <button type="button" class="btn btn-outline-danger remove-item"><i class="bi bi-x-lg"></i></button>
+                <div class="col-md-1">
+                    <input type="number" name="existing_qty" class="form-control form-control-sm text-end" placeholder="{{ _('Stock') }}" readonly value="{{ item.get('existing_qty', 0) }}">
                 </div>
+                <button type="button" class="btn btn-outline-danger btn-sm remove-item" style="position:absolute;top:0;right:-6px;width:22px;height:22px;padding:0;font-size:9px;z-index:5;border-radius:50%;display:flex;align-items:center;justify-content:center"><i class="bi bi-x-lg"></i></button>
             </div>
             {% endfor %}
             {% else %}
-            <div class="row g-2 mb-2 line-item">
+            <div class="row g-2 mb-2 line-item position-relative">
                 <div class="col-md-2">
-                    <input type="text" name="sku" class="form-control" placeholder="{{ _('SKU') }}" required>
+                    <input type="text" name="sku" class="form-control form-control-sm" placeholder="{{ _('SKU') }}" required>
                 </div>
-                <div class="col-md-4">
-                    <input type="text" name="name" class="form-control" placeholder="{{ _('Item name') }}">
+                <div class="col-md-3">
+                    <input type="text" name="name" class="form-control form-control-sm" placeholder="{{ _('Name') }}">
+                </div>
+                <div class="col-md-1">
+                    <input type="number" name="quantity" class="form-control form-control-sm text-end" placeholder="{{ _('Qty') }}" min="1" required>
+                </div>
+                <div class="col-md-1">
+                    <input type="number" step="0.01" name="unit_price" class="form-control form-control-sm text-end" placeholder="{{ _('Price') }}" min="0" required>
                 </div>
                 <div class="col-md-2">
-                    <input type="number" name="quantity" class="form-control" placeholder="{{ _('Qty') }}" min="1" required>
+                    <input type="text" name="package_type" class="form-control form-control-sm" placeholder="{{ _('Pack Type') }}">
                 </div>
                 <div class="col-md-2">
-                    <input type="number" step="0.01" name="unit_price" class="form-control" placeholder="{{ _('Price') }}" min="0" required>
+                    <div class="row g-1">
+                        <div class="col-6">
+                            <input type="text" name="pack_size" class="form-control form-control-sm" placeholder="{{ _('Size') }}">
+                        </div>
+                        <div class="col-6">
+                            <input type="text" name="pack_size_unit" class="form-control form-control-sm" placeholder="{{ _('Unit') }}">
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    <button type="button" class="btn btn-outline-danger remove-item"><i class="bi bi-x-lg"></i></button>
+                <div class="col-md-1">
+                    <input type="number" name="existing_qty" class="form-control form-control-sm text-end" placeholder="{{ _('Stock') }}" readonly>
                 </div>
+                <button type="button" class="btn btn-outline-danger btn-sm remove-item" style="position:absolute;top:0;right:-6px;width:22px;height:22px;padding:0;font-size:9px;z-index:5;border-radius:50%;display:flex;align-items:center;justify-content:center"><i class="bi bi-x-lg"></i></button>
             </div>
             {% endif %}
         </div>
@@ -173,6 +211,10 @@ function lookupProduct(input, row) {
     var skuIn = row.querySelector('input[name="sku"]');
     var nameIn = row.querySelector('input[name="name"]');
     var priceIn = row.querySelector('input[name="unit_price"]');
+    var pkgTypeIn = row.querySelector('input[name="package_type"]');
+    var pkgSizeIn = row.querySelector('input[name="pack_size"]');
+    var pkgSizeUnitIn = row.querySelector('input[name="pack_size_unit"]');
+    var existQtyIn = row.querySelector('input[name="existing_qty"]');
     fetch(LOOKUP_URL + '?q=' + encodeURIComponent(q))
         .then(function (r) { return r.json(); })
         .then(function (products) {
@@ -181,9 +223,28 @@ function lookupProduct(input, row) {
                 if (skuIn && p.sku) skuIn.value = p.sku;
                 if (nameIn && p.name) nameIn.value = p.name;
                 if (priceIn && p.price) priceIn.value = p.price;
+                if (pkgTypeIn && p.package_type) pkgTypeIn.value = p.package_type;
+                if (pkgSizeIn && p.pack_size) pkgSizeIn.value = p.pack_size;
+                if (pkgSizeUnitIn && p.pack_size_unit) pkgSizeUnitIn.value = p.pack_size_unit;
+                if (existQtyIn && p.quantity !== undefined) existQtyIn.value = p.quantity;
             }
         })
         .catch(function () {});
+}
+
+function validateQuantities() {
+    var errors = [];
+    var items = document.querySelectorAll('.line-item');
+    for (var i = 0; i < items.length; i++) {
+        var row = items[i];
+        var qty = parseInt(row.querySelector('input[name="quantity"]').value) || 0;
+        var exist = parseInt(row.querySelector('input[name="existing_qty"]').value) || 0;
+        var name = row.querySelector('input[name="name"]').value || row.querySelector('input[name="sku"]').value || ('Item ' + (i + 1));
+        if (exist > 0 && qty > exist) {
+            errors.push(name + ' — ' + _('Qty') + ' ' + qty + ' > ' + _('In Stock') + ' ' + exist);
+        }
+    }
+    return errors;
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -197,6 +258,18 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.target.closest('.remove-item')) {
             var items = document.querySelectorAll('.line-item');
             if (items.length > 1) e.target.closest('.line-item').remove();
+        }
+    });
+
+    document.getElementById('quoteForm').addEventListener('submit', function (e) {
+        var errDiv = document.getElementById('quoteFormError');
+        errDiv.classList.add('d-none');
+        var errors = validateQuantities();
+        if (errors.length > 0) {
+            e.preventDefault();
+            errDiv.textContent = errors.join('; ');
+            errDiv.classList.remove('d-none');
+            errDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     });
 
