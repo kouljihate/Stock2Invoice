@@ -1202,4 +1202,46 @@ _fr['Sales (Month)'] = 'Ventes (Mois)'
 _ar['Sales (Year)'] = 'المبيعات (السنة)'
 _fr['Sales (Year)'] = 'Ventes (Année)'
 
+_ar['Attention To'] = 'لصالح'
+_fr['Attention To'] = "À l'attention de"
+
+_ar['Attn:'] = 'لصالح:'
+_fr['Attn:'] = 'Attn:'
+
+_ar['Attention to:'] = 'لصالح:'
+_fr['Attention to:'] = "À l'attention de :"
+
+_ar['Contact Name'] = 'اسم جهة الاتصال'
+_fr['Contact Name'] = 'Nom du contact'
+
+_ar['Contact Email'] = 'البريد الإلكتروني للاتصال'
+_fr['Contact Email'] = 'Email du contact'
+
+_ar['Delivery Time'] = 'وقت التسليم'
+_fr['Delivery Time'] = 'Délai de livraison'
+
+_ar['Delivery:'] = 'التسليم:'
+_fr['Delivery:'] = 'Livraison :'
+
+_ar['Tel:'] = 'الهاتف:'
+_fr['Tel:'] = 'Tél :'
+
+_ar['Email:'] = 'البريد الإلكتروني:'
+_fr['Email:'] = 'Email :'
+
+_ar['RIB:'] = 'RIB:'
+_fr['RIB:'] = 'RIB :'
+
+_ar['IF:'] = 'IF:'
+_fr['IF:'] = 'IF :'
+
+_ar['TP:'] = 'TP:'
+_fr['TP:'] = 'TP :'
+
+_ar['RC:'] = 'RC:'
+_fr['RC:'] = 'RC :'
+
+_ar['ICE:'] = 'ICE:'
+_fr['ICE:'] = 'ICE :'
+
 

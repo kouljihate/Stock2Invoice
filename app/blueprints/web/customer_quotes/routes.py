@@ -89,13 +89,14 @@ def create_quote():
             flash('Quantity exceeds available stock', 'danger')
             return redirect(url_for('web_customer_quotes.create_quote'))
         count = CustomerQuoteModel.count({'company_id': oid(cid)})
-        quote_number = f"Q-{datetime.now().strftime('%Y%m%d')}-{count + 1:04d}"
+        quote_number = f"Q{datetime.now().strftime('%d%m%y')}-{count + 1:02d}"
         valid_until_str = request.form.get('valid_until', '')
         valid_until = datetime.strptime(valid_until_str, '%Y-%m-%d') if valid_until_str else None
         payload = {
             'quote_number': quote_number,
             'customer_name': request.form.get('customer_name', ''),
-            'customer_email': request.form.get('customer_email', ''),
+            'contact_name': request.form.get('contact_name', ''),
+            'contact_email': request.form.get('contact_email', ''),
             'customer_address': request.form.get('customer_address', ''),
             'items': items,
             'subtotal': sum(it['quantity'] * it['unit_price'] for it in items),
@@ -185,7 +186,8 @@ def edit_quote(quote_id):
         valid_until = datetime.strptime(valid_until_str, '%Y-%m-%d') if valid_until_str else None
         payload = {
             'customer_name': request.form.get('customer_name', ''),
-            'customer_email': request.form.get('customer_email', ''),
+            'contact_name': request.form.get('contact_name', ''),
+            'contact_email': request.form.get('contact_email', ''),
             'customer_address': request.form.get('customer_address', ''),
             'items': items,
             'subtotal': sum(it['quantity'] * it['unit_price'] for it in items),
@@ -242,7 +244,8 @@ def validate_quote(quote_id):
         user_id = get_jwt_identity()
         payload = {
             'customer_name': quote.get('customer_name', ''),
-            'customer_email': quote.get('customer_email', ''),
+            'contact_name': quote.get('contact_name', ''),
+            'contact_email': quote.get('contact_email', ''),
             'customer_address': quote.get('customer_address', ''),
             'items': quote.get('items', []),
             'discount_percent': float(quote.get('discount_percent', 0)),

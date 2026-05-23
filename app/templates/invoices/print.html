@@ -34,7 +34,7 @@
             <div class="col-6 text-end">
                 <strong>{{ _('Bill To:') }}</strong>
                 <p class="mb-0">{{ invoice.customer_name }}</p>
-                {% if invoice.customer_email %}<p class="mb-0"><small>{{ invoice.customer_email }}</small></p>{% endif %}
+                {% if invoice.contact_email %}<p class="mb-0"><small>{{ invoice.contact_email }}</small></p>{% elif invoice.customer_email %}<p class="mb-0"><small>{{ invoice.customer_email }}</small></p>{% endif %}
                 {% if invoice.customer_address %}<p><small>{{ invoice.customer_address }}</small></p>{% endif %}
             </div>
         </div>
@@ -53,8 +53,10 @@
             <div class="col-12">
                 <h3 class="mb-0 d-inline">{{ _('INVOICE') }}</h3>
                 <span class="h4 text-muted ms-2">{{ invoice.invoice_number }}</span>
+                {% if invoice.attention_to %}&nbsp;&nbsp;<small class="text-muted">| {{ _('Attention to:') }} {{ invoice.attention_to }}</small>{% endif %}
                 <br>
                 <small class="text-muted">{{ _('Date:') }} {{ invoice.created_at[:10] if invoice.created_at else '-' }}</small>
+                {% if invoice.delivery_time %}&nbsp;&nbsp;|&nbsp;&nbsp;<small>{{ _('Delivery:') }} {{ invoice.delivery_time }}</small>{% endif %}
             </div>
         </div>
 
@@ -84,12 +86,7 @@
         </table>
 
         <div class="row">
-            <div class="col-6">
-                {% if invoice.notes %}
-                <p><strong>{{ _('Notes:') }}</strong><br>{{ invoice.notes }}</p>
-                {% endif %}
-            </div>
-            <div class="col-6">
+            <div class="col-6 offset-6">
                 <table class="table table-sm table-borderless">
                     <tr><td>{{ _('Subtotal') }}</td><td class="text-end">{{ invoice.subtotal }} MAD</td></tr>
                     {% if invoice.discount_percent > 0 %}
@@ -101,7 +98,28 @@
             </div>
         </div>
 
-        <p class="text-center text-muted mt-4"><small>{{ _('Thank you for your business!') }}</small></p>
+        {% if invoice.notes %}
+        <div class="text-center mt-3">
+            <small class="text-muted"><strong>{{ _('Notes:') }}</strong><br>{{ invoice.notes }}</small>
+        </div>
+        {% endif %}
+
+        <hr class="mt-4">
+        <div class="row small text-muted">
+            <div class="col-6">
+                <strong>{{ current_company.name if current_company else 'Maure STC' }}</strong><br>
+                {% if current_company.address %}{{ current_company.address }}{% if current_company.city %}, {{ current_company.city }}{% endif %}<br>{% endif %}
+                {% if current_company.phone %}{{ _('Tel:') }} {{ current_company.phone }}<br>{% endif %}
+                {% if current_company.email %}{{ _('Email:') }} {{ current_company.email }}{% endif %}
+            </div>
+            <div class="col-6 text-end">
+                {% if current_company.rib %}{{ _('RIB:') }} {{ current_company.rib }}<br>{% endif %}
+                {% if current_company.if_tax %}{{ _('IF:') }} {{ current_company.if_tax }}<br>{% endif %}
+                {% if current_company.tp %}{{ _('TP:') }} {{ current_company.tp }}<br>{% endif %}
+                {% if current_company.rc %}{{ _('RC:') }} {{ current_company.rc }}<br>{% endif %}
+                {% if current_company.ice %}{{ _('ICE:') }} {{ current_company.ice }}{% endif %}
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

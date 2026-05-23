@@ -27,8 +27,10 @@
                     <div class="col-sm-6">
                         <small class="text-muted">{{ _('Customer') }}</small>
                         <p class="mb-0"><strong>{{ invoice.customer_name }}</strong></p>
-                        {% if invoice.customer_email %}<p class="mb-0"><small>{{ invoice.customer_email }}</small></p>{% endif %}
+                        {% if invoice.contact_email %}<p class="mb-0"><small>{{ invoice.contact_email }}</small></p>{% elif invoice.customer_email %}<p class="mb-0"><small>{{ invoice.customer_email }}</small></p>{% endif %}
                         {% if invoice.customer_address %}<p class="mb-0"><small>{{ invoice.customer_address }}</small></p>{% endif %}
+                        {% if invoice.attention_to %}<p class="mb-0 mt-1"><small class="text-muted">{{ _('Attn:') }}</small> {{ invoice.attention_to }}</p>{% endif %}
+                        {% if invoice.delivery_time %}<p class="mb-0 mt-1"><small class="text-muted">{{ _('Delivery:') }}</small> {{ invoice.delivery_time }}</p>{% endif %}
                     </div>
                     <div class="col-sm-6 text-sm-end">
                         <small class="text-muted">{{ _('Invoice Date') }}</small>

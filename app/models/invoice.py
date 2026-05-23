@@ -38,16 +38,12 @@ class InvoiceModel:
             {'$set': data}
         )
 
+
+
     @staticmethod
-    def get_next_sequence():
+    def count(filters=None):
         from app.extensions import mongo
-        result = mongo.db.counters.find_one_and_update(
-            {'_id': 'invoice_number'},
-            {'$inc': {'seq': 1}},
-            upsert=True,
-            return_document=True,
-        )
-        return result['seq']
+        return mongo.db[InvoiceModel.collection].count_documents(filters or {})
 
     @staticmethod
     def to_dict(inv):

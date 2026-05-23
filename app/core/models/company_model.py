@@ -59,6 +59,8 @@ class CompanyModel:
             'if_tax': c.get('if_tax'),
             'cnss': c.get('cnss'),
             'patente': c.get('patente'),
+            'rib': c.get('rib', ''),
+            'tp': c.get('tp', c.get('patente', '')),
             'website': c.get('website'),
             'created_at': c.get('created_at').isoformat() if c.get('created_at') else None,
         }

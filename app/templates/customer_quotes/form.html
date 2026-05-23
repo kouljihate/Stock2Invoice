@@ -12,7 +12,7 @@
                     <select name="customer_name" id="customerSelect" class="form-select" required>
                         <option value="">{{ _('-- Select Customer --') }}</option>
                         {% for c in customers %}
-                        <option value="{{ c.name }}" data-email="{{ c.email }}" data-address="{{ c.address }}" {% if quote and quote.customer_name == c.name %}selected{% endif %}>{{ c.name }}</option>
+                        <option value="{{ c.name }}" data-contact="{{ c.contact }}" data-email="{{ c.email }}" data-address="{{ c.address }}" {% if quote and quote.customer_name == c.name %}selected{% endif %}>{{ c.name }}</option>
                         {% endfor %}
                     </select>
                     <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
@@ -20,11 +20,15 @@
                     </button>
                 </div>
             </div>
-            <div class="col-md-4">
-                <label class="form-label">{{ _('Customer Email') }}</label>
-                <input type="email" name="customer_email" id="customerEmail" class="form-control" readonly value="{{ quote.customer_email if quote else '' }}">
+            <div class="col-md-3">
+                <label class="form-label">{{ _('Contact Name') }}</label>
+                <input type="text" name="contact_name" id="contactName" class="form-control" value="{{ quote.contact_name if quote else '' }}">
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
+                <label class="form-label">{{ _('Contact Email') }}</label>
+                <input type="email" name="contact_email" id="contactEmail" class="form-control" value="{{ quote.contact_email if quote else '' }}">
+            </div>
+            <div class="col-md-2">
                 <label class="form-label">{{ _('Valid Until') }}</label>
                 <input type="date" name="valid_until" class="form-control" value="{{ quote.valid_until[:10] if quote and quote.valid_until else '' }}">
             </div>
@@ -288,7 +292,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var sel = document.getElementById('customerSelect');
     sel.addEventListener('change', function () {
         var opt = sel.options[sel.selectedIndex];
-        document.getElementById('customerEmail').value = opt.dataset.email || '';
+        document.getElementById('contactName').value = opt.dataset.contact || '';
+        document.getElementById('contactEmail').value = opt.dataset.email || '';
         document.getElementById('customerAddress').value = opt.dataset.address || '';
     });
 
@@ -305,6 +310,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 var opt = document.createElement('option');
                 opt.value = c.name;
                 opt.textContent = c.name;
+                opt.dataset.contact = c.contact || '';
                 opt.dataset.email = c.email || '';
                 opt.dataset.address = c.address || '';
                 sel.appendChild(opt);

@@ -34,6 +34,10 @@ def list_products():
             import re
             regex = {'$regex': re.escape(request.args['search']), '$options': 'i'}
             filters['$or'] = [{'name': regex}, {'sku': regex}]
+        if request.args.get('status'):
+            filters['status'] = request.args['status']
+        if request.args.get('low_stock'):
+            filters['$expr'] = {'$lte': ['$quantity', '$quantity_min']}
         cid = _company_id()
         items, total = StockService.list(page, per_page, filters, cid)
         user = _get_user()

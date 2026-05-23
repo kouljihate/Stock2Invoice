@@ -63,7 +63,8 @@ class InvoiceService:
         tax = round(subtotal * 0.10, 2)
         total = round(subtotal + tax, 2)
 
-        invoice_number = f'INV-{InvoiceModel.get_next_sequence():05d}'
+        count = InvoiceModel.count({})
+        invoice_number = f"I{datetime.now().strftime('%d%m%y')}-{count + 1:02d}"
 
         invoice_data = {
             'invoice_number': invoice_number,

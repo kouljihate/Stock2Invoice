@@ -78,11 +78,13 @@ class OrderService:
         total = round(after_discount + tax_amount, 2)
 
         now = datetime.now(timezone.utc)
+        count = OrderModel.count({'company_id': ObjectId(company_id)})
 
         order_data = {
-            'order_number': f'ORD-{OrderService._next_sequence():05d}',
+            'order_number': f"O{datetime.now().strftime('%d%m%y')}-{count + 1:02d}",
             'customer_name': data['customer_name'].strip(),
-            'customer_email': (data.get('customer_email') or '').strip(),
+            'contact_name': (data.get('contact_name') or '').strip(),
+            'contact_email': (data.get('contact_email') or '').strip(),
             'customer_address': (data.get('customer_address') or '').strip(),
             'items': items,
             'subtotal': round(subtotal, 2),
@@ -124,8 +126,10 @@ class OrderService:
             update_data['notes'] = data['notes'].strip()
         if data.get('customer_name'):
             update_data['customer_name'] = data['customer_name'].strip()
-        if data.get('customer_email'):
-            update_data['customer_email'] = data['customer_email'].strip()
+        if 'contact_name' in data:
+            update_data['contact_name'] = data['contact_name'].strip()
+        if 'contact_email' in data:
+            update_data['contact_email'] = data['contact_email'].strip()
 
         OrderModel.update(order_id, update_data)
         logger.info('Order updated: %s (id=%s, status=%s->%s, by=%s)',
@@ -141,7 +145,8 @@ class OrderService:
         try:
             invoice_data = {
                 'customer_name': order_data['customer_name'],
-                'customer_email': order_data.get('customer_email', ''),
+                'contact_name': order_data.get('contact_name', ''),
+                'contact_email': order_data.get('contact_email', ''),
                 'customer_address': order_data.get('customer_address', ''),
                 'items': order_data['items'],
                 'discount_percent': order_data.get('discount_percent', 0),
@@ -150,12 +155,14 @@ class OrderService:
                 'notes': f'Auto-generated from Order {order_data.get("order_number")}',
             }
 
-            invoice_number = f'INV-{InvoiceModel.get_next_sequence():05d}'
+            inv_count = InvoiceModel.count({'company_id': ObjectId(company_id)})
+            invoice_number = f"I{datetime.now().strftime('%d%m%y')}-{inv_count + 1:02d}"
             now = datetime.now(timezone.utc)
             doc = {
                 'invoice_number': invoice_number,
                 'customer_name': invoice_data['customer_name'],
-                'customer_email': invoice_data.get('customer_email', ''),
+                'contact_name': invoice_data.get('contact_name', ''),
+                'contact_email': invoice_data.get('contact_email', ''),
                 'customer_address': invoice_data.get('customer_address', ''),
                 'invoice_date': now,
                 'due_date': now,
@@ -225,13 +232,4 @@ class OrderService:
             'cancelled': OrderModel.count({**filters, 'status': 'cancelled'}),
         }
 
-    @staticmethod
-    def _next_sequence():
-        from app.extensions.db import mongo
-        result = mongo.db.counters.find_one_and_update(
-            {'_id': 'order_number'},
-            {'$inc': {'seq': 1}},
-            upsert=True,
-            return_document=True,
-        )
-        return result['seq']
+

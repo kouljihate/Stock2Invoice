@@ -45,16 +45,6 @@ class InvoiceModel:
         mongo.db[InvoiceModel.collection].delete_one({'_id': ObjectId(invoice_id)})
 
     @staticmethod
-    def get_next_sequence():
-        result = mongo.db.counters.find_one_and_update(
-            {'_id': 'invoice_number'},
-            {'$inc': {'seq': 1}},
-            upsert=True,
-            return_document=True,
-        )
-        return result['seq']
-
-    @staticmethod
     def count(filters=None):
         return mongo.db[InvoiceModel.collection].count_documents(filters or {})
 
@@ -70,8 +60,11 @@ class InvoiceModel:
             'id': str(inv['_id']),
             'invoice_number': inv.get('invoice_number'),
             'customer_name': inv.get('customer_name'),
-            'customer_email': inv.get('customer_email', ''),
+            'contact_name': inv.get('contact_name', ''),
+            'contact_email': inv.get('contact_email', ''),
             'customer_address': inv.get('customer_address', ''),
+            'attention_to': inv.get('attention_to', ''),
+            'delivery_time': inv.get('delivery_time', ''),
             'invoice_date': inv.get('invoice_date').isoformat() if inv.get('invoice_date') else None,
             'due_date': inv.get('due_date').isoformat() if inv.get('due_date') else None,
             'items': inv.get('items', []),

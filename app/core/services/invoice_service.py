@@ -79,14 +79,18 @@ class InvoiceService:
         tax_amount = round(after_discount * (tax_percent / 100), 2)
         total = round(after_discount + tax_amount, 2)
 
-        invoice_number = f'INV-{InvoiceModel.get_next_sequence():05d}'
+        count = InvoiceModel.count({'company_id': ObjectId(company_id)})
+        invoice_number = f"I{datetime.now().strftime('%d%m%y')}-{count + 1:02d}"
         now = datetime.now(timezone.utc)
 
         invoice_data = {
             'invoice_number': invoice_number,
             'customer_name': data['customer_name'].strip(),
-            'customer_email': (data.get('customer_email') or '').strip(),
+            'contact_name': (data.get('contact_name') or '').strip(),
+            'contact_email': (data.get('contact_email') or '').strip(),
             'customer_address': (data.get('customer_address') or '').strip(),
+            'attention_to': (data.get('attention_to') or '').strip(),
+            'delivery_time': (data.get('delivery_time') or '').strip(),
             'invoice_date': now,
             'due_date': data.get('due_date') or now,
             'items': items,
@@ -137,8 +141,14 @@ class InvoiceService:
             update_data['notes'] = data['notes'].strip()
         if data.get('customer_name'):
             update_data['customer_name'] = data['customer_name'].strip()
-        if data.get('customer_email'):
-            update_data['customer_email'] = data['customer_email'].strip()
+        if 'contact_name' in data:
+            update_data['contact_name'] = data['contact_name'].strip()
+        if 'contact_email' in data:
+            update_data['contact_email'] = data['contact_email'].strip()
+        if 'attention_to' in data:
+            update_data['attention_to'] = data['attention_to'].strip()
+        if 'delivery_time' in data:
+            update_data['delivery_time'] = data['delivery_time'].strip()
         if data.get('invoice_date'):
             update_data['invoice_date'] = datetime.fromisoformat(data['invoice_date'])
         if data.get('due_date'):

@@ -4,6 +4,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.services.order_service import OrderService
 from app.core.models.order_model import OrderModel
 from app.core.models.product_model import ProductModel
+from app.core.models.customer_model import CustomerModel
 from app.core.models.user_model import UserModel
 from app.core.services.event_service import EventService
 from app.core.utils.helpers import paginate, oid
@@ -51,10 +52,12 @@ def create_order():
     user = _get_user()
     cid = _company_id()
     if request.method == 'GET':
+        customers = CustomerModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else []
         products = ProductModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else ProductModel.find_all_unpaginated()
         return render_template('orders/edit.html', mode='web',
                                user=UserModel.to_dict(user) if user else None,
-                               order=None, products=products)
+                               order=None, products=products,
+                               customers=[CustomerModel.to_dict(c) for c in customers])
 
     try:
         data = request.form.to_dict(flat=False)
@@ -63,15 +66,33 @@ def create_order():
         qtys = data.get('quantity', [])
         prices = data.get('unit_price', [])
         names = data.get('name', [])
+        package_types = data.get('package_type', [])
+        pack_sizes = data.get('pack_size', [])
+        pack_size_units = data.get('pack_size_unit', [])
+        existing_qtys = data.get('existing_qty', [])
+        qty_errors = []
         for i in range(len(skus)):
             if skus[i] and qtys[i] and int(qtys[i]) > 0:
-                items.append({'sku': skus[i], 'quantity': qtys[i],
-                              'unit_price': prices[i] if prices[i] else 0,
-                              'name': names[i] if i < len(names) else ''})
+                qty = int(qtys[i])
+                exist_qty = int(existing_qtys[i]) if i < len(existing_qtys) and existing_qtys[i] else 0
+                item_name = names[i] if i < len(names) else skus[i]
+                if exist_qty > 0 and qty > exist_qty:
+                    qty_errors.append(f"'{item_name}': qty {qty} exceeds stock {exist_qty}")
+                items.append({'sku': skus[i], 'quantity': qty,
+                              'unit_price': float(prices[i]) if prices[i] else 0,
+                              'name': names[i] if i < len(names) else '',
+                              'package_type': package_types[i] if i < len(package_types) else '',
+                              'pack_size': pack_sizes[i] if i < len(pack_sizes) else '',
+                              'pack_size_unit': pack_size_units[i] if i < len(pack_size_units) else '',
+                              'existing_qty': exist_qty})
+        if qty_errors:
+            flash('Quantity exceeds available stock', 'danger')
+            return redirect(url_for('web_orders.create_order'))
 
         payload = {
             'customer_name': request.form.get('customer_name', ''),
-            'customer_email': request.form.get('customer_email', ''),
+            'contact_name': request.form.get('contact_name', ''),
+            'contact_email': request.form.get('contact_email', ''),
             'customer_address': request.form.get('customer_address', ''),
             'items': items,
             'discount_percent': request.form.get('discount_percent', 0),
@@ -84,10 +105,12 @@ def create_order():
         if errors:
             for e in errors:
                 flash(e, 'danger')
+            customers = CustomerModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else []
             products = ProductModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else ProductModel.find_all_unpaginated()
             return render_template('orders/edit.html', mode='web',
                                    user=UserModel.to_dict(user) if user else None,
-                                   order=payload, products=products)
+                                   order=payload, products=products,
+                                   customers=[CustomerModel.to_dict(c) for c in customers])
 
         user_id = get_jwt_identity()
         order_id, order_number = OrderService.create(payload, user_id, cid)
@@ -98,10 +121,12 @@ def create_order():
     except Exception as e:
         logger.exception('Order create error')
         flash('Could not create order.', 'danger')
+        customers = CustomerModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else []
         products = ProductModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else ProductModel.find_all_unpaginated()
         return render_template('orders/edit.html', mode='web',
                                user=UserModel.to_dict(user) if user else None,
-                               order=request.form, products=products)
+                               order=request.form, products=products,
+                               customers=[CustomerModel.to_dict(c) for c in customers])
 
 
 @web_orders_bp.route('/<order_id>')

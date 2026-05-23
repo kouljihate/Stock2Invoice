@@ -1,13 +1,17 @@
 ﻿<div class="row mb-3">
     <div class="col-md-4">
-        <label class="form-label">Customer Name *</label>
+        <label class="form-label">Customer *</label>
         <input type="text" name="customer_name" class="form-control" value="{{ invoice.get('customer_name', '') if invoice else '' }}" required>
     </div>
-    <div class="col-md-4">
-        <label class="form-label">Customer Email</label>
-        <input type="email" name="customer_email" class="form-control" value="{{ invoice.get('customer_email', '') if invoice else '' }}">
+    <div class="col-md-3">
+        <label class="form-label">Contact Name</label>
+        <input type="text" name="contact_name" class="form-control" value="{{ invoice.get('contact_name', '') if invoice else '' }}">
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
+        <label class="form-label">Contact Email</label>
+        <input type="email" name="contact_email" class="form-control" value="{{ invoice.get('contact_email', '') if invoice else '' }}">
+    </div>
+    <div class="col-md-2">
         <label class="form-label">Status</label>
         <select name="status" class="form-select">
             <option value="draft" {% if invoice and invoice.get('status') == 'draft' %}selected{% endif %}>Draft</option>
