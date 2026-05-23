@@ -1,0 +1,91 @@
+{% extends 'base/layout.html' %}
+{% block title %}{{ _('User Management') }} — {{ company.name if company else '' }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><i class="bi bi-people me-2"></i>{{ _('User Management') }}</h4>
+    <div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+            <i class="bi bi-plus-lg me-1"></i>{{ _('Add User') }}
+        </button>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>{{ _('Name') }}</th>
+                    <th>{{ _('Email') }}</th>
+                    <th>{{ _('Role') }}</th>
+                    <th>{{ _('Joined') }}</th>
+                    <th class="text-end">{{ _('Actions') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>{{ u.name }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>
+                        <span class="badge bg-{{ 'info' if u.role == 'company_admin' else 'secondary' }}">
+                            {{ u.role }}
+                        </span>
+                    </td>
+                    <td><small>{{ u.created_at[:10] if u.created_at else '-' }}</small></td>
+                    <td class="text-end">
+                        <form method="POST" action="{{ url_for('web_users.set_role', user_id=u.id) }}" class="d-inline-block">
+                            <input type="hidden" name="role" value="{{ 'user' if u.role == 'company_admin' else 'company_admin' }}">
+                            <button type="submit" class="btn btn-sm btn-outline-warning" title="{{ _('Toggle role') }}">
+                                <i class="bi bi-arrow-left-right"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="text-center text-muted py-4">{{ _('No users found.') }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="addUserModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ url_for('web_users.create_user') }}">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ _('Add User') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">{{ _('Name') }}</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ _('Email') }}</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ _('Password') }}</label>
+                        <input type="password" name="password" class="form-control" required minlength="8">
+                        <div class="form-text">{{ _('At least 8 characters.') }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ _('Role') }}</label>
+                        <select name="role" class="form-select">
+                            <option value="user">{{ _('User') }}</option>
+                            <option value="company_admin">{{ _('Company Admin') }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Cancel') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ _('Add User') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
