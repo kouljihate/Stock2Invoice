@@ -1108,6 +1108,123 @@ _fr['Databases'] = 'Bases de données'
 _ar['Events'] = 'الأحداث'
 _fr['Events'] = 'Événements'
 
+_ar['Cash Flow'] = 'التدفق النقدي'
+_fr['Cash Flow'] = 'Flux de trésorerie'
+
+_ar['Pipeline Conversion'] = 'تحويل المسار'
+_fr['Pipeline Conversion'] = 'Conversion du pipeline'
+
+_ar['Pending Deliveries'] = 'التسليمات المعلقة'
+_fr['Pending Deliveries'] = 'Livraisons en attente'
+
+_ar['Outstanding Receivables'] = 'المستحقات القائمة'
+_fr['Outstanding Receivables'] = 'Créances en souffrance'
+
+_ar['overdue'] = 'متأخر'
+_fr['overdue'] = 'en retard'
+
+_ar['sent invoices awaiting payment'] = 'فواتير مرسلة بانتظار الدفع'
+_fr['sent invoices awaiting payment'] = 'factures envoyées en attente de paiement'
+
+_ar['Inflow'] = 'التدفق الوارد'
+_fr['Inflow'] = 'Entrées'
+
+_ar['Outflow'] = 'التدفق الصادر'
+_fr['Outflow'] = 'Sorties'
+
+_ar['Received'] = 'مستلم'
+_fr['Received'] = 'Reçu'
+
+_ar['Pending'] = 'معلق'
+_fr['Pending'] = 'En attente'
+
+_ar['Awaiting GR'] = 'بانتظار الاستلام'
+_fr['Awaiting GR'] = 'En attente de réception'
+
+_ar['Open'] = 'مفتوح'
+_fr['Open'] = 'Ouvert'
+
+_ar['Search suppliers...'] = 'بحث عن موردين...'
+_fr['Search suppliers...'] = 'Rechercher des fournisseurs...'
+
+_ar['Supply Chain & Procurement'] = 'سلسلة التوريد والمشتريات'
+_fr['Supply Chain & Procurement'] = 'Chaîne d\'approvisionnement'
+
+_ar['Accounts Payable'] = 'الحسابات الدائنة'
+_fr['Accounts Payable'] = 'Comptes fournisseurs'
+
+_ar['Due'] = 'تاريخ الاستحقاق'
+_fr['Due'] = 'Échéance'
+
+_ar['Pay'] = 'دفع'
+_fr['Pay'] = 'Payer'
+
+_ar['Quote-to-Order Pipeline'] = 'مسار عرض السعر إلى الطلب'
+_fr['Quote-to-Order Pipeline'] = 'Pipeline devis-commande'
+
+_ar['Expires'] = 'ينتهي'
+_fr['Expires'] = 'Expire'
+
+_ar['Convert to Order'] = 'تحويل إلى طلب'
+_fr['Convert to Order'] = 'Convertir en commande'
+
+_ar['Fulfillment & Delivery'] = 'التنفيذ والتسليم'
+_fr['Fulfillment & Delivery'] = 'Exécution et livraison'
+
+_ar['DN'] = 'إشعار تسليم'
+_fr['DN'] = 'BL'
+
+_ar['Dispatch'] = 'تسليم'
+_fr['Dispatch'] = 'Expédier'
+
+_ar['Billing & Invoicing'] = 'الفواتير والتحصيل'
+_fr['Billing & Invoicing'] = 'Facturation'
+
+_ar['Delivered'] = 'تم التسليم'
+_fr['Delivered'] = 'Livré'
+
+_ar['Invoiced'] = 'تم الفوترة'
+_fr['Invoiced'] = 'Facturé'
+
+_ar['Critical Operational Alerts'] = 'تنبيهات تشغيلية حرجة'
+_fr['Critical Operational Alerts'] = 'Alertes opérationnelles critiques'
+
+_ar['Customer Invoices are overdue by > 15 days'] = 'فواتير العملاء متأخرة > 15 يومًا'
+_fr['Customer Invoices are overdue by > 15 days'] = 'Factures clients en retard de > 15 jours'
+
+_ar['Stock for'] = 'مخزون'
+_fr['Stock for'] = 'Stock de'
+
+_ar['is below safety threshold'] = 'أقل من حد الأمان'
+_fr['is below safety threshold'] = 'est en dessous du seuil de sécurité'
+
+_ar['Supplier Invoice'] = 'فاتورة مورد'
+_fr['Supplier Invoice'] = 'Facture fournisseur'
+
+_ar['requires payment approval'] = 'تتطلب موافقة الدفع'
+_fr['requires payment approval'] = 'nécessite une approbation de paiement'
+
+_ar['No critical alerts'] = 'لا توجد تنبيهات حرجة'
+_fr['No critical alerts'] = 'Aucune alerte critique'
+
+_ar['New Supplier'] = 'مورد جديد'
+_fr['New Supplier'] = 'Nouveau fournisseur'
+
+_ar['New Quote'] = 'عرض سعر جديد'
+_fr['New Quote'] = 'Nouveau devis'
+
+_ar['New Purchase'] = 'شراء جديد'
+_fr['New Purchase'] = 'Nouvel achat'
+
+_ar['New Goods Receipt'] = 'استلام بضائع جديد'
+_fr['New Goods Receipt'] = 'Nouvelle réception'
+
+_ar['No orders ready for dispatch.'] = 'لا توجد طلبات جاهزة للتسليم.'
+_fr['No orders ready for dispatch.'] = 'Aucune commande prête à être expédiée.'
+
+_ar['No active quotes.'] = 'لا توجد عروض أسعار نشطة.'
+_fr['No active quotes.'] = 'Aucun devis actif.'
+
 _ar['Company Information'] = 'معلومات الشركة'
 _fr['Company Information'] = 'Informations société'
 
