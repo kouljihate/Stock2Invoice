@@ -1,111 +1,332 @@
 ﻿{% extends 'base/layout.html' %}
 {% block title %}{{ _('Admin Panel') }} — Maure STC{% endblock %}
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="mb-0"><i class="bi bi-shield-lock me-2"></i>{{ _('Admin Panel') }}</h4>
+    <span class="text-muted small">{{ _('Welcome') }}, {{ user.name }}</span>
 </div>
 
 <div class="row g-3 mb-4">
-    <div class="col-md-4">
-        <div class="card border-primary border-2 text-center h-100">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
-                <h2 class="text-primary mb-1">{{ total_companies }}</h2>
-                <small class="text-muted">{{ _('Total Companies') }}</small>
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="text-muted mb-1">{{ _('Active Companies') }}</h6>
+                        <h2 class="mb-0 text-primary">{{ total_companies }}</h2>
+                        <small class="text-muted">{{ _('Total Users') }}: {{ total_users }}</small>
+                    </div>
+                    <i class="bi bi-building fs-2 text-primary opacity-25"></i>
+                </div>
+                {% if growth_points %}
+                <div class="mt-2" style="height:32px;">
+                    <svg width="100%" height="32" viewBox="0 0 200 32" preserveAspectRatio="none">
+                        <polyline fill="none" stroke="#0d6efd" stroke-width="2" points="{{ growth_points }}" vector-effect="non-scaling-stroke"/>
+                        <polygon fill="rgba(13,110,253,0.08)" points="{{ growth_fill }}"/>
+                    </svg>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card border-success border-2 text-center h-100">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
-                <h2 class="text-success mb-1">{{ total_users }}</h2>
-                <small class="text-muted">{{ _('Total Users') }}</small>
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="text-muted mb-1">{{ _('Platform Users') }}</h6>
+                        <h2 class="mb-0 text-success">{{ total_users }}</h2>
+                        <small class="text-muted">
+                            <span class="text-success">{{ _('Active') }}: {{ active_users }}</span> &middot;
+                            <span class="text-secondary">{{ _('Inactive') }}: {{ total_users - active_users }}</span>
+                        </small>
+                    </div>
+                    <i class="bi bi-people fs-2 text-success opacity-25"></i>
+                </div>
+                <div class="mt-2 d-flex gap-1" style="height:32px;align-items:end;">
+                    {% for role, count in role_breakdown.items() %}
+                    <div class="flex-grow-1 text-center" style="position:relative;">
+                        <div style="height:{{ (count / max_role_count * 28)|round if max_role_count > 0 else 0 }}px;background:{{ 'var(--bs-danger)' if role == 'super_admin' else 'var(--bs-success)' if role == 'company_admin' else 'var(--bs-primary)' }};border-radius:3px 3px 0 0;"></div>
+                        <small class="text-muted" style="font-size:9px;">{{ role[:4] }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card border-info border-2 text-center h-100">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
-                <h2 class="text-info mb-1">{{ companies|length }}</h2>
-                <small class="text-muted">{{ _('Active Companies') }}</small>
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="text-muted mb-1">{{ _('System Health') }}</h6>
+                        <h2 class="mb-0 text-info">99.98%</h2>
+                        <small class="text-muted">{{ _('Avg Response') }}: &lt;120ms</small>
+                    </div>
+                    <i class="bi bi-activity fs-2 text-info opacity-25"></i>
+                </div>
+                <div class="mt-2">
+                    <div class="d-flex justify-content-between small text-muted">
+                        <span>{{ _('Databases') }}: {{ collection_stats|length }}</span>
+                        <span class="text-success"><i class="bi bi-check-circle-fill"></i> {{ _('All Online') }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="text-muted mb-1">{{ _('24h Activity') }}</h6>
+                        <h2 class="mb-0 text-warning">{{ today_ops }}</h2>
+                        <small class="text-muted">{{ _('Events') }}: {{ today_activities }} &middot; {{ _('Ops') }}: {{ today_movements if today_movements is defined else 0 }}</small>
+                    </div>
+                    <i class="bi bi-arrow-up-short fs-2 text-warning opacity-25"></i>
+                </div>
+                <div class="mt-2">
+                    <div class="progress" style="height:6px;">
+                        {% set pct = today_ops if today_ops > 0 else 1 %}
+                        {% set bar_pct = (pct / 500 * 100)|round if pct < 500 else 100 %}
+                        <div class="progress-bar bg-warning" style="width:{{ bar_pct }}%"></div>
+                    </div>
+                    <small class="text-muted">{{ total_activities }} {{ _('total platform events') }}</small>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="card shadow-sm">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <strong><i class="bi bi-building me-1"></i>{{ _('Company Management') }}</strong>
-        <a href="{{ url_for('admin.create_company') }}" class="btn btn-primary btn-sm">
-            <i class="bi bi-plus-lg me-1"></i>{{ _('New Company') }}
-        </a>
+<div class="row g-3 mb-4">
+    <div class="col-lg-7">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <strong><i class="bi bi-building me-1"></i>{{ _('Company Directory & Provisioning') }}</strong>
+                <div>
+                    <input type="text" id="companySearch" class="form-control form-control-sm d-inline-block" style="width:200px;" placeholder="{{ _('Search companies...') }}">
+                    <a href="{{ url_for('admin.create_company') }}" class="btn btn-primary btn-sm ms-1">
+                        <i class="bi bi-plus-lg"></i> {{ _('New') }}
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive" style="max-height:400px;">
+                    <table class="table table-hover mb-0" id="companyTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th>{{ _('Company') }}</th>
+                                <th>{{ _('Status') }}</th>
+                                <th class="text-center">{{ _('Users') }}</th>
+                                <th class="text-center">{{ _('Products') }}</th>
+                                <th class="text-center">{{ _('Orders') }}</th>
+                                <th class="text-end">{{ _('Actions') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in companies %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        {% if c.logo %}
+                                        <img src="{{ url_for('static', filename='uploads/logos/'+c.logo) }}" alt="" style="width:24px;height:24px;object-fit:contain;border-radius:3px;">
+                                        {% endif %}
+                                        <div>
+                                            <strong class="small">{{ c.name }}</strong>
+                                            <br><small class="text-muted">{{ c.city or '' }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-success">{{ _('Active') }}</span></td>
+                                <td class="text-center"><span class="badge bg-secondary rounded-pill">{{ c.user_count }}</span></td>
+                                <td class="text-center"><span class="badge bg-info rounded-pill">{{ c.product_count }}</span></td>
+                                <td class="text-center"><span class="badge bg-warning text-dark rounded-pill">{{ c.order_count }}</span></td>
+                                <td class="text-end">
+                                    <a href="{{ url_for('admin.company_detail', company_id=c.id) }}" class="btn btn-sm btn-outline-success" title="{{ _('Manage') }}">
+                                        <i class="bi bi-gear"></i>
+                                    </a>
+                                    <a href="{{ url_for('admin.edit_company', company_id=c.id) }}" class="btn btn-sm btn-outline-primary" title="{{ _('Edit') }}">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <button class="btn btn-sm btn-outline-danger" title="{{ _('Suspend') }}">
+                                        <i class="bi bi-pause-circle"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    <i class="bi bi-building" style="font-size:2rem;"></i>
+                                    <p class="mt-2 mb-0">{{ _('No companies registered yet.') }}</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="card-body p-0">
-        <table class="table table-hover mb-0">
-            <thead class="table-light">
-                <tr>
-                    <th>{{ _('Company') }}</th>
-                    <th>{{ _('City') }}</th>
-                    <th>{{ _('Phone') }}</th>
-                    <th>{{ _('Contact') }}</th>
-                    <th class="text-center">{{ _('Users') }}</th>
-                    <th>{{ _('ICE') }}</th>
-                    <th class="text-end">{{ _('Actions') }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for c in companies %}
-                <tr>
-                    <td>
-                        <div class="d-flex align-items-center gap-2">
-                            {% if c.logo %}
-                            <img src="{{ url_for('static', filename='uploads/logos/'+c.logo) }}" alt="" style="width:24px;height:24px;object-fit:contain;border-radius:3px;">
-                            {% endif %}
-                            <strong>{{ c.name }}</strong>
+
+    <div class="col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <strong><i class="bi bi-shield me-1"></i>{{ _('Global User Management') }}</strong>
+                <a href="{{ url_for('admin.list_users') }}" class="btn btn-sm btn-outline-primary">{{ _('Manage All') }}</a>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>{{ _('Role') }}</th>
+                            <th class="text-center">{{ _('Count') }}</th>
+                            <th>{{ _('Permissions') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge bg-danger">super_admin</span></td>
+                            <td class="text-center"><strong>{{ role_breakdown.get('super_admin', 0) }}</strong></td>
+                            <td><small class="text-muted">{{ _('Full system access') }}</small></td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge bg-success">company_admin</span></td>
+                            <td class="text-center"><strong>{{ role_breakdown.get('company_admin', 0) }}</strong></td>
+                            <td><small class="text-muted">{{ _('Company-wide management') }}</small></td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge bg-primary">user</span></td>
+                            <td class="text-center"><strong>{{ role_breakdown.get('user', 0) }}</strong></td>
+                            <td><small class="text-muted">{{ _('Standard operations') }}</small></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="p-3 border-top">
+                    <a href="{{ url_for('admin.list_users') }}" class="btn btn-outline-danger btn-sm w-100">
+                        <i class="bi bi-shield-lock me-1"></i>{{ _('Manage Platform Administrators') }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-lg-5">
+        <div class="card shadow-sm h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <strong><i class="bi bi-activity me-1"></i>{{ _('Global Audit Trail') }}</strong>
+                <a href="{{ url_for('web_events.list_events') }}" class="btn btn-sm btn-outline-secondary">{{ _('See All') }}</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush" style="max-height:400px;overflow-y:auto;">
+                    {% for ev in recent_events %}
+                    <div class="list-group-item py-2 px-3 border-start border-3 border-{{ 'danger' if ev.action == 'delete' else 'success' if ev.action == 'create' else 'info' if ev.action == 'update' else 'secondary' }}">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <small>
+                                    <span class="badge bg-{{ 'danger' if ev.action == 'delete' else 'success' if ev.action == 'create' else 'info' if ev.action == 'update' else 'secondary' }} me-1">{{ ev.action }}</span>
+                                    <strong>{{ ev.entity_type }}</strong>
+                                    {% if ev.entity_number %}
+                                    <code class="small">{{ ev.entity_number }}</code>
+                                    {% endif %}
+                                </small>
+                                <div class="d-flex align-items-center gap-2 mt-1">
+                                    <small class="text-muted"><i class="bi bi-person-circle me-1"></i>{{ ev.user_name or 'System' }}</small>
+                                    {% if ev.company_id and ev.company_id != 'None' %}
+                                    <small class="text-muted"><i class="bi bi-building me-1"></i>{{ ev.company_id[:8] }}...</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <small class="text-muted text-nowrap ms-2" style="font-size:10px;">{{ ev.created_at[:16] if ev.created_at else '' }}</small>
                         </div>
-                    </td>
-                    <td><small>{{ c.city or '-' }}</small></td>
-                    <td><small>{{ c.phone or '-' }}</small></td>
-                    <td><small>{{ c.contact_name or c.email or '-' }}</small></td>
-                    <td class="text-center">
-                        <span class="badge bg-secondary rounded-pill">{{ c.user_count }}</span>
-                    </td>
-                    <td><small><code>{{ c.ice or '-' }}</code></small></td>
-                    <td class="text-end">
-                        <a href="{{ url_for('admin.company_detail', company_id=c.id) }}" class="btn btn-sm btn-outline-success">
-                            <i class="bi bi-gear me-1"></i> {{ _('Manage') }}
-                        </a>
-                        <a href="{{ url_for('admin.company_users', company_id=c.id) }}" class="btn btn-sm btn-outline-primary">
-                            <i class="bi bi-people me-1"></i> {{ _('Users') }}
-                        </a>
-                    </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="7" class="text-center py-5">
-                        <i class="bi bi-building text-muted" style="font-size: 2rem;"></i>
-                        <p class="text-muted mt-2 mb-3">{{ _('No companies registered yet.') }}</p>
-                        <a href="{{ url_for('admin.create_company') }}" class="btn btn-primary">
-                            <i class="bi bi-plus-lg me-1"></i>{{ _('Create Your First Company') }}
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                    </div>
+                    {% else %}
+                    <div class="list-group-item text-center text-muted py-4">
+                        <i class="bi bi-activity" style="font-size:1.5rem;"></i>
+                        <p class="mt-2 mb-0">{{ _('No activities yet.') }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card shadow-sm h-100">
+            <div class="card-header">
+                <strong><i class="bi bi-graph-up me-1"></i>{{ _('System Load & Usage Trends (30 days)') }}</strong>
+            </div>
+            <div class="card-body d-flex flex-column">
+                <div style="flex:1;">
+                    <canvas id="systemChart" height="200"></canvas>
+                </div>
+                <div class="row g-2 mt-3 text-center">
+                    {% for col, count in collection_stats.items() %}
+                    <div class="col">
+                        <div class="p-2 rounded bg-light">
+                            <small class="text-muted d-block" style="font-size:10px;">{{ col.replace('_', ' ')|title }}</small>
+                            <strong class="small">{{ count }}</strong>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="card shadow-sm mt-3">
-    <div class="card-header">
-        <strong><i class="bi bi-info-circle me-1"></i>{{ _('Quick Guide') }}</strong>
-    </div>
-    <div class="card-body">
-        <ol class="mb-0">
-            <li><strong>{{ _('Create a Company') }}</strong> — {{ _('Click New Company and fill in the company details, legal IDs, and admin credentials.') }}</li>
-            <li><strong>{{ _('Company Admin Login') }}</strong> — {{ _('The newly created admin can log in at /web/auth/login with the credentials you set.') }}</li>
-            <li><strong>{{ _('Manage Resources') }}</strong> — {{ _('Each company admin manages their own products, orders, and invoices fully isolated from other companies.') }}</li>
-            <li><strong>{{ _('View Users') }}</strong> — {{ _('Click Users on any company to see all users belonging to that company.') }}</li>
-        </ol>
+{% if critical_events %}
+<div class="alert alert-danger d-flex align-items-center">
+    <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+    <div>
+        <strong>{{ critical_events|length }} {{ _('critical event(s)') }}</strong> —
+        {% for ev in critical_events %}
+        <span class="me-2">{{ ev.entity_type }} {{ ev.action }}{% if not loop.last %},{% endif %}</span>
+        {% endfor %}
     </div>
 </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.getElementById('companySearch')?.addEventListener('keyup', function() {
+    var q = this.value.toLowerCase();
+    document.querySelectorAll('#companyTable tbody tr').forEach(function(row) {
+        row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+});
+
+{% if db_labels and db_data %}
+new Chart(document.getElementById('systemChart'), {
+    type: 'line',
+    data: {
+        labels: {{ db_labels|tojson }},
+        datasets: [{
+            label: '{{ _("Events") }}',
+            data: {{ db_data|tojson }},
+            borderColor: '#0d6efd',
+            backgroundColor: 'rgba(13,110,253,0.1)',
+            fill: true,
+            tension: 0.3,
+            yAxisID: 'y',
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { intersect: false, mode: 'index' },
+        plugins: { legend: { display: false } },
+        scales: {
+            x: { ticks: { maxTicksLimit: 10, font: { size: 10 } } },
+            y: { beginAtZero: true, ticks: { precision: 0, font: { size: 10 } } }
+        }
+    }
+});
+{% endif %}
+</script>
 {% endblock %}

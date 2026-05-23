@@ -1015,6 +1015,99 @@ _fr['No companies yet.'] = 'Aucune société pour l\'instant.'
 _ar['Create Company'] = 'إنشاء شركة'
 _fr['Create Company'] = 'Créer une société'
 
+_ar["Today's Activities"] = 'أنشطة اليوم'
+_fr["Today's Activities"] = "Activités d'aujourd'hui"
+
+_ar['Recent Activities'] = 'النشاطات الأخيرة'
+_fr['Recent Activities'] = 'Activités récentes'
+
+_ar['No activities yet.'] = 'لا توجد نشاطات بعد.'
+_fr['No activities yet.'] = 'Aucune activité pour l\'instant.'
+
+_ar['Recent Purchase Orders'] = 'أوامر الشراء الأخيرة'
+_fr['Recent Purchase Orders'] = 'Bons de commande récents'
+
+_ar['Recent Supplier Invoices'] = 'فواتير الموردين الأخيرة'
+_fr['Recent Supplier Invoices'] = 'Factures fournisseurs récentes'
+
+_ar['Recent Quotes'] = 'عروض الأسعار الأخيرة'
+_fr['Recent Quotes'] = 'Devis récents'
+
+_ar['Recent Delivery Notes'] = 'إشعارات التسليم الأخيرة'
+_fr['Recent Delivery Notes'] = 'Bons de livraison récents'
+
+_ar['Total Activities'] = 'إجمالي النشاطات'
+_fr['Total Activities'] = 'Total des activités'
+
+_ar['Active Companies'] = 'الشركات النشطة'
+_fr['Active Companies'] = 'Sociétés actives'
+
+_ar['Platform Users'] = 'مستخدمو المنصة'
+_fr['Platform Users'] = 'Utilisateurs de la plateforme'
+
+_ar['Active'] = 'نشط'
+_fr['Active'] = 'Actif'
+
+_ar['Inactive'] = 'غير نشط'
+_fr['Inactive'] = 'Inactif'
+
+_ar['System Health'] = 'صحة النظام'
+_fr['System Health'] = 'Santé du système'
+
+_ar['Avg Response'] = 'متوسط الاستجابة'
+_fr['Avg Response'] = 'Réponse moyenne'
+
+_ar['All Online'] = 'الكل متصل'
+_fr['All Online'] = 'Tout en ligne'
+
+_ar['24h Activity'] = 'نشاط 24 ساعة'
+_fr['24h Activity'] = 'Activité 24h'
+
+_ar['total platform events'] = 'إجمالي أحداث المنصة'
+_fr['total platform events'] = 'total des événements de la plateforme'
+
+_ar['Company Directory & Provisioning'] = 'دليل الشركات والإعداد'
+_fr['Company Directory & Provisioning'] = 'Annuaire des sociétés'
+
+_ar['Search companies...'] = 'بحث عن شركات...'
+_fr['Search companies...'] = 'Rechercher des sociétés...'
+
+_ar['Global Audit Trail'] = 'سجل التدقيق العام'
+_fr['Global Audit Trail'] = 'Piste d\'audit globale'
+
+_ar['Global User Management'] = 'إدارة المستخدمين العالمية'
+_fr['Global User Management'] = 'Gestion globale des utilisateurs'
+
+_ar['Full system access'] = 'وصول كامل للنظام'
+_fr['Full system access'] = 'Accès complet au système'
+
+_ar['Company-wide management'] = 'إدارة على مستوى الشركة'
+_fr['Company-wide management'] = 'Gestion au niveau de la société'
+
+_ar['Standard operations'] = 'عمليات قياسية'
+_fr['Standard operations'] = 'Opérations standard'
+
+_ar['Manage Platform Administrators'] = 'إدارة مسؤولي المنصة'
+_fr['Manage Platform Administrators'] = 'Gérer les administrateurs de la plateforme'
+
+_ar['System Load & Usage Trends (30 days)'] = 'تحميل النظام واتجاهات الاستخدام (30 يومًا)'
+_fr['System Load & Usage Trends (30 days)'] = 'Charge système et tendances d\'utilisation (30 jours)'
+
+_ar['critical event(s)'] = 'حدث (أحداث) حرجة'
+_fr['critical event(s)'] = 'événement(s) critique(s)'
+
+_ar['Suspend'] = 'تعليق'
+_fr['Suspend'] = 'Suspendre'
+
+_ar['Permissions'] = 'الأذونات'
+_fr['Permissions'] = 'Autorisations'
+
+_ar['Databases'] = 'قواعد البيانات'
+_fr['Databases'] = 'Bases de données'
+
+_ar['Events'] = 'الأحداث'
+_fr['Events'] = 'Événements'
+
 _ar['Company Information'] = 'معلومات الشركة'
 _fr['Company Information'] = 'Informations société'
 
@@ -1243,5 +1336,14 @@ _fr['RC:'] = 'RC :'
 
 _ar['ICE:'] = 'ICE:'
 _fr['ICE:'] = 'ICE :'
+
+_ar['Toggle role'] = 'تبديل الدور'
+_fr['Toggle role'] = 'Changer le rôle'
+
+_ar['At least 8 characters.'] = '8 أحرف على الأقل.'
+_fr['At least 8 characters.'] = 'Au moins 8 caractères.'
+
+_ar['Company Admin'] = 'مسؤول الشركة'
+_fr['Company Admin'] = 'Administrateur société'
 
 

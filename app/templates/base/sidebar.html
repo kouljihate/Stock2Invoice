@@ -1,11 +1,12 @@
 ﻿<div class="d-flex flex-column flex-shrink-0 pt-3 sidebar">
     <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-            <a href="{{ url_for('web_dashboard.index') }}" class="nav-link link-dark {% if request.endpoint and 'dashboard' in request.endpoint %}active{% endif %}">
+            <a href="{% if user and user.role == 'super_admin' %}{{ url_for('admin.index') }}{% else %}{{ url_for('web_dashboard.index') }}{% endif %}" class="nav-link link-dark {% if request.endpoint and ('dashboard' in request.endpoint or request.endpoint == 'admin.index') %}active{% endif %}">
                 <i class="bi bi-speedometer2 me-2"></i>{{ _('Dashboard') }}
             </a>
         </li>
 
+        {% if not user or user.role != 'super_admin' %}
         <li class="nav-item mt-2 center">
             <span class="material-symbols-outlined">
                 add_shopping_cart
@@ -64,10 +65,18 @@
                 <i class="bi bi-file-text me-2"></i>{{ _('Customer Invoices') }}
             </a>
         </li>
+        {% endif %}
 
         <li class="nav-item mt-2">
             <small class="text-muted text-uppercase px-3 fw-bold" style="font-size:0.65rem;letter-spacing:0.05em;">{{ _('Administration') }}</small>
         </li>
+        {% if user and user.role in ('company_admin', 'super_admin') %}
+        <li>
+            <a href="{{ url_for('web_users.list_users') }}" class="nav-link link-dark {% if request.endpoint and 'web_users' in request.endpoint %}active{% endif %}">
+                <i class="bi bi-people me-2"></i>{{ _('User Management') }}
+            </a>
+        </li>
+        {% endif %}
         {% if user and user.role == 'super_admin' %}
         <li>
             <a href="{{ url_for('admin.companies') }}" class="nav-link link-dark {% if request.endpoint and request.endpoint.startswith('admin.') %}active{% endif %}">
@@ -76,23 +85,13 @@
         </li>
         <li>
             <a href="{{ url_for('admin.list_users') }}" class="nav-link link-dark {% if request.endpoint == 'admin.list_users' %}active{% endif %}">
-                <i class="bi bi-people me-2"></i>{{ _('Users') }}
+                <i class="bi bi-people me-2"></i>{{ _('All Users') }}
             </a>
         </li>
         <li>
             <hr>
         </li>
         {% endif %}
-        <li>
-            <a href="{{ url_for('web_stock.list_products') }}" class="nav-link link-dark {% if request.endpoint and 'stock' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-box me-2"></i>{{ _('Products (Inventory)') }}
-            </a>
-        </li>
-        <li>
-            <a href="{{ url_for('web_customers.list_customers') }}" class="nav-link link-dark {% if request.endpoint and 'customers' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-people me-2"></i>{{ _('Customers') }}
-            </a>
-        </li>
         <li>
             <a href="{{ url_for('web_events.list_events') }}" class="nav-link link-dark {% if request.endpoint and 'events' in request.endpoint %}active{% endif %}">
                 <i class="bi bi-activity me-2"></i>{{ _('Activity Log') }}

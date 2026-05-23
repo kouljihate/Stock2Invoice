@@ -12,6 +12,10 @@ class EventModel:
         return str(result.inserted_id)
 
     @staticmethod
+    def count(filters=None):
+        return mongo.db[EventModel.collection].count_documents(filters or {})
+
+    @staticmethod
     def find_all(page=1, per_page=20, filters=None):
         query = filters or {}
         total = mongo.db[EventModel.collection].count_documents(query)

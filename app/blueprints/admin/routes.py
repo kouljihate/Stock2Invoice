@@ -4,7 +4,6 @@ import re
 from uuid import uuid4
 from flask import Blueprint, current_app, render_template, request, redirect, url_for, flash
 from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
-from werkzeug.utils import secure_filename
 from app.core.models.company_model import CompanyModel
 from app.core.models.user_model import UserModel
 from app.core.services.auth_service import AuthService
@@ -51,23 +50,102 @@ def _get_user():
 @super_admin_required
 def index():
     from bson.objectid import ObjectId
-    companies = CompanyModel.find_all()
-    user = _get_user()
+    from app.core.models.event_model import EventModel
+    from datetime import datetime, timezone, timedelta
 
+    user = _get_user()
+    now = datetime.now(timezone.utc)
+    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    thirty_days_ago = now - timedelta(days=30)
+
+    companies = CompanyModel.find_all()
     company_list = []
     for c in companies:
         d = CompanyModel.to_dict(c)
-        d['user_count'] = UserModel.count({'company_id': ObjectId(d['id'])})
+        cid = ObjectId(d['id'])
+        d['user_count'] = UserModel.count({'company_id': cid})
+        d['product_count'] = mongo.db['products'].count_documents({'company_id': cid})
+        d['order_count'] = mongo.db['orders'].count_documents({'company_id': cid})
+        d['invoice_count'] = mongo.db['invoices'].count_documents({'company_id': cid})
+        d['movement_count'] = mongo.db['stock_movements'].count_documents({'company_id': cid})
+        d['po_count'] = mongo.db['purchase_orders'].count_documents({'company_id': cid})
         company_list.append(d)
 
     total_companies = len(company_list)
     total_users = sum(c['user_count'] for c in company_list)
+    total_activities = EventModel.count()
+    today_activities = EventModel.count({'created_at': {'$gte': today_start}})
+    today_movements = mongo.db['stock_movements'].count_documents({'created_at': {'$gte': today_start}})
+    today_ops = today_activities + today_movements
+
+    company_growth = list(mongo.db['companies'].aggregate([
+        {'$match': {'created_at': {'$gte': thirty_days_ago}}},
+        {'$group': {'_id': {'$dateToString': {'format': '%Y-%m-%d', 'date': '$created_at'}}, 'count': {'$sum': 1}}},
+        {'$sort': {'_id': 1}},
+    ]))
+    growth_labels = [g['_id'] for g in company_growth]
+    growth_data = [g['count'] for g in company_growth]
+    growth_max = max(growth_data) if growth_data else 1
+    growth_len = len(growth_data) or 1
+    growth_points = ' '.join(
+        f'{int(i * 200 / (growth_len - 1))},{int(32 - (v / growth_max * 28))}'
+        for i, v in enumerate(growth_data)
+    ) if growth_data else ''
+    growth_fill = f'0,32 {growth_points} 200,32' if growth_points else ''
+
+    user_roles = list(mongo.db['users'].aggregate([
+        {'$group': {'_id': '$role', 'count': {'$sum': 1}}},
+    ]))
+    role_breakdown = {r['_id']: r['count'] for r in user_roles}
+    max_role_count = max(role_breakdown.values()) if role_breakdown else 1
+
+    active_user_ids = set()
+    recent_user_events = mongo.db['events'].find(
+        {'created_at': {'$gte': today_start}, 'user_id': {'$ne': None}},
+        {'user_id': 1}
+    )
+    for ev in recent_user_events:
+        if ev.get('user_id'):
+            active_user_ids.add(str(ev['user_id']))
+
+    events_raw, _ = EventModel.find_all(page=1, per_page=20)
+    recent_events = [EventModel.to_dict(ev) for ev in events_raw]
+
+    critical_events = [e for e in recent_events if e['action'] in ('delete',) or 'failed' in e.get('entity_type', '').lower() or 'alert' in e.get('entity_type', '').lower()]
+
+    collection_stats = {}
+    for col in ['companies', 'users', 'products', 'orders', 'invoices', 'stock_movements', 'purchase_orders', 'supplier_invoices', 'customer_quotes', 'delivery_notes']:
+        collection_stats[col] = mongo.db[col].count_documents({})
+
+    db_usage_30d = list(mongo.db['events'].aggregate([
+        {'$match': {'created_at': {'$gte': thirty_days_ago}}},
+        {'$group': {'_id': {'$dateToString': {'format': '%Y-%m-%d', 'date': '$created_at'}}, 'count': {'$sum': 1}}},
+        {'$sort': {'_id': 1}},
+    ]))
+    db_labels = [d['_id'] for d in db_usage_30d]
+    db_data = [d['count'] for d in db_usage_30d]
 
     return render_template('admin/index.html', mode='web',
                            user=UserModel.to_dict(user) if user else None,
                            companies=company_list,
                            total_companies=total_companies,
-                           total_users=total_users)
+                           total_users=total_users,
+                           total_activities=total_activities,
+                           today_activities=today_activities,
+                           today_movements=today_movements,
+                           today_ops=today_ops,
+                           recent_events=recent_events,
+                           critical_events=critical_events[:5],
+                           growth_labels=growth_labels,
+                           growth_data=growth_data,
+                           growth_points=growth_points,
+                           growth_fill=growth_fill,
+                           role_breakdown=role_breakdown,
+                           max_role_count=max_role_count,
+                           active_users=len(active_user_ids),
+                           collection_stats=collection_stats,
+                           db_labels=db_labels,
+                           db_data=db_data)
 
 
 @admin_bp.route('/companies')
