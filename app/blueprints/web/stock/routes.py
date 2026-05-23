@@ -88,7 +88,7 @@ def create_product():
 def edit_product(product_id):
     user = _get_user()
     cid = _company_id()
-    product = StockService.get_by_id(product_id)
+    product = StockService.get_by_id(product_id, cid)
     if not product:
         flash('Product not found.', 'danger')
         return redirect(url_for('web_stock.list_products'))
@@ -128,7 +128,7 @@ def delete_product(product_id):
     try:
         user_id = get_jwt_identity()
         cid = _company_id()
-        product = StockService.get_by_id(product_id)
+        product = StockService.get_by_id(product_id, cid)
         if StockService.delete(product_id, user_id, cid):
             user_obj = UserModel.find_by_id(user_id)
             EventService.record(cid, 'product', product_id, product.get('sku','') if product else '', 'deleted',
@@ -146,13 +146,13 @@ def delete_product(product_id):
 @jwt_required()
 def view_product(product_id):
     user = _get_user()
-    product = StockService.get_by_id(product_id)
+    cid = _company_id()
+    product = StockService.get_by_id(product_id, cid)
     if not product:
         flash('Product not found.', 'danger')
         return redirect(url_for('web_stock.list_products'))
 
     try:
-        cid = _company_id()
         page, per_page = paginate(request.args.get('page', 1), 20)
         movements, total = StockService.get_movements(page, per_page, product_id, cid)
         return render_template('stock/detail.html', mode='web', user=UserModel.to_dict(user) if user else None,

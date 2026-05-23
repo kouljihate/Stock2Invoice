@@ -133,7 +133,8 @@ def create_invoice():
 @jwt_required()
 def view_invoice(invoice_id):
     user = _get_user()
-    inv = InvoiceService.get_by_id(invoice_id)
+    cid = _company_id()
+    inv = InvoiceService.get_by_id(invoice_id, cid)
     if not inv:
         flash('Invoice not found.', 'danger')
         return redirect(url_for('web_invoices.list_invoices'))
@@ -150,6 +151,9 @@ def delete_invoice(invoice_id):
         flash('Invoice not found.', 'danger')
     else:
         cid = _company_id()
+        if str(inv.get('company_id', '')) != str(cid):
+            flash('Access denied.', 'danger')
+            return redirect(url_for('web_invoices.list_invoices'))
         user_id = get_jwt_identity()
         user_obj = UserModel.find_by_id(user_id)
         inv_number = inv.get('invoice_number', '')
@@ -163,7 +167,8 @@ def delete_invoice(invoice_id):
 @jwt_required()
 def print_invoice(invoice_id):
     user = _get_user()
-    inv = InvoiceService.get_by_id(invoice_id)
+    cid = _company_id()
+    inv = InvoiceService.get_by_id(invoice_id, cid)
     if not inv:
         flash('Invoice not found.', 'danger')
         return redirect(url_for('web_invoices.list_invoices'))
@@ -182,7 +187,7 @@ def update_status(invoice_id):
             return redirect(url_for('web_invoices.view_invoice', invoice_id=invoice_id))
         user_id = get_jwt_identity()
         cid = _company_id()
-        inv = InvoiceService.get_by_id(invoice_id)
+        inv = InvoiceService.get_by_id(invoice_id, cid)
         old_status = inv.get('status') if inv else ''
         InvoiceService.update(invoice_id, {'status': status}, user_id, cid)
         user_obj = UserModel.find_by_id(user_id)

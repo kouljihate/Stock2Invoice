@@ -64,8 +64,11 @@ class StockService:
         return product_id
 
     @staticmethod
-    def get_by_id(product_id):
-        return ProductModel.find_by_id(product_id)
+    def get_by_id(product_id, company_id=None):
+        product = ProductModel.find_by_id(product_id)
+        if product and company_id and str(product.get('company_id', '')) != str(company_id):
+            return None
+        return product
 
     @staticmethod
     def get_by_sku(sku, company_id):

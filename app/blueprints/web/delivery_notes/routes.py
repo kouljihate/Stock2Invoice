@@ -77,6 +77,9 @@ def delete_delivery_note(dn_id):
         flash('Delivery note not found.', 'danger')
     else:
         cid = _company_id()
+        if str(dn.get('company_id', '')) != str(cid):
+            flash('Access denied.', 'danger')
+            return redirect(url_for('web_delivery_notes.list_delivery_notes'))
         user_id = get_jwt_identity()
         user_obj = UserModel.find_by_id(user_id)
         DeliveryNoteModel.delete(dn_id)

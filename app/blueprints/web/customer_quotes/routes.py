@@ -133,6 +133,10 @@ def view_quote(quote_id):
     if not q:
         flash('Quote not found.', 'danger')
         return redirect(url_for('web_customer_quotes.list_quotes'))
+    cid = _company_id()
+    if str(q.get('company_id', '')) != str(cid):
+        flash('Access denied.', 'danger')
+        return redirect(url_for('web_customer_quotes.list_quotes'))
     return render_template('customer_quotes/detail.html', mode='web',
                            user=UserModel.to_dict(user) if user else None,
                            quote=CustomerQuoteModel.to_dict(q))
@@ -147,6 +151,9 @@ def edit_quote(quote_id):
         flash('Quote not found.', 'danger')
         return redirect(url_for('web_customer_quotes.list_quotes'))
     cid = _company_id()
+    if str(quote.get('company_id', '')) != str(cid):
+        flash('Access denied.', 'danger')
+        return redirect(url_for('web_customer_quotes.list_quotes'))
     if request.method == 'GET':
         customers = CustomerModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else []
         return render_template('customer_quotes/form.html', mode='web',
@@ -218,9 +225,12 @@ def send_quote(quote_id):
     if not quote:
         flash('Quote not found.', 'danger')
         return redirect(url_for('web_customer_quotes.list_quotes'))
+    cid = _company_id()
+    if str(quote.get('company_id', '')) != str(cid):
+        flash('Access denied.', 'danger')
+        return redirect(url_for('web_customer_quotes.list_quotes'))
     try:
         CustomerQuoteModel.update(quote_id, {'status': 'sent'})
-        cid = _company_id()
         user_id = get_jwt_identity()
         user_obj = UserModel.find_by_id(user_id)
         EventService.record(cid, 'quote', quote_id, quote.get('quote_number',''), 'sent',
@@ -239,8 +249,11 @@ def validate_quote(quote_id):
     if not quote:
         flash('Quote not found.', 'danger')
         return redirect(url_for('web_customer_quotes.list_quotes'))
+    cid = _company_id()
+    if str(quote.get('company_id', '')) != str(cid):
+        flash('Access denied.', 'danger')
+        return redirect(url_for('web_customer_quotes.list_quotes'))
     try:
-        cid = _company_id()
         user_id = get_jwt_identity()
         payload = {
             'customer_name': quote.get('customer_name', ''),
@@ -280,6 +293,9 @@ def delete_quote(quote_id):
         flash('Quote not found.', 'danger')
     else:
         cid = _company_id()
+        if str(quote.get('company_id', '')) != str(cid):
+            flash('Access denied.', 'danger')
+            return redirect(url_for('web_customer_quotes.list_quotes'))
         user_id = get_jwt_identity()
         user_obj = UserModel.find_by_id(user_id)
         CustomerQuoteModel.delete(quote_id)

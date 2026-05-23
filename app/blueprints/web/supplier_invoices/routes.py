@@ -111,6 +111,10 @@ def view_invoice(inv_id):
     if not inv:
         flash('Invoice not found.', 'danger')
         return redirect(url_for('web_supplier_invoices.list_invoices'))
+    cid = _company_id()
+    if str(inv.get('company_id', '')) != str(cid):
+        flash('Access denied.', 'danger')
+        return redirect(url_for('web_supplier_invoices.list_invoices'))
     return render_template('supplier_invoices/detail.html', mode='web',
                            user=UserModel.to_dict(user) if user else None,
                            invoice=SupplierInvoiceModel.to_dict(inv))

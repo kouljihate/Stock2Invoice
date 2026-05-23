@@ -133,7 +133,8 @@ def create_order():
 @jwt_required()
 def view_order(order_id):
     user = _get_user()
-    order = OrderService.get_by_id(order_id)
+    cid = _company_id()
+    order = OrderService.get_by_id(order_id, cid)
     if not order:
         flash('Order not found.', 'danger')
         return redirect(url_for('web_orders.list_orders'))
@@ -152,7 +153,7 @@ def update_status(order_id):
             return redirect(url_for('web_orders.view_order', order_id=order_id))
         user_id = get_jwt_identity()
         cid = _company_id()
-        order = OrderService.get_by_id(order_id)
+        order = OrderService.get_by_id(order_id, cid)
         old_status = order.get('status') if order else ''
         OrderService.update(order_id, {'status': status}, user_id, cid)
         user_obj = UserModel.find_by_id(user_id)
@@ -174,6 +175,9 @@ def delete_order(order_id):
         flash('Order not found.', 'danger')
     else:
         cid = _company_id()
+        if str(order.get('company_id', '')) != str(cid):
+            flash('Access denied.', 'danger')
+            return redirect(url_for('web_orders.list_orders'))
         user_id = get_jwt_identity()
         user_obj = UserModel.find_by_id(user_id)
         order_number = order.get('order_number', '')
@@ -190,7 +194,8 @@ def download_pdf(order_id):
         import io
         from weasyprint import HTML
         user = _get_user()
-        order = OrderService.get_by_id(order_id)
+        cid = _company_id()
+        order = OrderService.get_by_id(order_id, cid)
         if not order:
             flash('Order not found.', 'danger')
             return redirect(url_for('web_orders.list_orders'))

@@ -161,8 +161,10 @@ class InvoiceService:
         return True
 
     @staticmethod
-    def get_by_id(invoice_id):
+    def get_by_id(invoice_id, company_id=None):
         inv = InvoiceModel.find_by_id(invoice_id)
+        if inv and company_id and str(inv.get('company_id', '')) != str(company_id):
+            return None
         return InvoiceModel.to_dict(inv) if inv else None
 
     @staticmethod

@@ -104,6 +104,10 @@ def view_order(po_id):
     if not po:
         flash('Purchase order not found.', 'danger')
         return redirect(url_for('web_purchase_orders.list_orders'))
+    cid = _company_id()
+    if str(po.get('company_id', '')) != str(cid):
+        flash('Access denied.', 'danger')
+        return redirect(url_for('web_purchase_orders.list_orders'))
     return render_template('purchase_orders/detail.html', mode='web',
                            user=UserModel.to_dict(user) if user else None,
                            order=PurchaseOrderModel.to_dict(po))

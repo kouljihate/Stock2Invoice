@@ -197,8 +197,10 @@ class OrderService:
             logger.exception('Failed to generate invoice from order %s', order_id)
 
     @staticmethod
-    def get_by_id(order_id):
+    def get_by_id(order_id, company_id=None):
         order = OrderModel.find_by_id(order_id)
+        if order and company_id and str(order.get('company_id', '')) != str(company_id):
+            return None
         return OrderModel.to_dict(order) if order else None
 
     @staticmethod

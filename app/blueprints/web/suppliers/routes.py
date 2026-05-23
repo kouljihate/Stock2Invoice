@@ -216,6 +216,10 @@ def edit_supplier(supplier_id):
     if not supplier:
         flash('Supplier not found.', 'danger')
         return redirect(url_for('web_suppliers.list_suppliers'))
+    cid = _company_id()
+    if str(supplier.get('company_id', '')) != str(cid):
+        flash('Access denied.', 'danger')
+        return redirect(url_for('web_suppliers.list_suppliers'))
     if request.method == 'GET':
         return render_template('suppliers/form.html', mode='web',
                                user=UserModel.to_dict(user) if user else None,
@@ -250,6 +254,9 @@ def delete_supplier(supplier_id):
         flash('Supplier not found.', 'danger')
     else:
         cid = _company_id()
+        if str(supplier.get('company_id', '')) != str(cid):
+            flash('Access denied.', 'danger')
+            return redirect(url_for('web_suppliers.list_suppliers'))
         user_id = get_jwt_identity()
         user_obj = UserModel.find_by_id(user_id)
         SupplierModel.delete(supplier_id)

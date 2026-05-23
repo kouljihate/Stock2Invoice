@@ -19,6 +19,11 @@
             </a>
         </li>
         <li>
+            <a href="{{ url_for('web_stock.list_products') }}" class="nav-link link-dark {% if request.endpoint and 'stock' in request.endpoint %}active{% endif %}">
+                <i class="bi bi-box me-2"></i>{{ _('Products / Stock') }}
+            </a>
+        </li>
+        <li>
             <a href="{{ url_for('web_purchase_orders.list_orders') }}" class="nav-link link-dark {% if request.endpoint and 'purchase_orders' in request.endpoint %}active{% endif %}">
                 <i class="bi bi-cart-check me-2"></i>{{ _('Purchase Orders') }}
             </a>

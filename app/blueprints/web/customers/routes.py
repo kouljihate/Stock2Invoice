@@ -219,6 +219,10 @@ def edit_customer(customer_id):
     if not customer:
         flash('Customer not found.', 'danger')
         return redirect(url_for('web_customers.list_customers'))
+    cid = _company_id()
+    if str(customer.get('company_id', '')) != str(cid):
+        flash('Access denied.', 'danger')
+        return redirect(url_for('web_customers.list_customers'))
     if request.method == 'GET':
         return render_template('customers/form.html', mode='web',
                                user=UserModel.to_dict(user) if user else None,
@@ -258,6 +262,9 @@ def delete_customer(customer_id):
         flash('Customer not found.', 'danger')
     else:
         cid = _company_id()
+        if str(customer.get('company_id', '')) != str(cid):
+            flash('Access denied.', 'danger')
+            return redirect(url_for('web_customers.list_customers'))
         user_id = get_jwt_identity()
         user_obj = UserModel.find_by_id(user_id)
         CustomerModel.delete(customer_id)
