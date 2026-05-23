@@ -103,6 +103,77 @@
             </div>
         </div>
     </div>
+
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header"><strong><i class="bi bi-file-earmark me-1"></i>{{ _('Invoice Template') }}</strong></div>
+            <div class="card-body">
+                {% set tpl = company.invoice_template or {} %}
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">{{ _('Primary Color') }}</label>
+                        <input type="color" name="inv_primary_color" class="form-control form-control-color" value="{{ tpl.get('primary_color', '#1a73e8') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">{{ _('Secondary Color') }}</label>
+                        <input type="color" name="inv_secondary_color" class="form-control form-control-color" value="{{ tpl.get('secondary_color', '#6c757d') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">{{ _('Accent Color') }}</label>
+                        <input type="color" name="inv_accent_color" class="form-control form-control-color" value="{{ tpl.get('accent_color', '#0d6efd') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">{{ _('Font Family') }}</label>
+                        <select name="inv_font_family" class="form-select">
+                            {{ _('Comfortaa') }}
+                            <option value="'Comfortaa', sans-serif" {% if tpl.get('font_family') == "'Comfortaa', sans-serif" or not tpl.get('font_family') %}selected{% endif %}>Comfortaa</option>
+                            <option value="'Inter', sans-serif" {% if tpl.get('font_family') == "'Inter', sans-serif" %}selected{% endif %}>Inter</option>
+                            <option value="'Roboto', sans-serif" {% if tpl.get('font_family') == "'Roboto', sans-serif" %}selected{% endif %}>Roboto</option>
+                            <option value="'Open Sans', sans-serif" {% if tpl.get('font_family') == "'Open Sans', sans-serif" %}selected{% endif %}>Open Sans</option>
+                            <option value="'Lato', sans-serif" {% if tpl.get('font_family') == "'Lato', sans-serif" %}selected{% endif %}>Lato</option>
+                            <option value="'Poppins', sans-serif" {% if tpl.get('font_family') == "'Poppins', sans-serif" %}selected{% endif %}>Poppins</option>
+                            <option value="'Georgia', serif" {% if tpl.get('font_family') == "'Georgia', serif" %}selected{% endif %}>Georgia</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ _('Header Text') }}</label>
+                        <input type="text" name="inv_header_text" class="form-control" value="{{ tpl.get('header_text', '') }}" placeholder="{{ _('e.g. Equipment for drinking water, wellness water, spas and pools.') }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ _('Footer Text') }}</label>
+                        <input type="text" name="inv_footer_text" class="form-control" value="{{ tpl.get('footer_text', '') }}" placeholder="{{ _('e.g. Thank you for your business!') }}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">{{ _('Payment Terms') }}</label>
+                        <input type="text" name="inv_payment_terms" class="form-control" value="{{ tpl.get('payment_terms', '') }}" placeholder="{{ _('e.g. Net 30 days') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">{{ _('Signature Name') }}</label>
+                        <input type="text" name="inv_signature_name" class="form-control" value="{{ tpl.get('signature_name', '') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">{{ _('Signature Title') }}</label>
+                        <input type="text" name="inv_signature_title" class="form-control" value="{{ tpl.get('signature_title', '') }}">
+                    </div>
+                    <div class="col-12">
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="inv_show_logo" id="inv_show_logo" value="1" {% if tpl.get('show_logo', true) %}checked{% endif %}>
+                            <label class="form-check-label" for="inv_show_logo">{{ _('Show logo on invoices') }}</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="inv_show_legal_ids" id="inv_show_legal_ids" value="1" {% if tpl.get('show_legal_ids', true) %}checked{% endif %}>
+                            <label class="form-check-label" for="inv_show_legal_ids">{{ _('Show legal IDs (ICE/RC/IF)') }}</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="inv_show_rib" id="inv_show_rib" value="1" {% if tpl.get('show_rib', true) %}checked{% endif %}>
+                            <label class="form-check-label" for="inv_show_rib">{{ _('Show RIB') }}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="col-12">
         <button type="submit" class="btn btn-primary"><i class="bi bi-check me-1"></i>{{ _('Save Changes') }}</button>
         <a href="{{ url_for('admin.company_detail', company_id=company.id) }}" class="btn btn-outline-secondary">{{ _('Cancel') }}</a>

@@ -237,6 +237,20 @@ def create_company():
         'cnss': (request.form.get('cnss') or '').strip(),
         'patente': (request.form.get('patente') or '').strip(),
         'website': (request.form.get('website') or '').strip(),
+        'invoice_template': {
+            'primary_color': '#1a73e8',
+            'secondary_color': '#6c757d',
+            'accent_color': '#0d6efd',
+            'font_family': "'Comfortaa', sans-serif",
+            'show_logo': True,
+            'show_legal_ids': True,
+            'show_rib': True,
+            'header_text': '',
+            'footer_text': '',
+            'payment_terms': '',
+            'signature_name': '',
+            'signature_title': '',
+        },
     }
     company_id = CompanyModel.create(company_data)
 
@@ -373,6 +387,20 @@ def edit_company(company_id):
         'cnss': (request.form.get('cnss') or '').strip(),
         'patente': (request.form.get('patente') or '').strip(),
         'website': (request.form.get('website') or '').strip(),
+        'invoice_template': {
+            'primary_color': (request.form.get('inv_primary_color') or '').strip(),
+            'secondary_color': (request.form.get('inv_secondary_color') or '').strip(),
+            'accent_color': (request.form.get('inv_accent_color') or '').strip(),
+            'font_family': (request.form.get('inv_font_family') or '').strip(),
+            'show_logo': request.form.get('inv_show_logo') == '1',
+            'show_legal_ids': request.form.get('inv_show_legal_ids') == '1',
+            'show_rib': request.form.get('inv_show_rib') == '1',
+            'header_text': (request.form.get('inv_header_text') or '').strip(),
+            'footer_text': (request.form.get('inv_footer_text') or '').strip(),
+            'payment_terms': (request.form.get('inv_payment_terms') or '').strip(),
+            'signature_name': (request.form.get('inv_signature_name') or '').strip(),
+            'signature_title': (request.form.get('inv_signature_title') or '').strip(),
+        },
     }
 
     logo = request.files.get('logo')

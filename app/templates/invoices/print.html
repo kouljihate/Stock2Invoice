@@ -1,9 +1,19 @@
 ﻿{% extends 'base/layout.html' %}
 {% block title %}{{ _('Print') }} — {{ invoice.invoice_number }}{% endblock %}
 {% block extra_head %}
+{% set tpl = current_company.invoice_template if current_company else {} %}
+{% set pri = tpl.get('primary_color', '#1a73e8') %}
+{% set sec = tpl.get('secondary_color', '#6c757d') %}
+{% set acc = tpl.get('accent_color', '#0d6efd') %}
+{% set font = tpl.get('font_family', "'Comfortaa', sans-serif") %}
 <style>
-    body { font-family: 'Comfortaa', sans-serif; }
+    body { font-family: {{ font }}; }
     .no-print { display: none; }
+    .inv-header { color: {{ pri }}; }
+    .inv-label { color: {{ sec }}; }
+    .inv-table thead { background-color: {{ pri }} !important; color: #fff; }
+    .inv-table thead th { color: #fff; }
+    .inv-total { color: {{ acc }}; font-weight: 700; }
     @media print {
         .no-print { display: none !important; }
         .navbar, .sidebar-col, .sidebar, footer { display: none !important; }
@@ -20,16 +30,21 @@
 
 <div class="card border-0">
     <div class="card-body">
+        {% set tpl = current_company.invoice_template if current_company else {} %}
         <div class="row mb-4">
             <div class="col-6">
-                {% if current_company and current_company.logo %}
+                {% if current_company and current_company.logo and tpl.get('show_logo', true) %}
                 <img src="{{ url_for('static', filename='uploads/logos/'+current_company.logo) }}" alt="Logo" style="max-height:100px;object-fit:contain;">
                 {% else %}
-                <h2 class="text-primary">{{ current_company.name if current_company else 'Maure STC' }}</h2>
+                <h2 class="inv-header">{{ current_company.name if current_company else 'Maure STC' }}</h2>
                 {% endif %}
+                {% if tpl.get('header_text') %}
+                <p class="mb-0 mt-1" style="font-size:11px;color:#666;white-space:nowrap;">{{ tpl.get('header_text') }}</p>
+                {% else %}
                 <p class="mb-0 mt-1" style="font-size:11px;color:#666;white-space:nowrap;">
                     Equipement d'eau potable, Eau du bien-être, Spa et piscines.
                 </p>
+                {% endif %}
             </div>
             <div class="col-6 text-end">
                 <strong>{{ _('Bill To:') }}</strong>
@@ -51,8 +66,8 @@
 
         <div class="row mb-4">
             <div class="col-12">
-                <h3 class="mb-0 d-inline">{{ _('INVOICE') }}</h3>
-                <span class="h4 text-muted ms-2">{{ invoice.invoice_number }}</span>
+                <h3 class="mb-0 d-inline inv-header">{{ _('INVOICE') }}</h3>
+                <span class="h4 inv-label ms-2">{{ invoice.invoice_number }}</span>
                 {% if invoice.attention_to %}&nbsp;&nbsp;<small class="text-muted">| {{ _('Attention to:') }} {{ invoice.attention_to }}</small>{% endif %}
                 <br>
                 <small class="text-muted">{{ _('Date:') }} {{ invoice.created_at[:10] if invoice.created_at else '-' }}</small>
@@ -60,8 +75,8 @@
             </div>
         </div>
 
-        <table class="table table-bordered">
-            <thead class="table-dark">
+        <table class="table table-bordered inv-table">
+            <thead>
                 <tr>
                     <th>{{ _('SKU') }}</th>
                     <th>{{ _('Item') }}</th>
@@ -93,10 +108,18 @@
                     <tr><td>{{ _('Discount') }} ({{ invoice.discount_percent }}%)</td><td class="text-end text-danger">-{{ invoice.discount_amount }} MAD</td></tr>
                     {% endif %}
                     <tr><td>{{ _('Tax') }} ({{ invoice.tax_percent }}%)</td><td class="text-end">{{ invoice.tax_amount }} MAD</td></tr>
-                    <tr class="fw-bold"><td>{{ _('Total') }}</td><td class="text-end fs-4">{{ invoice.total }} MAD</td></tr>
+                    <tr class="fw-bold"><td>{{ _('Total') }}</td><td class="text-end fs-4 inv-total">{{ invoice.total }} MAD</td></tr>
                 </table>
             </div>
         </div>
+
+        {% if tpl.get('payment_terms') %}
+        <div class="row mt-2">
+            <div class="col-12">
+                <small class="inv-label"><strong>{{ _('Payment Terms:') }}</strong> {{ tpl.get('payment_terms') }}</small>
+            </div>
+        </div>
+        {% endif %}
 
         {% if invoice.notes %}
         <div class="text-center mt-3">
@@ -113,13 +136,33 @@
                 {% if current_company.email %}{{ _('Email:') }} {{ current_company.email }}{% endif %}
             </div>
             <div class="col-6 text-end">
-                {% if current_company.rib %}{{ _('RIB:') }} {{ current_company.rib }}<br>{% endif %}
+                {% if current_company.rib and tpl.get('show_rib', true) %}{{ _('RIB:') }} {{ current_company.rib }}<br>{% endif %}
+                {% if tpl.get('show_legal_ids', true) %}
                 {% if current_company.if_tax %}{{ _('IF:') }} {{ current_company.if_tax }}<br>{% endif %}
                 {% if current_company.tp %}{{ _('TP:') }} {{ current_company.tp }}<br>{% endif %}
                 {% if current_company.rc %}{{ _('RC:') }} {{ current_company.rc }}<br>{% endif %}
                 {% if current_company.ice %}{{ _('ICE:') }} {{ current_company.ice }}{% endif %}
+                {% endif %}
             </div>
         </div>
+
+        {% if tpl.get('footer_text') or (tpl.get('signature_name') and tpl.get('signature_title')) %}
+        <hr>
+        <div class="row small text-muted">
+            {% if tpl.get('footer_text') %}
+            <div class="col-6">
+                <em>{{ tpl.get('footer_text') }}</em>
+            </div>
+            {% endif %}
+            {% if tpl.get('signature_name') and tpl.get('signature_title') %}
+            <div class="col-6 text-end">
+                {{ _('Authorized by') }}<br>
+                <strong>{{ tpl.get('signature_name') }}</strong><br>
+                <small>{{ tpl.get('signature_title') }}</small>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

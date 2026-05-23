@@ -62,5 +62,6 @@ class CompanyModel:
             'rib': c.get('rib', ''),
             'tp': c.get('tp', c.get('patente', '')),
             'website': c.get('website'),
+            'invoice_template': c.get('invoice_template', {}),
             'created_at': c.get('created_at').isoformat() if c.get('created_at') else None,
         }
