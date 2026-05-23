@@ -6,101 +6,122 @@
             </a>
         </li>
 
+        {% set _p2p_active = request.endpoint and ('suppliers' in request.endpoint or 'purchase_orders' in request.endpoint or 'goods_receipt' in request.endpoint or 'supplier_invoices' in request.endpoint or 'payments' in request.endpoint) %}
+        {% set _q2c_active = request.endpoint and ('customer_quotes' in request.endpoint or 'orders' in request.endpoint or 'delivery_notes' in request.endpoint or 'invoices' in request.endpoint or 'customers' in request.endpoint) %}
+        {% set _gen_active = request.endpoint and ('stock' in request.endpoint or 'web_users' in request.endpoint or 'events' in request.endpoint) or (request.endpoint and request.endpoint.startswith('admin.')) %}
+
         {% if not user or user.role != 'super_admin' %}
-        <li class="nav-item mt-2 center">
-            <span class="material-symbols-outlined">
-                add_shopping_cart
-            </span>
-            <strong class="text-muted text-uppercase px-3 fw-bold" style="font-size:1.50rem;letter-spacing:0.05em;">{{ _('Procure-to-Pay') }}</strong>
-        </li>
-        <li>
-            <a href="{{ url_for('web_suppliers.list_suppliers') }}" class="nav-link link-dark {% if request.endpoint and 'suppliers' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-truck me-2"></i>{{ _('Suppliers') }}
+        <li class="nav-item mt-2">
+            <a class="nav-link link-dark d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#p2pCollapse" role="button" aria-expanded="{{ 'true' if _p2p_active else 'false' }}">
+                <span><span class="material-symbols-outlined me-1" style="font-size:1.3rem;vertical-align:middle;">add_shopping_cart</span> <strong>{{ _('Procure-to-Pay') }}</strong></span>
+                <i class="bi bi-chevron-down small"></i>
             </a>
-        </li>
-        <li>
-            <a href="{{ url_for('web_stock.list_products') }}" class="nav-link link-dark {% if request.endpoint and 'stock' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-box me-2"></i>{{ _('Products / Stock') }}
-            </a>
-        </li>
-        <li>
-            <a href="{{ url_for('web_purchase_orders.list_orders') }}" class="nav-link link-dark {% if request.endpoint and 'purchase_orders' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-cart-check me-2"></i>{{ _('Purchase Orders') }}
-            </a>
-        </li>
-        <li>
-            <a href="{{ url_for('web_goods_receipt.list_receipts') }}" class="nav-link link-dark {% if request.endpoint and 'goods_receipt' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-box-seam me-2"></i>{{ _('Goods Receipt') }}
-            </a>
-        </li>
-        <li>
-            <a href="{{ url_for('web_supplier_invoices.list_invoices') }}" class="nav-link link-dark {% if request.endpoint and 'supplier_invoices' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-receipt me-2"></i>{{ _('Supplier Invoices') }}
-            </a>
-        </li>
-        <li>
-            <a href="{{ url_for('web_payments.list_payments') }}" class="nav-link link-dark {% if request.endpoint and 'payments' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-credit-card me-2"></i>{{ _('Payments') }}
-            </a>
+            <div class="collapse{% if _p2p_active %} show{% endif %}" id="p2pCollapse">
+                <ul class="nav nav-pills flex-column ms-3">
+                    <li>
+                        <a href="{{ url_for('web_suppliers.list_suppliers') }}" class="nav-link link-dark py-1 {% if request.endpoint and 'suppliers' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-truck me-2"></i>{{ _('Suppliers') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('web_purchase_orders.list_orders') }}" class="nav-link link-dark py-1 {% if request.endpoint and 'purchase_orders' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-cart-check me-2"></i>{{ _('Purchase Orders') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('web_goods_receipt.list_receipts') }}" class="nav-link link-dark py-1 {% if request.endpoint and 'goods_receipt' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-box-seam me-2"></i>{{ _('Goods Receipt') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('web_supplier_invoices.list_invoices') }}" class="nav-link link-dark py-1 {% if request.endpoint and 'supplier_invoices' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-receipt me-2"></i>{{ _('Supplier Invoices') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('web_payments.list_payments') }}" class="nav-link link-dark py-1 {% if request.endpoint and 'payments' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-credit-card me-2"></i>{{ _('Payments') }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </li>
 
         <li class="nav-item mt-2">
-            <span class="material-symbols-outlined">
-                point_of_sale
-            </span>
-            <strong class="text-muted text-uppercase px-3 fw-bold" style="font-size:1.50rem;letter-spacing:0.05em;">{{ _('Quote-to-Cash') }}</strong>
-        </li>
-        <li>
-            <a href="{{ url_for('web_customer_quotes.list_quotes') }}" class="nav-link link-dark {% if request.endpoint and 'customer_quotes' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-file-earmark-text me-2"></i>{{ _('Quotes') }}
+            <a class="nav-link link-dark d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#q2cCollapse" role="button" aria-expanded="{{ 'true' if _q2c_active else 'false' }}">
+                <span><span class="material-symbols-outlined me-1" style="font-size:1.3rem;vertical-align:middle;">point_of_sale</span> <strong>{{ _('Quote-to-Cash') }}</strong></span>
+                <i class="bi bi-chevron-down small"></i>
             </a>
-        </li>
-        <li>
-            <a href="{{ url_for('web_orders.list_orders') }}" class="nav-link link-dark {% if request.endpoint and 'orders' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-cart me-2"></i>{{ _('Customer Orders') }}
-            </a>
-        </li>
-        <li>
-            <a href="{{ url_for('web_delivery_notes.list_delivery_notes') }}" class="nav-link link-dark {% if request.endpoint and 'delivery_notes' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-truck me-2"></i>{{ _('Delivery Notes') }}
-            </a>
-        </li>
-        <li>
-            <a href="{{ url_for('web_invoices.list_invoices') }}" class="nav-link link-dark {% if request.endpoint and 'invoices' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-file-text me-2"></i>{{ _('Customer Invoices') }}
-            </a>
+            <div class="collapse{% if _q2c_active %} show{% endif %}" id="q2cCollapse">
+                <ul class="nav nav-pills flex-column ms-3">
+                    <li>
+                        <a href="{{ url_for('web_customers.list_customers') }}" class="nav-link link-dark py-1 {% if request.endpoint and 'customers' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-people me-2"></i>{{ _('Customers') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('web_customer_quotes.list_quotes') }}" class="nav-link link-dark py-1 {% if request.endpoint and 'customer_quotes' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-file-earmark-text me-2"></i>{{ _('Quotes') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('web_orders.list_orders') }}" class="nav-link link-dark py-1 {% if request.endpoint and 'orders' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-cart me-2"></i>{{ _('Orders') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('web_invoices.list_invoices') }}" class="nav-link link-dark py-1 {% if request.endpoint and 'invoices' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-file-text me-2"></i>{{ _('Invoices') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('web_delivery_notes.list_delivery_notes') }}" class="nav-link link-dark py-1 {% if request.endpoint and 'delivery_notes' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-truck me-2"></i>{{ _('Delivery Notes') }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </li>
         {% endif %}
 
         <li class="nav-item mt-2">
-            <small class="text-muted text-uppercase px-3 fw-bold" style="font-size:0.65rem;letter-spacing:0.05em;">{{ _('Administration') }}</small>
-        </li>
-        {% if user and user.role in ('company_admin', 'super_admin') %}
-        <li>
-            <a href="{{ url_for('web_users.list_users') }}" class="nav-link link-dark {% if request.endpoint and 'web_users' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-people me-2"></i>{{ _('User Management') }}
+            <a class="nav-link link-dark d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#generalCollapse" role="button" aria-expanded="{{ 'true' if _gen_active else 'false' }}">
+                <span><i class="bi bi-gear me-2"></i><strong>{{ _('General') }}</strong></span>
+                <i class="bi bi-chevron-down small"></i>
             </a>
-        </li>
-        {% endif %}
-        {% if user and user.role == 'super_admin' %}
-        <li>
-            <a href="{{ url_for('admin.companies') }}" class="nav-link link-dark {% if request.endpoint and request.endpoint.startswith('admin.') %}active{% endif %}">
-                <i class="bi bi-buildings me-2"></i>{{ _('Companies') }}
-            </a>
-        </li>
-        <li>
-            <a href="{{ url_for('admin.list_users') }}" class="nav-link link-dark {% if request.endpoint == 'admin.list_users' %}active{% endif %}">
-                <i class="bi bi-people me-2"></i>{{ _('All Users') }}
-            </a>
-        </li>
-        <li>
-            <hr>
-        </li>
-        {% endif %}
-        <li>
-            <a href="{{ url_for('web_events.list_events') }}" class="nav-link link-dark {% if request.endpoint and 'events' in request.endpoint %}active{% endif %}">
-                <i class="bi bi-activity me-2"></i>{{ _('Activity Log') }}
-            </a>
+            <div class="collapse{% if _gen_active %} show{% endif %}" id="generalCollapse">
+                <ul class="nav nav-pills flex-column ms-3">
+                    <li>
+                        <a href="{{ url_for('web_stock.list_products') }}" class="nav-link link-dark py-1 {% if request.endpoint and 'stock' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-box me-2"></i>{{ _('Products / Stock') }}
+                        </a>
+                    </li>
+                    {% if user and user.role in ('company_admin', 'super_admin') %}
+                    <li>
+                        <a href="{{ url_for('web_users.list_users') }}" class="nav-link link-dark py-1 {% if request.endpoint and 'web_users' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-people me-2"></i>{{ _('Users') }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if user and user.role == 'super_admin' %}
+                    <li>
+                        <a href="{{ url_for('admin.companies') }}" class="nav-link link-dark py-1 {% if request.endpoint and request.endpoint.startswith('admin.') %}active{% endif %}">
+                            <i class="bi bi-buildings me-2"></i>{{ _('Companies') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('admin.list_users') }}" class="nav-link link-dark py-1 {% if request.endpoint == 'admin.list_users' %}active{% endif %}">
+                            <i class="bi bi-people me-2"></i>{{ _('All Users') }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li>
+                        <a href="{{ url_for('web_events.list_events') }}" class="nav-link link-dark py-1 {% if request.endpoint and 'events' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-activity me-2"></i>{{ _('Activity Log') }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </li>
     </ul>
     <footer class="mt-auto pt-2 pb-2 border-top text-muted small text-center sidebar-footer">
