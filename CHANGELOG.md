@@ -1,5 +1,31 @@
 # Changelog
 
+## [2.1.0] — 2026-05-24
+### Added
+- Server-side PDF generation via fpdf2 (pure Python, no external deps)
+- Comfortaa font embedded in PDF
+- Per-company invoice template customization (colors, font, header/footer text, visibility toggles)
+- `number_to_french.py` utility: converts totals to French words (dirhams/centimes)
+- Dynamic Arrêté in PDF: "Arrêtée la présente facture à la somme de X MAD (en lettres : Y)"
+- City field on invoice and quote forms (col-md-4 next to Address)
+- `min_of_items`/`max_of_items` CLI args on test_quote_lifecycle.py
+- Subtitle below logo in PDF header: "Equipement d'eau potable, Eau du bien-être, Spa et piscines."
+- Arabic/French translations
+
+### Changed
+- PDF layout: 20/70/10 A4 partition (header/body/footer)
+- INVOICE title + ref on same row, Attention To right-aligned on same row
+- Notes always rendered as fixed French message at bottom of body
+- Logo size increased (w=50 → w=70)
+- Sidebar restructured with Bootstrap 5 collapse dropdowns (P2P/Q2C/General)
+- Invoice print template uses dynamic company invoice_template settings
+
+### Fixed
+- Data isolation: company_id ownership checks across all 9 blueprint files
+- Service layer: StockService, OrderService, InvoiceService check company_id
+- Logo upload: `os.path.splitext` base vs extension bug
+- InvoiceModel.to_dict() missing customer_city, customer_country, arrete fields
+
 ## [1.3.0] — 2026-05-22
 ### Added
 - Customers module: CRUD + bulk upload
