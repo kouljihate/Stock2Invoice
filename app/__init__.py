@@ -54,7 +54,7 @@ def create_app(config_class=Config):
         lang = request.cookies.get('lang', 'en')
         if lang not in LANGS:
             lang = 'en'
-        return render_template('base/token_expired.html', current_lang=lang, _=lambda key: _translate(key, lang)), 401
+        return render_template('base/token_expired.html', current_lang=lang, _=lambda key: _translate(key, lang), version=VERSION, build_date=BUILD_DATE), 401
 
     @jwt.unauthorized_loader
     def unauthorized_callback(reason):
@@ -93,6 +93,12 @@ def create_app(config_class=Config):
     app.register_blueprint(mobile_orders_bp, url_prefix='/mobile/orders')
 
     app.register_blueprint(admin_bp, url_prefix='/admin')
+
+    @app.route('/favicon.ico')
+    def favicon():
+        from flask import send_from_directory
+        import os
+        return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.svg', mimetype='image/vnd.microsoft.icon')
 
     @app.route('/lang/<lang>')
     def set_lang(lang):

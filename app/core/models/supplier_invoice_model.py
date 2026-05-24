@@ -29,6 +29,11 @@ class SupplierInvoiceModel:
         mongo.db[SupplierInvoiceModel.collection].update_one({'_id': ObjectId(inv_id)}, {'$set': data})
 
     @staticmethod
+    def delete(inv_id):
+        from bson.objectid import ObjectId
+        mongo.db[SupplierInvoiceModel.collection].delete_one({'_id': ObjectId(inv_id)})
+
+    @staticmethod
     def count(filters=None):
         return mongo.db[SupplierInvoiceModel.collection].count_documents(filters or {})
 

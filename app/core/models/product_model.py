@@ -85,6 +85,8 @@ class ProductModel:
             'subcategory': item.get('subcategory', ''),
             'package_type': item.get('package_type', ''),
             'brand': item.get('brand', ''),
+            'supplier_id': str(item.get('supplier_id')) if item.get('supplier_id') else '',
+            'supplier_name': item.get('supplier_name', ''),
             'pack_size': float(item.get('pack_size', 0)),
             'pack_size_unit': item.get('pack_size_unit', ''),
             'number_of_pack': int(item.get('number_of_pack', 0)),

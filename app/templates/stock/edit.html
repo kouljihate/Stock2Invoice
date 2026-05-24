@@ -11,17 +11,26 @@
         <form method="POST" action="" class="card shadow-sm">
             <div class="card-body">
                 <div class="row g-3 mb-3">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label">{{ _('SKU') }} *</label>
                         <input type="text" name="sku" class="form-control" value="{{ product.get('sku', '') if product else '' }}" {% if product and product.id %}readonly{% endif %} required>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label">{{ _('Name') }} *</label>
                         <input type="text" name="name" class="form-control" value="{{ product.get('name', '') if product else '' }}" required>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label">{{ _('Brand') }}</label>
                         <input type="text" name="brand" class="form-control" value="{{ product.get('brand', '') if product else '' }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">{{ _('Supplier') }}</label>
+                        <select name="supplier_id" class="form-select">
+                            <option value="">{{ _('None') }}</option>
+                            {% for s in suppliers %}
+                            <option value="{{ s.id }}" {% if product and product.get('supplier_id') == s.id %}selected{% endif %}>{{ s.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
                 <div class="row g-3 mb-3">

@@ -1,7 +1,7 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('New Goods Receipt') }} — Maure STC{% endblock %}
+{% block title %}{% if receipt and receipt.id %}{{ _('Edit') }}{% else %}{{ _('New') }}{% endif %} {{ _('Goods Receipt') }} — Maure STC{% endblock %}
 {% block content %}
-<h4 class="mb-4"><i class="bi bi-plus-circle me-2"></i>{{ _('New Goods Receipt') }}</h4>
+<h4 class="mb-4"><i class="bi bi-{% if receipt and receipt.id %}pencil{% else %}plus-circle{% endif %} me-2"></i>{% if receipt and receipt.id %}{{ _('Edit') }}{% else %}{{ _('New') }}{% endif %} {{ _('Goods Receipt') }}</h4>
 <form method="POST" action="" class="card shadow-sm">
     <div class="card-body">
         <div class="row mb-3">
@@ -10,16 +10,34 @@
                 <select name="po_id" class="form-select" id="po-select" required>
                     <option value="">{{ _('-- Select PO --') }}</option>
                     {% for po in pos %}
-                    <option value="{{ po.id }}" data-number="{{ po.po_number }}" data-supplier="{{ po.supplier_name }}" data-supplier-id="{{ po.supplier_id }}">{{ po.po_number }} — {{ po.supplier_name }}</option>
+                    <option value="{{ po.id }}" data-number="{{ po.po_number }}" data-supplier="{{ po.supplier_name }}" data-supplier-id="{{ po.supplier_id }}" {% if receipt and receipt.po_id == po.id %}selected{% endif %}>{{ po.po_number }} — {{ po.supplier_name }}</option>
                     {% endfor %}
                 </select>
-                <input type="hidden" name="po_number" id="po-number" value="">
-                <input type="hidden" name="supplier_name" id="supplier-name" value="">
-                <input type="hidden" name="supplier_id" id="supplier-id" value="">
+                <input type="hidden" name="po_number" id="po-number" value="{{ receipt.po_number if receipt and receipt.po_number else '' }}">
+                <input type="hidden" name="supplier_name" id="supplier-name" value="{{ receipt.supplier_name if receipt and receipt.supplier_name else '' }}">
+                <input type="hidden" name="supplier_id" id="supplier-id" value="{{ receipt.supplier_id if receipt and receipt.supplier_id else '' }}">
             </div>
         </div>
         <h5 class="mt-4 mb-3">{{ _('Received Items') }}</h5>
         <div id="line-items">
+            {% if receipt and receipt.items %}
+            {% for item in receipt.items %}
+            <div class="row g-2 mb-2 line-item">
+                <div class="col-md-3">
+                    <input type="text" name="sku" class="form-control" placeholder="{{ _('SKU') }}" value="{{ item.sku }}" required>
+                </div>
+                <div class="col-md-5">
+                    <input type="text" name="name" class="form-control" placeholder="{{ _('Item name') }}" value="{{ item.name }}">
+                </div>
+                <div class="col-md-2">
+                    <input type="number" name="quantity" class="form-control" placeholder="{{ _('Qty') }}" min="1" value="{{ item.quantity }}" required>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-outline-danger remove-item"><i class="bi bi-x-lg"></i></button>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
             <div class="row g-2 mb-2 line-item">
                 <div class="col-md-3">
                     <input type="text" name="sku" class="form-control" placeholder="{{ _('SKU') }}" required>
@@ -34,16 +52,17 @@
                     <button type="button" class="btn btn-outline-danger remove-item"><i class="bi bi-x-lg"></i></button>
                 </div>
             </div>
+            {% endif %}
         </div>
         <button type="button" class="btn btn-sm btn-outline-success mb-3" id="add-item">
             <i class="bi bi-plus-lg me-1"></i>{{ _('Add Item') }}
         </button>
         <div class="mb-3">
             <label class="form-label">{{ _('Notes') }}</label>
-            <textarea name="notes" class="form-control" rows="2"></textarea>
+            <textarea name="notes" class="form-control" rows="2">{{ receipt.notes if receipt and receipt.notes else '' }}</textarea>
         </div>
         <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>{{ _('Create Goods Receipt') }}</button>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>{% if receipt and receipt.id %}{{ _('Update Goods Receipt') }}{% else %}{{ _('Create Goods Receipt') }}{% endif %}</button>
             <a href="{{ url_for('web_goods_receipt.list_receipts') }}" class="btn btn-outline-secondary">{{ _('Cancel') }}</a>
         </div>
     </div>

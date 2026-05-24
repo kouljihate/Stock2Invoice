@@ -28,6 +28,16 @@ class GoodsReceiptModel:
         return mongo.db[GoodsReceiptModel.collection].count_documents(filters or {})
 
     @staticmethod
+    def update(gr_id, data):
+        from bson.objectid import ObjectId
+        mongo.db[GoodsReceiptModel.collection].update_one({'_id': ObjectId(gr_id)}, {'$set': data})
+
+    @staticmethod
+    def delete(gr_id):
+        from bson.objectid import ObjectId
+        mongo.db[GoodsReceiptModel.collection].delete_one({'_id': ObjectId(gr_id)})
+
+    @staticmethod
     def to_dict(gr):
         return {
             'id': str(gr['_id']),
@@ -38,6 +48,7 @@ class GoodsReceiptModel:
             'supplier_name': gr.get('supplier_name', ''),
             'items': gr.get('items', []),
             'notes': gr.get('notes', ''),
+            'status': gr.get('status', 'waiting'),
             'company_id': str(gr.get('company_id')) if gr.get('company_id') else None,
             'created_by': str(gr.get('created_by')) if gr.get('created_by') else None,
             'created_at': gr.get('created_at').isoformat() if gr.get('created_at') else None,

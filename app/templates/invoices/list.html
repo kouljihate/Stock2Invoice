@@ -47,7 +47,7 @@
                 <td class="text-end">
                     <div class="d-flex gap-1 justify-content-end">
                         <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.view_invoice', invoice_id=inv.id) }}{% else %}{{ url_for('web_invoices.view_invoice', invoice_id=inv.id) }}{% endif %}" class="btn btn-sm btn-outline-primary btn-icon-circle" title="{{ _('View') }}"><i class="bi bi-eye"></i></a>
-                        <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.print_invoice', invoice_id=inv.id) }}{% else %}{{ url_for('web_invoices.print_invoice', invoice_id=inv.id) }}{% endif %}" target="_blank" class="btn btn-sm btn-outline-secondary btn-icon-circle" title="{{ _('Print') }}"><i class="bi bi-printer"></i></a>
+                        <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.download_pdf', invoice_id=inv.id) }}{% else %}{{ url_for('web_invoices.download_pdf', invoice_id=inv.id) }}{% endif %}" target="_blank" class="btn btn-sm btn-outline-secondary btn-icon-circle" title="{{ _('PDF') }}"><i class="bi bi-file-earmark-pdf"></i></a>
                         <form method="POST" action="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.delete_invoice', invoice_id=inv.id) }}{% else %}{{ url_for('web_invoices.delete_invoice', invoice_id=inv.id) }}{% endif %}" class="d-inline" onsubmit="return confirm('{{ _('Delete') }} {{ inv.invoice_number or inv.id[:8] }}?')">
                             <button type="submit" class="btn btn-sm btn-outline-danger btn-icon-circle" title="{{ _('Delete') }}"><i class="bi bi-trash"></i></button>
                         </form>

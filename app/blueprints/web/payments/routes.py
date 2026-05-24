@@ -5,6 +5,7 @@ from app.core.models.user_model import UserModel
 from app.core.models.payment_model import PaymentModel
 from app.core.models.supplier_model import SupplierModel
 from app.core.utils.helpers import paginate, oid
+from app.core.services.event_service import EventService
 from bson.objectid import ObjectId
 
 logger = logging.getLogger(__name__)
@@ -53,7 +54,9 @@ def create_payment():
             'company_id': oid(cid),
             'created_by': oid(get_jwt_identity()),
         }
-        PaymentModel.create(payload)
+        pmt_id = PaymentModel.create(payload)
+        user_obj = _get_user()
+        EventService.record(cid, 'payment', pmt_id, payment_number, 'created', user_id=get_jwt_identity(), user_name=user_obj.get('name','') if user_obj else '')
         flash(f'Payment {payment_number} created.', 'success')
         return redirect(url_for('web_payments.list_payments'))
     except Exception as e:

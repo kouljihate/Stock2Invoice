@@ -4,8 +4,10 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.services.stock_service import StockService
 from app.core.models.user_model import UserModel
 from app.core.models.product_model import ProductModel
+from app.core.models.supplier_model import SupplierModel
 from app.core.services.event_service import EventService
 from app.core.utils.helpers import paginate
+from bson.objectid import ObjectId
 
 logger = logging.getLogger(__name__)
 web_stock_bp = Blueprint('web_stock', __name__, template_folder='../../../templates')
@@ -59,19 +61,27 @@ def list_products():
 @jwt_required()
 def create_product():
     user = _get_user()
+    cid = _company_id()
+    suppliers = []
+    if cid:
+        suppliers = [SupplierModel.to_dict(s) for s in SupplierModel.find_all_unpaginated({'company_id': ObjectId(cid)})]
     if request.method == 'GET':
-        return render_template('stock/edit.html', mode='web', user=UserModel.to_dict(user) if user else None, product=None)
+        return render_template('stock/edit.html', mode='web', user=UserModel.to_dict(user) if user else None, product=None, suppliers=suppliers)
 
     try:
         cid = _company_id()
-        errors = StockService.validate(request.form.to_dict(), cid)
+        data = request.form.to_dict()
+        if data.get('supplier_id'):
+            sup = SupplierModel.find_by_id(data['supplier_id'])
+            data['supplier_name'] = sup.get('name', '') if sup else ''
+        errors = StockService.validate(data, cid)
         if errors:
             for e in errors:
                 flash(e, 'danger')
-            return render_template('stock/edit.html', mode='web', user=UserModel.to_dict(user) if user else None, product=request.form)
+            return render_template('stock/edit.html', mode='web', user=UserModel.to_dict(user) if user else None, product=data, suppliers=suppliers)
 
         user_id = get_jwt_identity()
-        StockService.create(request.form.to_dict(), user_id, cid)
+        StockService.create(data, user_id, cid)
         user_obj = UserModel.find_by_id(user_id)
         EventService.record(cid, 'product', '', request.form.get('sku',''), 'created',
                             user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
@@ -80,7 +90,7 @@ def create_product():
     except Exception as e:
         logger.exception('Product create error')
         flash('Could not create product.', 'danger')
-        return render_template('stock/edit.html', mode='web', user=UserModel.to_dict(user) if user else None, product=request.form)
+        return render_template('stock/edit.html', mode='web', user=UserModel.to_dict(user) if user else None, product=request.form, suppliers=suppliers)
 
 
 @web_stock_bp.route('/<product_id>/edit', methods=['GET', 'POST'])
@@ -94,18 +104,27 @@ def edit_product(product_id):
         return redirect(url_for('web_stock.list_products'))
 
     if request.method == 'GET':
+        suppliers = []
+        if cid:
+            suppliers = [SupplierModel.to_dict(s) for s in SupplierModel.find_all_unpaginated({'company_id': ObjectId(cid)})]
         return render_template('stock/edit.html', mode='web', user=UserModel.to_dict(user) if user else None,
-                               product=product)
+                               product=product, suppliers=suppliers)
 
     try:
         data = request.form.to_dict()
         data['sku'] = product['sku']
+        if data.get('supplier_id'):
+            sup = SupplierModel.find_by_id(data['supplier_id'])
+            data['supplier_name'] = sup.get('name', '') if sup else ''
         errors = StockService.validate(data, cid, is_update=True)
         if errors:
             for e in errors:
                 flash(e, 'danger')
+            suppliers = []
+            if cid:
+                suppliers = [SupplierModel.to_dict(s) for s in SupplierModel.find_all_unpaginated({'company_id': ObjectId(cid)})]
             return render_template('stock/edit.html', mode='web', user=UserModel.to_dict(user) if user else None,
-                                   product=data)
+                                   product=data, suppliers=suppliers)
 
         user_id = get_jwt_identity()
         StockService.update(product_id, data, user_id, cid)
@@ -118,8 +137,11 @@ def edit_product(product_id):
     except Exception as e:
         logger.exception('Product update error')
         flash('Could not update product.', 'danger')
+        suppliers = []
+        if cid:
+            suppliers = [SupplierModel.to_dict(s) for s in SupplierModel.find_all_unpaginated({'company_id': ObjectId(cid)})]
         return render_template('stock/edit.html', mode='web', user=UserModel.to_dict(user) if user else None,
-                               product=request.form)
+                               product=request.form, suppliers=suppliers)
 
 
 @web_stock_bp.route('/<product_id>/delete', methods=['POST'])
@@ -180,7 +202,6 @@ def bulk_upload():
     json_data = request.form.get('json_data')
     if json_data:
         rows = json.loads(json_data)
-        from bson.objectid import ObjectId
         results = []
         success_count = 0
         for idx, row in enumerate(rows):
@@ -199,6 +220,8 @@ def bulk_upload():
                 'subcategory': row.get('subcategory', ''),
                 'package_type': row.get('package_type', ''),
                 'brand': row.get('brand', ''),
+                'supplier_id': row.get('supplier_id', ''),
+                'supplier_name': row.get('supplier_name', ''),
                 'pack_size': row.get('pack_size', '0'),
                 'pack_size_unit': row.get('pack_size_unit', ''),
                 'number_of_pack': row.get('number_of_pack', '0'),
@@ -284,6 +307,8 @@ def bulk_upload():
             'subcategory': r.get('subcategory', ''),
             'package_type': r.get('package_type', ''),
             'brand': r.get('brand', ''),
+            'supplier_id': r.get('supplier_id', ''),
+            'supplier_name': r.get('supplier_name', ''),
             'pack_size': r.get('pack_size', '0'),
             'pack_size_unit': r.get('pack_size_unit', ''),
             'number_of_pack': r.get('number_of_pack', '0'),

@@ -5,18 +5,56 @@
     <h4 class="mb-0"><i class="bi bi-cart-check me-2"></i>{{ _('Purchase Order') }} {{ order.po_number or order.id[:8] }}</h4>
     <a href="{{ url_for('web_purchase_orders.list_orders') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>{{ _('Back') }}</a>
 </div>
-<div class="card shadow-sm">
+
+<div class="card shadow-sm mb-3">
     <div class="card-body">
         <dl class="row small mb-0">
             <dt class="col-sm-2">{{ _('Supplier') }}</dt>
-            <dd class="col-sm-10">{{ order.supplier_name or '-' }}</dd>
+            <dd class="col-sm-4">{{ order.supplier_name or '-' }}</dd>
             <dt class="col-sm-2">{{ _('Status') }}</dt>
-            <dd class="col-sm-10"><span class="badge bg-{{ 'success' if order.status == 'received' else 'warning' }}">{{ _(order.status) }}</span></dd>
-            <dt class="col-sm-2">{{ _('Total') }}</dt>
-            <dd class="col-sm-10">{{ "%.2f"|format(order.total) }}</dd>
+            <dd class="col-sm-4"><span class="badge bg-{{ 'success' if order.status == 'received' else 'warning' if order.status in ('draft','pending') else 'info' if order.status == 'sent' else 'danger' }}">{{ _(order.status) }}</span></dd>
             <dt class="col-sm-2">{{ _('Created') }}</dt>
-            <dd class="col-sm-10">{{ order.created_at[:10] if order.created_at else '-' }}</dd>
+            <dd class="col-sm-4">{{ order.created_at[:10] if order.created_at else '-' }}</dd>
+            <dt class="col-sm-2">{{ _('Notes') }}</dt>
+            <dd class="col-sm-4">{{ order.notes or '-' }}</dd>
         </dl>
     </div>
+</div>
+
+{% if order.get('items') %}
+<div class="card shadow-sm mb-3">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0 small">
+            <thead class="table-light">
+                <tr><th>{{ _('SKU') }}</th><th>{{ _('Name') }}</th><th class="text-end">{{ _('Qty') }}</th><th class="text-end">{{ _('Unit Price') }}</th><th class="text-end">{{ _('Total') }}</th></tr>
+            </thead>
+            <tbody>
+                {% for item in order.get('items') %}
+                <tr>
+                    <td><code>{{ item.sku }}</code></td>
+                    <td>{{ item.name or '-' }}</td>
+                    <td class="text-end">{{ item.quantity }}</td>
+                    <td class="text-end">{{ "%.2f"|format(item.unit_price) }}</td>
+                    <td class="text-end">{{ "%.2f"|format(item.quantity * item.unit_price) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot class="table-light">
+                <tr><td colspan="4" class="text-end">{{ _('Subtotal') }}</td><td class="text-end">{{ "%.2f"|format(order.subtotal) }}</td></tr>
+                {% if order.discount_percent > 0 %}
+                <tr><td colspan="4" class="text-end">{{ _('Discount') }} ({{ order.discount_percent }}%)</td><td class="text-end">-{{ "%.2f"|format(order.discount_amount) }}</td></tr>
+                {% endif %}
+                {% if order.tax_percent > 0 %}
+                <tr><td colspan="4" class="text-end">{{ _('Tax') }} ({{ order.tax_percent }}%)</td><td class="text-end">{{ "%.2f"|format(order.tax_amount) }}</td></tr>
+                {% endif %}
+                <tr><td colspan="4" class="text-end fw-bold">{{ _('Total') }}</td><td class="text-end fw-bold">{{ "%.2f"|format(order.total) }}</td></tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<div class="d-flex gap-2">
+    <a href="{{ url_for('web_purchase_orders.list_orders') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>{{ _('Back to List') }}</a>
 </div>
 {% endblock %}

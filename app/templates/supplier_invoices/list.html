@@ -14,14 +14,28 @@
             <tbody>
                 {% for inv in invoices %}
                 <tr>
-                    <td><code>{{ inv.invoice_number or inv.id[:8] }}</code></td>
-                    <td>{{ inv.supplier_name or '-' }}</td>
-                    <td><small>{{ inv.po_number or '-' }}</small></td>
-                    <td><span class="badge bg-{{ 'success' if inv.status == 'paid' else 'warning' if inv.status == 'draft' else 'info' if inv.status in ('sent','approved') else 'danger' }}">{{ _(inv.status) }}</span></td>
-                    <td class="text-end">{{ "%.2f"|format(inv.total) }}</td>
-                    <td><small>{{ inv.due_date[:10] if inv.due_date else '-' }}</small></td>
-                    <td class="text-end">
-                        <a href="{{ url_for('web_supplier_invoices.view_invoice', inv_id=inv.id) }}" class="btn btn-sm btn-outline-info"><i class="bi bi-eye"></i></a>
+                    <td class="align-middle"><code>{{ inv.invoice_number or inv.id[:8] }}</code></td>
+                    <td class="align-middle">{{ inv.supplier_name or '-' }}</td>
+                    <td class="align-middle"><small>{{ inv.po_number or '-' }}</small></td>
+                    <td class="align-middle"><span class="badge bg-{{ 'success' if inv.status == 'paid' else 'warning' if inv.status == 'draft' else 'info' if inv.status in ('sent','approved') else 'danger' }}">{{ _(inv.status) }}</span></td>
+                    <td class="text-end align-middle">{{ "%.2f"|format(inv.total) }}</td>
+                    <td class="align-middle"><small>{{ inv.due_date[:10] if inv.due_date else '-' }}</small></td>
+                    <td class="text-end align-middle" style="white-space: nowrap;">
+                        <div class="d-flex gap-1 justify-content-end align-items-center">
+                            <a href="{{ url_for('web_supplier_invoices.view_invoice', inv_id=inv.id) }}" class="btn btn-sm btn-outline-info btn-icon-circle" title="{{ _('View') }}"><i class="bi bi-eye"></i></a>
+                            {% if inv.status == 'draft' %}
+                            <form method="POST" action="{{ url_for('web_supplier_invoices.validate_invoice', inv_id=inv.id) }}" class="d-inline-flex" onsubmit="return confirm('{{ _('Validate this supplier invoice?') }}')">
+                                <button type="submit" class="btn btn-sm btn-outline-success btn-icon-circle" title="{{ _('Validate') }}"><i class="bi bi-check-circle"></i></button>
+                            </form>
+                            {% else %}
+                            <form method="POST" action="{{ url_for('web_supplier_invoices.invalidate_invoice', inv_id=inv.id) }}" class="d-inline-flex" onsubmit="return confirm('{{ _('Invalidate this supplier invoice?') }}')">
+                                <button type="submit" class="btn btn-sm btn-outline-warning btn-icon-circle" title="{{ _('Invalidate') }}"><i class="bi bi-x-circle"></i></button>
+                            </form>
+                            {% endif %}
+                            <form method="POST" action="{{ url_for('web_supplier_invoices.delete_invoice', inv_id=inv.id) }}" class="d-inline-flex" onsubmit="return confirm('{{ _('Delete this supplier invoice?') }}')">
+                                <button type="submit" class="btn btn-sm btn-outline-danger btn-icon-circle" title="{{ _('Delete') }}"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 {% else %}

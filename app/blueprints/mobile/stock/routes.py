@@ -3,7 +3,9 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.services.stock_service import StockService
 from app.core.models.user_model import UserModel
+from app.core.models.supplier_model import SupplierModel
 from app.core.utils.helpers import paginate
+from bson.objectid import ObjectId
 
 logger = logging.getLogger(__name__)
 mobile_stock_bp = Blueprint('mobile_stock', __name__, template_folder='../../../templates')
@@ -48,26 +50,34 @@ def list_products():
 @jwt_required()
 def create_product():
     user = _get_user()
+    cid = _company_id()
+    suppliers = []
+    if cid:
+        suppliers = [SupplierModel.to_dict(s) for s in SupplierModel.find_all_unpaginated({'company_id': ObjectId(cid)})]
     if request.method == 'GET':
         return render_template('stock/edit.html', mode='mobile',
-                               user=UserModel.to_dict(user) if user else None, product=None)
+                               user=UserModel.to_dict(user) if user else None, product=None, suppliers=suppliers)
     try:
         cid = _company_id()
-        errors = StockService.validate(request.form.to_dict(), cid)
+        data = request.form.to_dict()
+        if data.get('supplier_id'):
+            sup = SupplierModel.find_by_id(data['supplier_id'])
+            data['supplier_name'] = sup.get('name', '') if sup else ''
+        errors = StockService.validate(data, cid)
         if errors:
             for e in errors:
                 flash(e, 'danger')
             return render_template('stock/edit.html', mode='mobile',
-                                   user=UserModel.to_dict(user) if user else None, product=request.form)
+                                   user=UserModel.to_dict(user) if user else None, product=data, suppliers=suppliers)
         user_id = get_jwt_identity()
-        StockService.create(request.form.to_dict(), user_id, cid)
+        StockService.create(data, user_id, cid)
         flash('Product created.', 'success')
         return redirect(url_for('mobile_stock.list_products'))
     except Exception as e:
         logger.exception('Mobile product create error')
         flash('Could not create product.', 'danger')
         return render_template('stock/edit.html', mode='mobile',
-                               user=UserModel.to_dict(user) if user else None, product=request.form)
+                               user=UserModel.to_dict(user) if user else None, product=request.form, suppliers=suppliers)
 
 
 @mobile_stock_bp.route('/<product_id>/edit', methods=['GET', 'POST'])
@@ -79,18 +89,24 @@ def edit_product(product_id):
     if not product:
         flash('Product not found.', 'danger')
         return redirect(url_for('mobile_stock.list_products'))
+    suppliers = []
+    if cid:
+        suppliers = [SupplierModel.to_dict(s) for s in SupplierModel.find_all_unpaginated({'company_id': ObjectId(cid)})]
     if request.method == 'GET':
         return render_template('stock/edit.html', mode='mobile',
-                               user=UserModel.to_dict(user) if user else None, product=product)
+                               user=UserModel.to_dict(user) if user else None, product=product, suppliers=suppliers)
     try:
         data = request.form.to_dict()
         data['sku'] = product['sku']
+        if data.get('supplier_id'):
+            sup = SupplierModel.find_by_id(data['supplier_id'])
+            data['supplier_name'] = sup.get('name', '') if sup else ''
         errors = StockService.validate(data, cid, is_update=True)
         if errors:
             for e in errors:
                 flash(e, 'danger')
             return render_template('stock/edit.html', mode='mobile',
-                                   user=UserModel.to_dict(user) if user else None, product=data)
+                                   user=UserModel.to_dict(user) if user else None, product=data, suppliers=suppliers)
         user_id = get_jwt_identity()
         StockService.update(product_id, data, user_id, cid)
         flash('Product updated.', 'success')
@@ -99,7 +115,7 @@ def edit_product(product_id):
         logger.exception('Mobile product update error')
         flash('Could not update product.', 'danger')
         return render_template('stock/edit.html', mode='mobile',
-                               user=UserModel.to_dict(user) if user else None, product=request.form)
+                               user=UserModel.to_dict(user) if user else None, product=request.form, suppliers=suppliers)
 
 
 @mobile_stock_bp.route('/<product_id>/delete', methods=['POST'])

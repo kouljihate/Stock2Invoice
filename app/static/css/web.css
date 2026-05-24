@@ -1,5 +1,8 @@
 .sidebar-col {
   padding-right: 0;
+  height: calc(100vh - 56px);
+  position: sticky;
+  top: 56px;
 }
 
 main {

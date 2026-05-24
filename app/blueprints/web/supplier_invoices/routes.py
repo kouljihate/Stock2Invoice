@@ -6,6 +6,7 @@ from app.core.models.user_model import UserModel
 from app.core.models.supplier_invoice_model import SupplierInvoiceModel
 from app.core.models.supplier_model import SupplierModel
 from app.core.utils.helpers import paginate, oid
+from app.core.services.event_service import EventService
 
 logger = logging.getLogger(__name__)
 web_supplier_invoices_bp = Blueprint('web_supplier_invoices', __name__, template_folder='../../../templates')
@@ -94,7 +95,9 @@ def create_invoice():
         payload['discount_amount'] = discount
         payload['tax_amount'] = taxable * payload['tax_percent'] / 100
         payload['total'] = taxable + payload['tax_amount']
-        SupplierInvoiceModel.create(payload)
+        inv_id = SupplierInvoiceModel.create(payload)
+        user_obj = _get_user()
+        EventService.record(cid, 'supplier_invoice', inv_id, inv_number, 'created', user_id=get_jwt_identity(), user_name=user_obj.get('name','') if user_obj else '')
         flash(f'Supplier invoice {inv_number} created.', 'success')
         return redirect(url_for('web_supplier_invoices.list_invoices'))
     except Exception as e:
@@ -118,3 +121,72 @@ def view_invoice(inv_id):
     return render_template('supplier_invoices/detail.html', mode='web',
                            user=UserModel.to_dict(user) if user else None,
                            invoice=SupplierInvoiceModel.to_dict(inv))
+
+
+@web_supplier_invoices_bp.route('/<inv_id>/validate', methods=['POST'])
+@jwt_required()
+def validate_invoice(inv_id):
+    try:
+        cid = _company_id()
+        inv = SupplierInvoiceModel.find_by_id(inv_id)
+        if not inv:
+            flash('Supplier invoice not found.', 'danger')
+            return redirect(url_for('web_supplier_invoices.list_invoices'))
+        if str(inv.get('company_id', '')) != str(cid):
+            flash('Access denied.', 'danger')
+            return redirect(url_for('web_supplier_invoices.list_invoices'))
+        SupplierInvoiceModel.update(inv_id, {'status': 'approved'})
+        user_obj = _get_user()
+        EventService.record(cid, 'supplier_invoice', inv_id, inv.get('invoice_number',''), 'approved',
+                            user_id=get_jwt_identity(), user_name=user_obj.get('name','') if user_obj else '')
+        flash('Supplier invoice validated.', 'success')
+    except Exception as e:
+        logger.exception('Supplier invoice validate error')
+        flash(f'Could not validate supplier invoice: {e}', 'danger')
+    return redirect(url_for('web_supplier_invoices.list_invoices'))
+
+
+@web_supplier_invoices_bp.route('/<inv_id>/invalidate', methods=['POST'])
+@jwt_required()
+def invalidate_invoice(inv_id):
+    try:
+        cid = _company_id()
+        inv = SupplierInvoiceModel.find_by_id(inv_id)
+        if not inv:
+            flash('Supplier invoice not found.', 'danger')
+            return redirect(url_for('web_supplier_invoices.list_invoices'))
+        if str(inv.get('company_id', '')) != str(cid):
+            flash('Access denied.', 'danger')
+            return redirect(url_for('web_supplier_invoices.list_invoices'))
+        SupplierInvoiceModel.update(inv_id, {'status': 'draft'})
+        user_obj = _get_user()
+        EventService.record(cid, 'supplier_invoice', inv_id, inv.get('invoice_number',''), 'invalidated',
+                            user_id=get_jwt_identity(), user_name=user_obj.get('name','') if user_obj else '')
+        flash('Supplier invoice invalidated.', 'success')
+    except Exception as e:
+        logger.exception('Supplier invoice invalidate error')
+        flash(f'Could not invalidate supplier invoice: {e}', 'danger')
+    return redirect(url_for('web_supplier_invoices.list_invoices'))
+
+
+@web_supplier_invoices_bp.route('/<inv_id>/delete', methods=['POST'])
+@jwt_required()
+def delete_invoice(inv_id):
+    try:
+        cid = _company_id()
+        inv = SupplierInvoiceModel.find_by_id(inv_id)
+        if not inv:
+            flash('Supplier invoice not found.', 'danger')
+            return redirect(url_for('web_supplier_invoices.list_invoices'))
+        if str(inv.get('company_id', '')) != str(cid):
+            flash('Access denied.', 'danger')
+            return redirect(url_for('web_supplier_invoices.list_invoices'))
+        SupplierInvoiceModel.delete(inv_id)
+        user_obj = _get_user()
+        EventService.record(cid, 'supplier_invoice', inv_id, inv.get('invoice_number',''), 'deleted',
+                            user_id=get_jwt_identity(), user_name=user_obj.get('name','') if user_obj else '')
+        flash('Supplier invoice deleted.', 'success')
+    except Exception as e:
+        logger.exception('Supplier invoice delete error')
+        flash(f'Could not delete supplier invoice: {e}', 'danger')
+    return redirect(url_for('web_supplier_invoices.list_invoices'))

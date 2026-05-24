@@ -21,10 +21,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/web.css') }}">
     {% endif %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
 
     {% block extra_head %}{% endblock %}
 </head>
-<body class="{% if mode == 'mobile' %}bg-light{% else %}bg-white{% endif %}">
+<body class="{% if mode == 'mobile' %}bg-light{% else %}bg-white{% endif %} {% block body_class %}{% endblock %}">
     {% if user %}
         {% include 'base/navbar.html' %}
     {% endif %}
@@ -34,11 +36,11 @@
                 <div class="col-md-2 d-none d-md-block sidebar-col">
                     {% include 'base/sidebar.html' %}
                 </div>
-                <main class="col-md-10 ms-sm-auto px-md-4 py-4">
+                <main class="col-md-10 ms-sm-auto px-md-4 pb-4">
             {% elif user and mode == 'mobile' %}
-                <main class="col-12 px-3 py-3">
+                <main class="col-12 px-3 pb-3">
             {% else %}
-                <main class="col-12 px-3 py-3">
+                <main class="col-12 px-3 pb-3">
             {% endif %}
                 {% if current_company %}
                 <div class="row justify-content-center">

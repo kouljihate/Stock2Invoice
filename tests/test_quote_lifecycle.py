@@ -93,10 +93,10 @@ def _create_quote(page, customer_name, sku, product_name, price, n_items=1):
         page.wait_for_timeout(150)
         rows = page.locator(".line-item")
         last = rows.nth(rows.count() - 1)
-        last.fill("input[name='sku']", sku)
-        last.fill("input[name='quantity']", str(random.randint(1, 5)))
-        last.fill("input[name='unit_price']", str(random.randint(30, 300)))
-        last.fill("input[name='name']", product_name or sku)
+        last.locator("input[name='sku']").fill(sku)
+        last.locator("input[name='quantity']").fill(str(random.randint(1, 5)))
+        last.locator("input[name='unit_price']").fill(str(random.randint(30, 300)))
+        last.locator("input[name='name']").fill(product_name or sku)
 
 
     page.click("button[type='submit']")
@@ -148,8 +148,8 @@ def _create_delivery_note(page, order_id, sku, product_name, n_items=1):
         page.wait_for_timeout(150)
         rows = page.locator(".line-item")
         last = rows.nth(rows.count() - 1)
-        last.fill("input[name='sku']", sku)
-        last.fill("input[name='quantity']", str(random.randint(1, 3)))
+        last.locator("input[name='sku']").fill(sku)
+        last.locator("input[name='quantity']").fill(str(random.randint(1, 3)))
 
     page.click("button[type='submit']")
     try:

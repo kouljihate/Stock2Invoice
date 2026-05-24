@@ -29,6 +29,11 @@ class PurchaseOrderModel:
         mongo.db[PurchaseOrderModel.collection].update_one({'_id': ObjectId(po_id)}, {'$set': data})
 
     @staticmethod
+    def delete(po_id):
+        from bson.objectid import ObjectId
+        mongo.db[PurchaseOrderModel.collection].delete_one({'_id': ObjectId(po_id)})
+
+    @staticmethod
     def count(filters=None):
         return mongo.db[PurchaseOrderModel.collection].count_documents(filters or {})
 

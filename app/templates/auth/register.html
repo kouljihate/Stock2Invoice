@@ -1,42 +1,59 @@
 ﻿{% extends 'base/layout.html' %}
 {% block title %}Register — Maure STC{% endblock %}
+{% block body_class %}auth-body{% endblock %}
 {% block content %}
-<div class="row justify-content-center mt-5">
-    <div class="col-md-5 col-lg-4">
-        <div class="card shadow-sm">
-            <div class="card-body p-4">
-                <h3 class="text-center mb-4">
-                    <i class="bi bi-box-seam text-primary me-2"></i>Maure STC
-                </h3>
-                <p class="text-center text-muted mb-4">{{ _('Register') }}</p>
+<div class="row justify-content-center">
+    <div class="col-md-12 col-lg-12">
+        <div class="auth-card">
+            <div class="text-center">
+                <div class="brand-icon">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <h2>Maure STC</h2>
+                <p class="tagline">Create your account</p>
+            </div>
 
-                <form method="POST" action="">
-                    <div class="mb-3">
-                        <label class="form-label">{{ _('Name') }}</label>
+            <form method="POST" action="">
+                <div class="mb-3">
+                    <label class="form-label">{{ _('Name') }}</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
                         <input type="text" name="name" class="form-control" placeholder="{{ _('Name') }}" required>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">{{ _('Email') }}</label>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">{{ _('Email') }}</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                         <input type="email" name="email" class="form-control" placeholder="you@example.com" required>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">{{ _('Password') }}</label>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">{{ _('Password') }}</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
                         <input type="password" name="password" class="form-control" placeholder="Min 8 chars, letters + numbers" required>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">{{ _('Confirm Password') }}</label>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">{{ _('Confirm Password') }}</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
                         <input type="password" name="confirm_password" class="form-control" placeholder="Repeat password" required>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 mb-3">
-                        <i class="bi bi-person-plus me-1"></i>{{ _('Register') }}
-                    </button>
-                    <p class="text-center mb-0">
-                        {{ _('Already have an account?') }}
-                        <a href="{% if mode == 'mobile' %}{{ url_for('mobile_auth.login') }}{% else %}{{ url_for('web_auth.login') }}{% endif %}">{{ _('Sign In') }}</a>
-                    </p>
-                </form>
-            </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mb-3">
+                    <i class="bi bi-person-plus me-1"></i>{{ _('Register') }}
+                </button>
+                <p class="text-center auth-link mb-0">
+                    {{ _('Already have an account?') }}
+                    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_auth.login') }}{% else %}{{ url_for('web_auth.login') }}{% endif %}">{{ _('Sign In') }}</a>
+                </p>
+            </form>
         </div>
     </div>
+</div>
+<div class="auth-footer">
+    &copy; {{ build_date[:4] }} Maure STC &middot; v{{ version }}
 </div>
 {% endblock %}

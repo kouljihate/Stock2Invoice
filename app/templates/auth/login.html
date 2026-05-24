@@ -1,37 +1,45 @@
 ﻿{% extends 'base/layout.html' %}
 {% block title %}Login — Maure STC{% endblock %}
+{% block body_class %}auth-body{% endblock %}
 {% block content %}
-<div class="row justify-content-center mt-5">
-    <div class="col-md-5 col-lg-4">
-        <div class="card shadow-sm">
-            <div class="card-body p-4">
-                <h2 class="text-center mb-4">
-                    <i class="bi bi-box-seam text-primary me-2"></i>Maure STC
-                </h2>
-                <small class="text-muted d-block text-center mb-4">
-                    Stock-To-Cash Management System
-                </small>
-                <p class="text-center text-muted mb-4">{{ _('Sign In') }}</p>
+<div class="row justify-content-center">
+    <div class="col-md-12 col-lg-12">
+        <div class="auth-card">
+            <div class="text-center">
+                <div class="brand-icon">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <h2>Maure STC</h2>
+                <p class="tagline">Stock-To-Cash Management System</p>
+            </div>
 
-                <form method="POST" action="">
-                    <div class="mb-3">
-                        <label class="form-label">{{ _('Email') }}</label>
+            <form method="POST" action="">
+                <div class="mb-3">
+                    <label class="form-label">{{ _('Email') }}</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                         <input type="email" name="email" class="form-control" placeholder="you@example.com" required autofocus>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">{{ _('Password') }}</label>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">{{ _('Password') }}</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
                         <input type="password" name="password" class="form-control" placeholder="Enter password" required>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 mb-3">
-                        <i class="bi bi-box-arrow-in-right me-1"></i>{{ _('Sign In') }}
-                    </button>
-                    <p class="text-center mb-0">
-                        {{ _("Don't have an account?") }}
-                        <a href="{% if mode == 'mobile' %}{{ url_for('mobile_auth.register') }}{% else %}{{ url_for('web_auth.register') }}{% endif %}">{{ _('Register') }}</a>
-                    </p>
-                </form>
-            </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mb-3">
+                    <i class="bi bi-box-arrow-in-right me-1"></i>{{ _('Sign In') }}
+                </button>
+                <p class="text-center auth-link mb-0">
+                    {{ _("Don't have an account?") }}
+                    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_auth.register') }}{% else %}{{ url_for('web_auth.register') }}{% endif %}">{{ _('Register') }}</a>
+                </p>
+            </form>
         </div>
     </div>
+</div>
+<div class="auth-footer">
+    &copy; {{ build_date[:4] }} Maure STC &middot; v{{ version }}
 </div>
 {% endblock %}
