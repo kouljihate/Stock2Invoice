@@ -7,4 +7,5 @@ venv/
 .DS_Store
 Thumbs.db
 app/static/uploads/
+test_invoice.pdf
 PROMPT_BB.md

@@ -1,11 +1,14 @@
 import logging
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from io import BytesIO
+from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.services.invoice_service import InvoiceService
+from app.core.services.pdf_service import generate_invoice_pdf
 from app.core.models.invoice_model import InvoiceModel
 from app.core.models.product_model import ProductModel
 from app.core.models.customer_model import CustomerModel
 from app.core.models.user_model import UserModel
+from app.core.models.company_model import CompanyModel
 from app.core.services.event_service import EventService
 from app.core.utils.helpers import paginate, oid
 
@@ -175,6 +178,27 @@ def print_invoice(invoice_id):
     return render_template('invoices/print.html', mode='web',
                            user=UserModel.to_dict(user) if user else None,
                            invoice=inv)
+
+
+@web_invoices_bp.route('/<invoice_id>/pdf')
+@jwt_required()
+def download_pdf(invoice_id):
+    cid = _company_id()
+    inv = InvoiceService.get_by_id(invoice_id, cid)
+    if not inv:
+        flash('Invoice not found.', 'danger')
+        return redirect(url_for('web_invoices.list_invoices'))
+    company = None
+    if cid:
+        company = CompanyModel.find_by_id(cid)
+        if company:
+            company = CompanyModel.to_dict(company)
+    buf = generate_invoice_pdf(inv, company)
+    inv_number = inv.get('invoice_number', 'invoice')
+    safe_name = inv_number.replace('/', '_').replace('\\', '_')
+    return send_file(buf, mimetype='application/pdf',
+                     as_attachment=False,
+                     download_name=f'{safe_name}.pdf')
 
 
 @web_invoices_bp.route('/<invoice_id>/status', methods=['POST'])
