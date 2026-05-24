@@ -74,15 +74,31 @@ def _get_first_customer(page):
     return None
 
 
-def _create_quote(page, customer_name, sku, product_name, price):
+def _create_quote(page, customer_name, sku, product_name, price, n_items=1):
     page.goto(f"{BASE_URL}/web/quotes/create")
     page.wait_for_selector("select[name='customer_name']")
     page.select_option("select[name='customer_name']", label=customer_name)
     page.wait_for_timeout(300)
+
+    # Fill first item row
     page.fill("input[name='sku']", sku)
-    page.fill("input[name='quantity']", "1")
+    page.fill("input[name='quantity']", str(random.randint(1, 5)))
     page.fill("input[name='unit_price']", str(price))
     page.fill("input[name='name']", product_name or sku)
+
+
+    # Add additional item rows
+    for _ in range(1, n_items):
+        page.click("#add-item")
+        page.wait_for_timeout(150)
+        rows = page.locator(".line-item")
+        last = rows.nth(rows.count() - 1)
+        last.fill("input[name='sku']", sku)
+        last.fill("input[name='quantity']", str(random.randint(1, 5)))
+        last.fill("input[name='unit_price']", str(random.randint(30, 300)))
+        last.fill("input[name='name']", product_name or sku)
+
+
     page.click("button[type='submit']")
     try:
         page.wait_for_url(re.compile(r"/web/quotes/?$"), timeout=10000)
@@ -111,15 +127,30 @@ def _mark_invoice_paid(page, invoice_id):
         pass
 
 
-def _create_delivery_note(page, order_id, sku, product_name):
+def _create_delivery_note(page, order_id, sku, product_name, n_items=1):
     page.goto(f"{BASE_URL}/web/delivery-notes/create")
     page.wait_for_selector("select[name='order_id']")
     page.select_option("select[name='order_id']", value=order_id)
     page.wait_for_timeout(500)
+
+    # Fill first item row
     page.fill("input[name='sku']", sku)
-    page.fill("input[name='quantity']", "1")
+    page.fill("input[name='quantity']", str(random.randint(1, 3)))
     if page.locator("input[name='name']").count() > 0:
         page.fill("input[name='name']", product_name)
+
+    # Add additional item rows
+    for _ in range(1, n_items):
+        add_btn = page.locator("#add-item")
+        if add_btn.count() == 0:
+            break
+        add_btn.click()
+        page.wait_for_timeout(150)
+        rows = page.locator(".line-item")
+        last = rows.nth(rows.count() - 1)
+        last.fill("input[name='sku']", sku)
+        last.fill("input[name='quantity']", str(random.randint(1, 3)))
+
     page.click("button[type='submit']")
     try:
         page.wait_for_url(re.compile(r"/web/delivery-notes/?$"), timeout=10000)
@@ -127,7 +158,7 @@ def _create_delivery_note(page, order_id, sku, product_name):
         pass
 
 
-def _process_company(company, n_quotes):
+def _process_company(company, n_quotes, min_items=1, max_items=1):
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
@@ -148,9 +179,10 @@ def _process_company(company, n_quotes):
 
             for qi in range(1, n_quotes + 1):
                 price = random.randint(50, 500)
+                n_items = random.randint(min_items, max_items)
                 try:
-                    print(f"    [{company['name']}] Quote {qi}/{n_quotes}: create...")
-                    _create_quote(page, cust_name, sku, pname or sku, price)
+                    print(f"    [{company['name']}] Quote {qi}/{n_quotes}: create ({n_items} items)...")
+                    _create_quote(page, cust_name, sku, pname or sku, price, n_items)
 
                     quote_id = _extract_latest_quote_id(page)
                     if not quote_id:
@@ -188,8 +220,8 @@ def _process_company(company, n_quotes):
                     print(f"    [{company['name']}] Quote {qi}: marking invoice paid...")
                     _mark_invoice_paid(page, invoice_id)
 
-                    print(f"    [{company['name']}] Quote {qi}: creating delivery note...")
-                    _create_delivery_note(page, order_id, sku, pname or sku)
+                    print(f"    [{company['name']}] Quote {qi}: creating delivery note ({n_items} items)...")
+                    _create_delivery_note(page, order_id, sku, pname or sku, n_items)
 
                     print(f"    ✓ [{company['name']}] Quote {qi} done")
 
@@ -249,8 +281,10 @@ def main():
     n_quotes = int(sys.argv[1]) if len(sys.argv) > 1 else 1
     n_companies = int(sys.argv[2]) if len(sys.argv) > 2 else 1
     n_workers = int(sys.argv[3]) if len(sys.argv) > 3 else 5
+    min_items = int(sys.argv[4]) if len(sys.argv) > 4 else 1
+    max_items = int(sys.argv[5]) if len(sys.argv) > 5 else 1
 
-    print(f"Quotes per company: {n_quotes}, Companies: {n_companies}, Workers: {n_workers}")
+    print(f"Quotes per company: {n_quotes}, Companies: {n_companies}, Workers: {n_workers}, Items per quote: {min_items}-{max_items}")
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -275,7 +309,7 @@ def main():
     print(f"\nProcessing {len(enriched)} companies in parallel ({n_workers} workers)...")
     with ThreadPoolExecutor(max_workers=n_workers) as pool:
         futures = {
-            pool.submit(_process_company, c, n_quotes): c["name"]
+            pool.submit(_process_company, c, n_quotes, min_items, max_items): c["name"]
             for c in enriched
         }
         for f in as_completed(futures):

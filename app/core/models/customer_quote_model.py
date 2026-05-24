@@ -46,6 +46,7 @@ class CustomerQuoteModel:
             'contact_name': q.get('contact_name', ''),
             'contact_email': q.get('contact_email', ''),
             'customer_address': q.get('customer_address', ''),
+            'customer_city': q.get('customer_city', ''),
             'items': q.get('items', []),
             'subtotal': float(q.get('subtotal', 0)),
             'discount_percent': float(q.get('discount_percent', 0)),

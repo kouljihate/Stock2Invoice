@@ -63,6 +63,8 @@ class InvoiceModel:
             'contact_name': inv.get('contact_name', ''),
             'contact_email': inv.get('contact_email', ''),
             'customer_address': inv.get('customer_address', ''),
+            'customer_city': inv.get('customer_city', ''),
+            'customer_country': inv.get('customer_country', ''),
             'attention_to': inv.get('attention_to', ''),
             'delivery_time': inv.get('delivery_time', ''),
             'invoice_date': inv.get('invoice_date').isoformat() if inv.get('invoice_date') else None,

@@ -97,6 +97,8 @@ def create_invoice():
             'contact_name': request.form.get('contact_name', ''),
             'contact_email': request.form.get('contact_email', ''),
             'customer_address': request.form.get('customer_address', ''),
+            'customer_city': request.form.get('customer_city', ''),
+            'customer_country': request.form.get('customer_country', ''),
             'items': items,
             'discount_percent': request.form.get('discount_percent', 0),
             'tax_percent': request.form.get('tax_percent', 10),

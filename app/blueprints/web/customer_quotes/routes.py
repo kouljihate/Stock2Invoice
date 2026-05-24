@@ -98,6 +98,7 @@ def create_quote():
             'contact_name': request.form.get('contact_name', ''),
             'contact_email': request.form.get('contact_email', ''),
             'customer_address': request.form.get('customer_address', ''),
+            'customer_city': request.form.get('customer_city', ''),
             'items': items,
             'subtotal': sum(it['quantity'] * it['unit_price'] for it in items),
             'discount_percent': float(request.form.get('discount_percent', 0)),

@@ -89,6 +89,8 @@ class InvoiceService:
             'contact_name': (data.get('contact_name') or '').strip(),
             'contact_email': (data.get('contact_email') or '').strip(),
             'customer_address': (data.get('customer_address') or '').strip(),
+            'customer_city': (data.get('customer_city') or '').strip(),
+            'customer_country': (data.get('customer_country') or '').strip(),
             'attention_to': (data.get('attention_to') or '').strip(),
             'delivery_time': (data.get('delivery_time') or '').strip(),
             'invoice_date': now,
