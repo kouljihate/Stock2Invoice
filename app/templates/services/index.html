@@ -1,0 +1,42 @@
+{% extends 'base/layout.html' %}
+{% block title %}{{ _('Service Module') }} — Maure STC{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><span class="material-symbols-outlined me-2" style="font-size:1.6rem;vertical-align:middle;">handyman</span>{{ _('Service Module') }}</h4>
+</div>
+<div class="row g-3">
+    <div class="col-md-4">
+        <a href="{{ url_for('web_services.list_quotes') }}" class="text-decoration-none">
+            <div class="card shadow-sm text-center py-4">
+                <div class="card-body">
+                    <span class="material-symbols-outlined" style="font-size:2.5rem;color:var(--bs-info);">description</span>
+                    <h5 class="mt-2">{{ _('Service Quotes') }}</h5>
+                    <p class="text-muted small mb-0">{{ _('Create and manage service quotes') }}</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ url_for('web_services.list_orders') }}" class="text-decoration-none">
+            <div class="card shadow-sm text-center py-4">
+                <div class="card-body">
+                    <span class="material-symbols-outlined" style="font-size:2.5rem;color:var(--bs-warning);">assignment</span>
+                    <h5 class="mt-2">{{ _('Service Orders') }}</h5>
+                    <p class="text-muted small mb-0">{{ _('Track service order status') }}</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ url_for('web_services.list_invoices') }}" class="text-decoration-none">
+            <div class="card shadow-sm text-center py-4">
+                <div class="card-body">
+                    <span class="material-symbols-outlined" style="font-size:2.5rem;color:var(--bs-success);">receipt_long</span>
+                    <h5 class="mt-2">{{ _('Service Invoices') }}</h5>
+                    <p class="text-muted small mb-0">{{ _('Manage service billing') }}</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+{% endblock %}
