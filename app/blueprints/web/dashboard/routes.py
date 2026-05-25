@@ -12,7 +12,7 @@ from app.core.models.supplier_invoice_model import SupplierInvoiceModel
 from app.core.models.payment_model import PaymentModel
 from app.core.models.customer_quote_model import CustomerQuoteModel
 from app.core.models.delivery_note_model import DeliveryNoteModel
-from app.core.models.order_model import OrderModel
+from app.core.models.order_model import CustomerOrderModel
 from app.core.models.customer_model import CustomerModel
 from app.core.services.stock_service import StockService
 from app.core.services.invoice_service import InvoiceService
@@ -57,7 +57,7 @@ def index():
         payment_count = PaymentModel.count(scope)
         customer_count = CustomerModel.count(scope)
         quote_count = CustomerQuoteModel.count(scope)
-        order_count = OrderModel.count(scope)
+        order_count = CustomerOrderModel.count(scope)
         dn_count = DeliveryNoteModel.count(scope)
 
         invoice_counts = InvoiceService.get_counts(cid)
@@ -129,7 +129,7 @@ def index():
         recent_pos, _ = PurchaseOrderModel.find_all(1, 5, scope)
         recent_sis, _ = SupplierInvoiceModel.find_all(1, 5, scope)
         recent_quotes, _ = CustomerQuoteModel.find_all(1, 5, scope)
-        recent_orders = OrderModel.recent(5, scope)
+        recent_orders = CustomerOrderModel.recent(5, scope)
         recent_dns, _ = DeliveryNoteModel.find_all(1, 5, scope)
         recent_payments, _ = PaymentModel.find_all(1, 5, scope)
 
@@ -168,11 +168,11 @@ def index():
                                suppliers=suppliers,
                                pending_grs=[PurchaseOrderModel.to_dict(p) for p in pending_grs],
                                active_quotes=[CustomerQuoteModel.to_dict(q) for q in active_quotes],
-                               orders_ready=[OrderModel.to_dict(o) for o in orders_ready],
+                               orders_ready=[CustomerOrderModel.to_dict(o) for o in orders_ready],
                                recent_pos=[PurchaseOrderModel.to_dict(p) for p in recent_pos],
                                recent_sis=[SupplierInvoiceModel.to_dict(s) for s in recent_sis],
                                recent_quotes=[CustomerQuoteModel.to_dict(q) for q in recent_quotes],
-                               recent_orders=[OrderModel.to_dict(o) for o in recent_orders],
+                               recent_orders=[CustomerOrderModel.to_dict(o) for o in recent_orders],
                                recent_dns=[DeliveryNoteModel.to_dict(d) for d in recent_dns],
                                recent_payments=[PaymentModel.to_dict(p) for p in recent_payments])
     except Exception as e:

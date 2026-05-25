@@ -56,6 +56,13 @@ class InvoiceModel:
 
     @staticmethod
     def to_dict(inv):
+        # Defensive mapping: templates/services assume these keys exist.
+        if not inv:
+            return None
+
+        def _dt(v):
+            return v.isoformat() if v else None
+
         return {
             'id': str(inv['_id']),
             'invoice_number': inv.get('invoice_number'),
@@ -67,8 +74,8 @@ class InvoiceModel:
             'customer_country': inv.get('customer_country', ''),
             'attention_to': inv.get('attention_to', ''),
             'delivery_time': inv.get('delivery_time', ''),
-            'invoice_date': inv.get('invoice_date').isoformat() if inv.get('invoice_date') else None,
-            'due_date': inv.get('due_date').isoformat() if inv.get('due_date') else None,
+            'invoice_date': _dt(inv.get('invoice_date')),
+            'due_date': _dt(inv.get('due_date')),
             'items': inv.get('items', []),
             'subtotal': float(inv.get('subtotal', 0)),
             'discount_percent': float(inv.get('discount_percent', 0)),
@@ -80,5 +87,5 @@ class InvoiceModel:
             'notes': inv.get('notes', ''),
             'company_id': str(inv.get('company_id')) if inv.get('company_id') else None,
             'created_by': str(inv.get('created_by')) if inv.get('created_by') else None,
-            'created_at': inv.get('created_at').isoformat() if inv.get('created_at') else None,
+            'created_at': _dt(inv.get('created_at')),
         }

@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime, timezone
 from bson.objectid import ObjectId
-from app.core.models.order_model import OrderModel
+from app.core.models.order_model import CustomerOrderModel
 from app.core.models.invoice_model import InvoiceModel
 from app.core.models.product_model import ProductModel
 from app.core.services.stock_service import StockService
@@ -78,7 +78,7 @@ class OrderService:
         total = round(after_discount + tax_amount, 2)
 
         now = datetime.now(timezone.utc)
-        count = OrderModel.count({'company_id': ObjectId(company_id)})
+        count = CustomerOrderModel.count({'company_id': ObjectId(company_id)})
 
         order_data = {
             'order_number': f"O{datetime.now().strftime('%d%m%y')}-{count + 1:02d}",
@@ -101,8 +101,8 @@ class OrderService:
             'generated_invoice_number': None,
         }
 
-        order_id = OrderModel.create(order_data)
-        logger.info('Order created: %s (id=%s, company=%s, total=%.2f, by=%s)',
+        order_id = CustomerOrderModel.create(order_data)
+        logger.info('Customer Order created: %s (id=%s, company=%s, total=%.2f, by=%s)',
                      order_data['order_number'], order_id, company_id, total, user_id)
 
         if order_data['status'] == 'confirmed':
@@ -112,7 +112,7 @@ class OrderService:
 
     @staticmethod
     def update(order_id, data, user_id, company_id):
-        order = OrderModel.find_by_id(order_id)
+        order = CustomerOrderModel.find_by_id(order_id)
         if not order:
             return None
         if str(order.get('company_id', '')) != company_id:
@@ -131,8 +131,8 @@ class OrderService:
         if 'contact_email' in data:
             update_data['contact_email'] = data['contact_email'].strip()
 
-        OrderModel.update(order_id, update_data)
-        logger.info('Order updated: %s (id=%s, status=%s->%s, by=%s)',
+        CustomerOrderModel.update(order_id, update_data)
+        logger.info('Customer Order updated: %s (id=%s, status=%s->%s, by=%s)',
                      order.get('order_number'), order_id, old_status, new_status, user_id)
 
         if new_status == 'confirmed' and old_status != 'confirmed' and not order.get('generated_invoice_id'):
@@ -208,7 +208,7 @@ class OrderService:
         query = filters or {}
         if company_id:
             query['company_id'] = ObjectId(company_id)
-        items, total = OrderModel.find_all(page, per_page, query)
+        items, total = CustomerOrderModel.find_all(page, per_page, query)
         return [OrderModel.to_dict(item) for item in items], total
 
     @staticmethod

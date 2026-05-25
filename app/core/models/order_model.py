@@ -2,25 +2,25 @@ from datetime import datetime, timezone
 from app.extensions.db import mongo
 
 
-class OrderModel:
+class CustomerOrderModel:
     collection = 'orders'
 
     @staticmethod
     def create(data):
         data['created_at'] = datetime.now(timezone.utc)
-        result = mongo.db[OrderModel.collection].insert_one(data)
+        result = mongo.db[CustomerOrderModel.collection].insert_one(data)
         return str(result.inserted_id)
 
     @staticmethod
     def find_by_id(order_id):
         from bson.objectid import ObjectId
-        return mongo.db[OrderModel.collection].find_one({'_id': ObjectId(order_id)})
+        return mongo.db[CustomerOrderModel.collection].find_one({'_id': ObjectId(order_id)})
 
     @staticmethod
     def find_all(page=1, per_page=20, filters=None):
         query = filters or {}
-        total = mongo.db[OrderModel.collection].count_documents(query)
-        cursor = mongo.db[OrderModel.collection].find(query) \
+        total = mongo.db[CustomerOrderModel.collection].count_documents(query)
+        cursor = mongo.db[CustomerOrderModel.collection].find(query) \
             .sort('created_at', -1) \
             .skip((page - 1) * per_page) \
             .limit(per_page)
@@ -29,19 +29,19 @@ class OrderModel:
     @staticmethod
     def update(order_id, data):
         from bson.objectid import ObjectId
-        mongo.db[OrderModel.collection].update_one(
+        mongo.db[CustomerOrderModel.collection].update_one(
             {'_id': ObjectId(order_id)},
             {'$set': data},
         )
 
     @staticmethod
     def count(filters=None):
-        return mongo.db[OrderModel.collection].count_documents(filters or {})
+        return mongo.db[CustomerOrderModel.collection].count_documents(filters or {})
 
     @staticmethod
     def recent(limit=5, filters=None):
         query = filters or {}
-        cursor = mongo.db[OrderModel.collection].find(query).sort('created_at', -1).limit(limit)
+        cursor = mongo.db[CustomerOrderModel.collection].find(query).sort('created_at', -1).limit(limit)
         return list(cursor)
 
     @staticmethod

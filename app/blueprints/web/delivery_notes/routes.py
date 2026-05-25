@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.models.user_model import UserModel
 from app.core.models.delivery_note_model import DeliveryNoteModel
-from app.core.models.order_model import OrderModel
+from app.core.models.order_model import CustomerOrderModel
 from app.core.services.event_service import EventService
 from app.core.utils.helpers import paginate, oid
 

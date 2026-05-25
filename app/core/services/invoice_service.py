@@ -68,6 +68,9 @@ class InvoiceService:
                 'quantity': qty,
                 'unit_price': up,
                 'total': line_total,
+                'pack_size': it.get('pack_size', ''),
+                'package_type': it.get('package_type', ''),
+                'pack_size_unit': it.get('pack_size_unit', ''),
             })
             subtotal += line_total
 
@@ -136,8 +139,8 @@ class InvoiceService:
             if data['status'] == 'paid' and old_status != 'paid':
                 for it in inv.get('items', []):
                     if not StockService.deduct_stock(it['sku'], it['quantity'], company_id,
-                                                      reference=f'Invoice {inv["invoice_number"]} confirmed',
-                                                      user_id=user_id):
+                                                       reference=f'Invoice {inv["invoice_number"]} confirmed',
+                                                       user_id=user_id):
                         logger.error('Stock deduction failed for SKU=%s on invoice=%s confirm', it['sku'], invoice_id)
         if data.get('notes'):
             update_data['notes'] = data['notes'].strip()
@@ -155,6 +158,9 @@ class InvoiceService:
             update_data['invoice_date'] = datetime.fromisoformat(data['invoice_date'])
         if data.get('due_date'):
             update_data['due_date'] = datetime.fromisoformat(data['due_date'])
+        # Handle items update if provided
+        if 'items' in data and isinstance(data['items'], list):
+            update_data['items'] = data['items']
 
         if update_data:
             InvoiceModel.update(invoice_id, update_data)

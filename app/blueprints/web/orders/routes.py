@@ -2,7 +2,7 @@ import logging
 from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.services.order_service import OrderService
-from app.core.models.order_model import OrderModel
+from app.core.models.order_model import CustomerOrderModel
 from app.core.models.product_model import ProductModel
 from app.core.models.customer_model import CustomerModel
 from app.core.models.user_model import UserModel
@@ -116,7 +116,7 @@ def create_order():
         order_id, order_number = OrderService.create(payload, user_id, cid)
         user_obj = UserModel.find_by_id(user_id)
         EventService.record(cid, 'order', order_id, order_number, 'created', user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
-        flash(f'Order {order_number} created.', 'success')
+        flash(f'Customer Order {order_number} created.', 'success')
         return redirect(url_for('web_orders.view_order', order_id=order_id))
     except Exception as e:
         logger.exception('Order create error')

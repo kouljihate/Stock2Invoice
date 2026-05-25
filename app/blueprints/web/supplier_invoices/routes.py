@@ -135,11 +135,36 @@ def validate_invoice(inv_id):
         if str(inv.get('company_id', '')) != str(cid):
             flash('Access denied.', 'danger')
             return redirect(url_for('web_supplier_invoices.list_invoices'))
+        
+        # Update invoice status to approved
         SupplierInvoiceModel.update(inv_id, {'status': 'approved'})
+        
+        # Create payment record
+        from app.core.models.payment_model import PaymentModel
+        from app.core.models.supplier_model import SupplierModel
+        
+        supplier = SupplierModel.find_by_id(inv.get('supplier_id'))
+        payment_data = {
+            'payment_number': f"PAY-{datetime.now().strftime('%Y%m%d')}-{PaymentModel.count() + 1:04d}",
+            'supplier_id': inv.get('supplier_id'),
+            'supplier_name': inv.get('supplier_name', ''),
+            'invoice_id': inv_id,
+            'invoice_number': inv.get('invoice_number', ''),
+            'amount': inv.get('total', 0),
+            'payment_date': datetime.now(timezone.utc),
+            'payment_method': 'bank_transfer',  # Default method
+            'reference': f'Payment for invoice {inv.get("invoice_number")}',
+            'notes': f'Auto-generated payment for validated supplier invoice {inv.get("invoice_number")}',
+            'status': 'pending',  # Payment starts as pending, to be marked as paid when actually paid
+            'company_id': inv.get('company_id'),
+            'created_by': get_jwt_identity()
+        }
+        PaymentModel.create(payment_data)
+        
         user_obj = _get_user()
         EventService.record(cid, 'supplier_invoice', inv_id, inv.get('invoice_number',''), 'approved',
                             user_id=get_jwt_identity(), user_name=user_obj.get('name','') if user_obj else '')
-        flash('Supplier invoice validated.', 'success')
+        flash('Supplier invoice validated and payment created.', 'success')
     except Exception as e:
         logger.exception('Supplier invoice validate error')
         flash(f'Could not validate supplier invoice: {e}', 'danger')
