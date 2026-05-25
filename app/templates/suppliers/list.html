@@ -27,11 +27,13 @@
                     <td>{{ s.phone or '-' }}</td>
                     <td>{{ s.city or '-' }}</td>
                     <td><code>{{ s.ice or '-' }}</code></td>
-                    <td class="text-end">
-                        <a href="{{ url_for('web_suppliers.edit_supplier', supplier_id=s.id) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
-                        <form method="POST" action="{{ url_for('web_suppliers.delete_supplier', supplier_id=s.id) }}" class="d-inline" onsubmit="return confirm('Delete {{ s.name }}---')">
-                            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-                        </form>
+                    <td class="text-end" style="white-space: nowrap;">
+                        <div class="d-flex gap-1 justify-content-end align-items-center">
+                            <a href="{{ url_for('web_suppliers.edit_supplier', supplier_id=s.id) }}" class="btn btn-sm btn-outline-primary btn-icon-circle" title="{{ _('Edit') }}"><i class="bi bi-pencil"></i></a>
+                            <form method="POST" action="{{ url_for('web_suppliers.delete_supplier', supplier_id=s.id) }}" class="d-inline-flex" onsubmit="return confirm('{{ _('Delete') }} {{ s.name }}?')">
+                                <button type="submit" class="btn btn-sm btn-outline-danger btn-icon-circle" title="{{ _('Delete') }}"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 {% else %}
