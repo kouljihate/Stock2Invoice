@@ -89,3 +89,22 @@ def logout():
     flash('You have been logged out.', 'info')
     logger.info('Web logout')
     return resp
+
+
+@web_auth_bp.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'GET':
+        return render_template('auth/forgot_password.html', mode='web')
+
+    email = request.form.get('email')
+    if not email:
+        flash('Please enter your email address.', 'danger')
+        return render_template('auth/forgot_password.html', mode='web')
+
+    # In a real application, you would:
+    # 1. Check if the email exists in the database
+    # 2. Generate a reset token
+    # 3. Send an email with the reset link
+    # For now, we'll just show a success message (to prevent user enumeration)
+    flash('If your email is registered, you will receive a password reset link.', 'info')
+    return redirect(url_for('web_auth.login'))

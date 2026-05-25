@@ -31,10 +31,13 @@
                 <button type="submit" class="btn btn-primary w-100 mb-3">
                     <i class="bi bi-box-arrow-in-right me-1"></i>{{ _('Sign In') }}
                 </button>
-                <p class="text-center auth-link mb-0">
-                    {{ _("Don't have an account?") }}
-                    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_auth.register') }}{% else %}{{ url_for('web_auth.register') }}{% endif %}">{{ _('Register') }}</a>
-                </p>
+                 <p class="text-center auth-link mb-0">
+                     {{ _("Don't have an account?") }}
+                     <a href="{% if mode == 'mobile' %}{{ url_for('mobile_auth.register') }}{% else %}{{ url_for('web_auth.register') }}{% endif %}">{{ _('Register') }}</a>
+                 </p>
+                 <p class="text-center auth-link mb-0">
+                     <a href="{% if mode == 'mobile' %}{{ url_for('mobile_auth.forgot_password') }}{% else %}{{ url_for('web_auth.forgot_password') }}{% endif %}">{{ _('Forgot Password?') }}</a>
+                 </p>
             </form>
         </div>
     </div>
