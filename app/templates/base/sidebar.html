@@ -7,7 +7,7 @@
         </li>
 
         {% set _p2p_active = request.endpoint and ('suppliers' in request.endpoint or 'purchase_orders' in request.endpoint or 'goods_receipt' in request.endpoint or 'supplier_invoices' in request.endpoint or 'payments' in request.endpoint) %}
-        {% set _q2c_active = request.endpoint and ('customer_quotes' in request.endpoint or 'orders' in request.endpoint or 'delivery_notes' in request.endpoint or 'invoices' in request.endpoint or 'customers' in request.endpoint or 'services' in request.endpoint) %}
+        {% set _q2c_active = request.endpoint and ('customer_quotes' in request.endpoint or 'orders' in request.endpoint or 'delivery_notes' in request.endpoint or 'invoices' in request.endpoint or 'customers' in request.endpoint) %}
         {% set _gen_active = request.endpoint and ('stock' in request.endpoint or 'web_users' in request.endpoint or 'events' in request.endpoint) or (request.endpoint and request.endpoint.startswith('admin.')) %}
 
         {% if not user or user.role != 'super_admin' %}
@@ -78,31 +78,6 @@
                         <a href="{{ url_for('web_delivery_notes.list_delivery_notes') }}" class="nav-link link-dark py-1 {% if request.endpoint and 'delivery_notes' in request.endpoint %}active{% endif %}">
                             <i class="bi bi-truck me-2"></i>{{ _('Delivery Notes') }}
                         </a>
-                    </li>
-                    <li class="mt-2">
-                        <a class="nav-link link-dark d-flex justify-content-between align-items-center py-1" data-bs-toggle="collapse" href="#serviceCollapse" role="button" aria-expanded="{{ 'true' if request.endpoint and 'services' in request.endpoint else 'false' }}">
-                            <span><span class="material-symbols-outlined me-2" style="font-size:1.2rem;vertical-align:middle;">handyman</span>{{ _('Service Module') }}</span>
-                            <i class="bi bi-chevron-down small"></i>
-                        </a>
-                        <div class="collapse{% if request.endpoint and 'services' in request.endpoint %} show{% endif %}" id="serviceCollapse">
-                            <ul class="nav nav-pills flex-column ms-3">
-                                <li>
-                                    <a href="{{ url_for('web_services.list_quotes') }}" class="nav-link link-dark py-0 {% if request.endpoint == 'web_services.list_quotes' %}active{% endif %}">
-                                        <i class="bi bi-file-earmark-text me-2"></i>{{ _('Quotes') }}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ url_for('web_services.list_orders') }}" class="nav-link link-dark py-0 {% if request.endpoint == 'web_services.list_orders' %}active{% endif %}">
-                                        <i class="bi bi-cart me-2"></i>{{ _('Orders') }}
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ url_for('web_services.list_invoices') }}" class="nav-link link-dark py-0 {% if request.endpoint == 'web_services.list_invoices' %}active{% endif %}">
-                                        <i class="bi bi-file-text me-2"></i>{{ _('Invoices') }}
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
                     </li>
                 </ul>
             </div>
