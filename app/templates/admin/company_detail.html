@@ -276,7 +276,7 @@
                 </div>
             </div>
             <div class="card-body p-0">
-                <table class="table table-hover mb-0 small">
+                <table class="table table-hover mb-0 small align-middle">
                     <thead class="table-light">
                         <tr><th>{{ _('Name') }}</th><th>{{ _('Email') }}</th><th>{{ _('Role') }}</th><th>{{ _('Joined') }}</th><th class="text-end">{{ _('Actions') }}</th></tr>
                     </thead>
@@ -286,23 +286,17 @@
                             <td><a href="{{ url_for('admin.edit_user', user_id=u.id) }}" class="text-decoration-none">{{ u.name }}</a></td>
                             <td>{{ u.email }}</td>
                             <td>
-                                {% if u.role == 'super_admin' %}
-                                <span class="badge bg-danger">super_admin</span>
-                                {% else %}
-                                <form method="POST" action="{{ url_for('admin.set_user_role', user_id=u.id) }}" class="d-flex align-items-center gap-1">
-                                    <select name="role" class="form-select form-select-sm" style="width:auto;" onchange="this.form.submit()">
-                                        <option value="user" {{ 'selected' if u.role == 'user' }}>{{ _('User') }}</option>
-                                        <option value="company_admin" {{ 'selected' if u.role == 'company_admin' }}>{{ _('Admin') }}</option>
-                                    </select>
-                                </form>
-                                {% endif %}
+                                {% set role_names = u.role_names or ['Customer'] %}
+                                {% for rn in role_names %}
+                                <span class="badge bg-{{ 'danger' if rn == 'Admin' else 'info' if rn == 'Manager' else 'primary' if rn == 'Customer' else 'secondary' }} me-1">{{ rn }}</span>
+                                {% endfor %}
                             </td>
-                            <td><small>{{ u.created_at[:10] if u.created_at else '-' }}</small></td>
+                            <td>{{ u.created_at[:10] if u.created_at else '-' }}</td>
                             <td class="text-end">
-                                {% if u.role != 'super_admin' %}
-                                <a href="{{ url_for('admin.edit_user', user_id=u.id) }}" class="btn btn-sm btn-outline-primary" title="Edit"><i class="bi bi-pencil"></i></a>
+                                {% if 'Admin' not in u.role_names %}
+                                <a href="{{ url_for('admin.edit_user', user_id=u.id) }}" class="btn btn-sm btn-outline-primary rounded-circle" style="width:32px;height:32px;padding:0;" title="Edit"><i class="bi bi-pencil"></i></a>
                                 <form method="POST" action="{{ url_for('admin.delete_user', user_id=u.id) }}" class="d-inline" onsubmit="return confirm('Delete user {{ u.email }}?')">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="bi bi-trash"></i></button>
+                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle" style="width:32px;height:32px;padding:0;" title="Delete"><i class="bi bi-trash"></i></button>
                                 </form>
                                 {% endif %}
                             </td>

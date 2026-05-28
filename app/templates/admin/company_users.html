@@ -10,7 +10,7 @@
 
 <div class="card shadow-sm">
     <div class="card-body p-0">
-        <table class="table table-hover mb-0">
+        <table class="table table-hover mb-0 align-middle">
             <thead class="table-light">
                 <tr>
                     <th>{{ _('Name') }}</th>
@@ -24,8 +24,13 @@
                 <tr>
                     <td>{{ u.name }}</td>
                     <td>{{ u.email }}</td>
-                    <td><span class="badge bg-{{ 'danger' if u.role == 'super_admin' else 'info' if u.role == 'company_admin' else 'secondary' }}">{{ u.role }}</span></td>
-                    <td><small>{{ u.created_at[:10] if u.created_at else '-' }}</small></td>
+                    <td>
+                        {% set role_names = u.role_names or ['Customer'] %}
+                        {% for rn in role_names %}
+                        <span class="badge bg-{{ 'danger' if rn == 'Admin' else 'info' if rn == 'Manager' else 'primary' if rn == 'Customer' else 'secondary' }} me-1">{{ rn }}</span>
+                        {% endfor %}
+                    </td>
+                    <td>{{ u.created_at[:10] if u.created_at else '-' }}</td>
                 </tr>
                 {% else %}
                 <tr><td colspan="4" class="text-center text-muted py-4">{{ _('No users for this company.') }}</td></tr>

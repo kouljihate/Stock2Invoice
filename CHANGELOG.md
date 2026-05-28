@@ -1,5 +1,28 @@
 # Changelog
 
+## [2.2.0] — 2026-05-28
+### Added
+- Role-Based Access Control (RBAC): Permission and Role collections, wildcard permission expansion
+- EShop module: public product listing, admin panel with order management
+- Services module: service view, creation, scheduling, and closure workflows
+- `general.companies`, `general.allusers`, `general.activities` permissions for admin sidebar gating
+- `eshop.administration`, `eshop.link` permissions
+- Dedicated 403 Forbidden error page with card layout and descriptive message
+- `abort(403)` enforcement on admin, eshop admin, and company-admin routes
+
+### Changed
+- Sidebar: all modules (Q2C, P2P, EShop, General) shown to all users; only admin items (Companies, All Users, Activity Log) remain permission-gated
+- User model: replaced single `role` string with `roles` array (role-name strings from Role collection)
+- Permission model: expanded from simple access flags to 26+ concrete permissions with wildcard support (`*`, `module.*`)
+- Dashboard user aggregation: switched from `$group` on old `role` field to `$unwind` on `roles` array
+- Error pages: now auto-detect web/mobile mode and attempt to load logged-in user for context
+- All Companies table: rows vertically aligned to middle
+
+### Fixed
+- `NoneType` object is not subscriptable error on admin dashboard (aggregate grouping on removed `role` field)
+- `NameError: name 'RoleModel' is not defined` in admin routes (missing import)
+- Sidebar permission check for EShop sub-items now uses combined `user.permissions` from effective role expansion
+
 ## [2.1.0] — 2026-05-24
 ### Added
 - Server-side PDF generation via fpdf2 (pure Python, no external deps)

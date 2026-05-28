@@ -2,10 +2,11 @@ import logging
 import os
 import re
 from uuid import uuid4
-from flask import Blueprint, current_app, render_template, request, redirect, url_for, flash
+from flask import Blueprint, current_app, render_template, request, redirect, url_for, flash, abort
 from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
 from app.core.models.company_model import CompanyModel
 from app.core.models.user_model import UserModel
+from app.core.models.role_model import RoleModel
 from app.core.services.auth_service import AuthService
 from app.extensions.db import mongo
 from functools import wraps
@@ -33,9 +34,9 @@ def super_admin_required(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
         claims = get_jwt()
-        if claims.get('role') != 'super_admin':
-            flash('Super admin access required.', 'danger')
-            return redirect(url_for('web_auth.login'))
+        role_names = claims.get('role_names', [])
+        if 'Admin' not in role_names:
+            abort(403)
         return fn(*args, **kwargs)
     return wrapper
 
@@ -94,9 +95,10 @@ def index():
     growth_fill = f'0,32 {growth_points} 200,32' if growth_points else ''
 
     user_roles = list(mongo.db['users'].aggregate([
-        {'$group': {'_id': '$role', 'count': {'$sum': 1}}},
+        {'$unwind': '$roles'},
+        {'$group': {'_id': '$roles', 'count': {'$sum': 1}}},
     ]))
-    role_breakdown = {r['_id']: r['count'] for r in user_roles}
+    role_breakdown = {r['_id'] or 'Unknown': r['count'] for r in user_roles}
     max_role_count = max(role_breakdown.values()) if role_breakdown else 1
 
     active_user_ids = set()
@@ -260,7 +262,7 @@ def create_company():
         'name': admin_name or company_name + ' Admin',
         'email': admin_email,
         'password': hashed,
-        'role': 'company_admin',
+        'roles': ['Manager'],
         'company_id': ObjectId(company_id),
     }
     UserModel.create(user_data)
@@ -430,7 +432,7 @@ def delete_company(company_id):
     return redirect(url_for('admin.index'))
 
 
-@admin_bp.route('/companies/<company_id>/add-user', methods=['POST'])
+@admin_bp.route('/companies/<company_id>/add-user', methods=['GET', 'POST'])
 @jwt_required()
 @super_admin_required
 def add_user(company_id):
@@ -441,18 +443,26 @@ def add_user(company_id):
         flash('Company not found.', 'danger')
         return redirect(url_for('admin.index'))
 
+    if request.method == 'GET':
+        # Fetch all roles to display in the form
+        roles = RoleModel.find_all()
+        return render_template('admin/create_user.html', mode='web',
+                               user=UserModel.to_dict(user) if user else None,
+                               company=CompanyModel.to_dict(company) if company else None,
+                               roles=[RoleModel.to_dict(r) for r in roles])
+
     email = (request.form.get('email') or '').strip().lower()
     password = request.form.get('password', '')
     name = (request.form.get('name') or '').strip()
-    role = request.form.get('role', 'user')
+    roles = request.form.getlist('roles')  # Get list of selected role names
 
     errors = []
     if not email:
         errors.append('Email is required.')
     if len(password) < 8:
         errors.append('Password must be at least 8 characters.')
-    if role not in ('user', 'company_admin'):
-        errors.append('Invalid role.')
+    if not roles:
+        errors.append('At least one role must be selected.')
 
     existing_user = UserModel.find_by_email(email)
     if existing_user:
@@ -469,12 +479,12 @@ def add_user(company_id):
         'name': name or email.split('@')[0],
         'email': email,
         'password': hashed,
-        'role': role,
+        'roles': roles,
         'company_id': ObjectId(company_id),
     }
     UserModel.create(user_data)
 
-    logger.info('User %s added to company %s (role=%s)', email, company.get('name'), role)
+    logger.info('User %s added to company %s (roles=%s)', email, company.get('name'), roles)
     flash(f'User "{email}" added to company.', 'success')
     return redirect(url_for('admin.company_detail', company_id=company_id))
 
@@ -488,17 +498,24 @@ def set_user_role(user_id):
         flash('User not found.', 'danger')
         return redirect(url_for('admin.index'))
 
-    if user.get('role') == 'super_admin':
-        flash('Cannot change super admin role.', 'danger')
+    user_dict = UserModel.to_dict(user)
+    if 'Admin' in user_dict.get('role_names', []):
+        flash('Cannot change admin role.', 'danger')
         return redirect(url_for('admin.index'))
 
-    new_role = request.form.get('role', '')
-    if new_role not in ('user', 'company_admin'):
+    new_role_name = request.form.get('role', '')
+    if new_role_name not in ('user', 'company_admin'):
         flash('Invalid role.', 'danger')
     else:
-        UserModel.update(user_id, {'role': new_role})
-        logger.info('User %s role changed to %s', user.get('email'), new_role)
-        flash(f'User role updated to {new_role}.', 'success')
+        # Map old role names to new RBAC role names
+        target_role = 'Customer' if new_role_name == 'user' else 'Manager'
+        role = RoleModel.find_by_name(target_role)
+        if role:
+            UserModel.update(user_id, {'roles': [target_role]})
+            logger.info('User %s role changed to %s', user.get('email'), target_role)
+            flash(f'User role updated to {target_role}.', 'success')
+        else:
+            flash(f'Role "{target_role}" not found.', 'danger')
 
     company_id = str(user['company_id']) if user.get('company_id') else None
     if company_id:
@@ -543,23 +560,34 @@ def edit_user(user_id):
         flash('User not found.', 'danger')
         return redirect(url_for('admin.list_users'))
 
-    if target.get('role') == 'super_admin' and str(target['_id']) != str(get_jwt_identity()):
-        flash('Cannot edit super admin accounts.', 'danger')
+    # Check if trying to edit another admin (current user can edit themselves)
+    target_dict = UserModel.to_dict(target)
+    current_user_id = get_jwt_identity()
+    if 'Admin' in target_dict.get('role_names', []) and str(target['_id']) != current_user_id:
+        flash('Cannot edit admin accounts.', 'danger')
         return redirect(url_for('admin.list_users'))
 
     if request.method == 'GET':
+        # Fetch all roles to display in the form
+        roles_list = RoleModel.find_all()
         return render_template('admin/edit_user.html', mode='web',
                                user=UserModel.to_dict(user) if user else None,
-                               target=UserModel.to_dict(target))
+                               target=target_dict,
+                               roles=[RoleModel.to_dict(r) for r in roles_list])
 
     name = (request.form.get('name') or '').strip()
     email = (request.form.get('email') or '').strip().lower()
+    roles = request.form.getlist('roles')  # Get list of selected role names
 
     errors = []
     if not name:
         errors.append('Name is required.')
     if not email:
         errors.append('Email is required.')
+
+    # Validate roles - must have at least one
+    if not roles:
+        errors.append('At least one role must be selected.')
 
     existing = UserModel.find_by_email(email)
     if existing and str(existing['_id']) != user_id:
@@ -570,9 +598,15 @@ def edit_user(user_id):
             flash(e, 'danger')
         return render_template('admin/edit_user.html', mode='web',
                                user=UserModel.to_dict(user) if user else None,
-                               target=UserModel.to_dict(target))
+                               target=target_dict,
+                               roles=[RoleModel.to_dict(r) for r in RoleModel.find_all()])
 
-    UserModel.update(user_id, {'name': name, 'email': email})
+    update_data = {
+        'name': name,
+        'email': email,
+        'roles': roles
+    }
+    UserModel.update(user_id, update_data)
     logger.info('User updated: %s (id=%s)', email, user_id)
     flash('User details updated.', 'success')
     return redirect(url_for('admin.list_users'))
@@ -587,8 +621,9 @@ def reset_password(user_id):
         flash('User not found.', 'danger')
         return redirect(url_for('admin.list_users'))
 
-    if target.get('role') == 'super_admin':
-        flash('Cannot reset password for super admin via UI.', 'danger')
+    target_dict = UserModel.to_dict(target)
+    if 'Admin' in target_dict.get('role_names', []):
+        flash('Cannot reset password for admin via UI.', 'danger')
         return redirect(url_for('admin.list_users'))
 
     new_password = request.form.get('new_password', '')
@@ -618,8 +653,9 @@ def delete_user(user_id):
         flash('User not found.', 'danger')
         return redirect(url_for('admin.list_users'))
 
-    if target.get('role') == 'super_admin':
-        flash('Cannot delete super admin account.', 'danger')
+    target_dict = UserModel.to_dict(target)
+    if 'Admin' in target_dict.get('role_names', []):
+        flash('Cannot delete admin account.', 'danger')
         return redirect(url_for('admin.list_users'))
 
     company_id = str(target['company_id']) if target.get('company_id') else None

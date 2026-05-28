@@ -1,6 +1,6 @@
 ﻿<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
     <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="{% if mode == 'mobile' %}{{ url_for('mobile_dashboard.index') }}{% elif user and user.role == 'super_admin' %}{{ url_for('admin.index') }}{% else %}{{ url_for('web_dashboard.index') }}{% endif %}">
+        <a class="navbar-brand fw-bold" href="{% if mode == 'mobile' %}{{ url_for('mobile_dashboard.index') }}{% elif user and 'Admin' in user.role_names %}{{ url_for('admin.index') }}{% else %}{{ url_for('web_dashboard.index') }}{% endif %}">
             <i class="bi bi-box-seam me-2"></i>Maure STC
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
@@ -9,7 +9,7 @@
         <div class="collapse navbar-collapse" id="mainNavbar">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% if mode == 'mobile' %}{{ url_for('mobile_dashboard.index') }}{% elif user and user.role == 'super_admin' %}{{ url_for('admin.index') }}{% else %}{{ url_for('web_dashboard.index') }}{% endif %}">
+                    <a class="nav-link" href="{% if mode == 'mobile' %}{{ url_for('mobile_dashboard.index') }}{% elif user and 'Admin' in user.role_names %}{{ url_for('admin.index') }}{% else %}{{ url_for('web_dashboard.index') }}{% endif %}">
                         <i class="bi bi-speedometer2 me-1"></i>{{ _('Dashboard') }}
                     </a>
                 </li>
@@ -45,7 +45,7 @@
                         {% endfor %}
                     </ul>
                 </li>
-                {% if user.role == 'super_admin' %}
+                {% if 'Admin' in user.role_names %}
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('admin.index') }}">
                         <i class="bi bi-shield-lock me-1"></i>{{ _('Admin') }}
@@ -63,7 +63,7 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><span class="dropdown-item-text text-muted small">{{ user.email }}</span></li>
-                        <li><span class="dropdown-item-text text-muted small">{{ _('Role') }}: {{ user.role }}</span></li>
+                        <li><span class="dropdown-item-text text-muted small">{{ _('Role') }}: {{ user.role_names|join(', ') }}</span></li>
                         {% if current_company %}
                         <li><span class="dropdown-item-text text-muted small">{{ current_company.name }}</span></li>
                         {% elif user.company_id %}

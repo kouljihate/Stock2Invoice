@@ -2,7 +2,7 @@
 {% block title %}{{ _('Edit User') }} — {{ _('Admin') }}{% endblock %}
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="mb-0"><i class="bi bi-pencil me-2"></i>{{ _('Edit User') }}</h4>
             <a href="{{ url_for('admin.list_users') }}" class="btn btn-outline-secondary btn-sm">
@@ -10,7 +10,7 @@
             </a>
         </div>
 
-        <div class="card shadow-sm mb-3">
+        <div class="card shadow-sm mb-4">
             <div class="card-header"><strong>{{ _('User Details') }}</strong></div>
             <div class="card-body">
                 <form method="POST">
@@ -22,10 +22,26 @@
                         <label class="form-label">{{ _('Email') }}</label>
                         <input type="email" name="email" class="form-control" value="{{ target.email }}" required>
                     </div>
+                    
                     <div class="mb-3">
-                        <label class="form-label">{{ _('Role') }}</label>
-                        <input type="text" class="form-control" value="{{ target.role }}" disabled>
+                        <label class="form-label">{{ _('Roles') }}</label>
+                        <div>
+                            {% for role in roles %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="roles" value="{{ role.name }}" id="role_{{ role.id }}" {% if role.name in target.roles %}checked{% endif %}>
+                                <label class="form-check-label" for="role_{{ role.id }}">{{ role.name }}</label>
+                                {% if role.description %}
+                                <small class="text-muted d-block">{{ role.description }}</small>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
                     </div>
+                    
+                    <div class="mb-3">
+                        <small class="text-muted">{{ _('Note: Users must have at least one role selected.') }}</small>
+                    </div>
+                    
                     <button type="submit" class="btn btn-primary"><i class="bi bi-check me-1"></i>{{ _('Save Changes') }}</button>
                     <a href="{{ url_for('admin.list_users') }}" class="btn btn-outline-secondary">{{ _('Cancel') }}</a>
                 </form>
@@ -45,7 +61,7 @@
             </div>
         </div>
 
-        {% if target.role != 'super_admin' %}
+        {% if 'Admin' not in target.role_names %}
         <div class="card shadow-sm mt-3">
             <div class="card-header text-danger"><strong><i class="bi bi-exclamation-triangle me-1"></i>{{ _('Danger Zone') }}</strong></div>
             <div class="card-body">

@@ -92,6 +92,7 @@ class ProductModel:
             'number_of_pack': int(item.get('number_of_pack', 0)),
             'quantity_min': int(item.get('quantity_min', 5)),
             'status': item.get('status', 'active'),
+            'photos': item.get('photos', []),
             'company_id': str(item.get('company_id')) if item.get('company_id') else None,
             'created_at': item.get('created_at').isoformat() if item.get('created_at') else None,
             'updated_at': item.get('updated_at').isoformat() if item.get('updated_at') else None,

@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 from app.extensions.db import mongo
+from app.core.utils.permissions import get_effective_permissions, has_permission
 
 
 class UserModel:
@@ -7,6 +8,10 @@ class UserModel:
 
     @staticmethod
     def create(data):
+        # Set default values for new fields if not provided
+        if 'roles' not in data:
+            data['roles'] = []  # Will be set to default role after roles are created
+            
         data['created_at'] = datetime.now(timezone.utc)
         data['updated_at'] = datetime.now(timezone.utc)
         result = mongo.db[UserModel.collection].insert_one(data)
@@ -55,11 +60,40 @@ class UserModel:
 
     @staticmethod
     def to_dict(user):
+        # Get roles and permissions
+        role_names = user.get('roles', [])
+        user_role_permissions = []
+        if role_names:
+            roles = list(mongo.db['roles'].find({'name': {'$in': role_names}}))
+            for role in roles:
+                perms = role.get('permissions', [])
+                if perms:
+                    user_role_permissions.extend(perms)
+        effective_permissions = get_effective_permissions(user_role_permissions)
+        
         return {
             'id': str(user['_id']),
             'name': user.get('name'),
             'email': user.get('email'),
-            'role': user.get('role', 'user'),
+            'roles': role_names,
+            'role_names': role_names,
+            'permissions': effective_permissions,
             'company_id': str(user.get('company_id')) if user.get('company_id') else None,
             'created_at': user.get('created_at').isoformat() if user.get('created_at') else None,
         }
+
+    @staticmethod
+    def has_perm(user, permission):
+        if not user:
+            return False
+        if isinstance(user, dict):
+            role_names = user.get('roles', [])
+        else:
+            role_names = getattr(user, 'roles', [])
+        if not role_names:
+            return False
+        roles = list(mongo.db['roles'].find({'name': {'$in': role_names}}))
+        role_perms = []
+        for role in roles:
+            role_perms.extend(role.get('permissions', []))
+        return has_permission(role_perms, permission)

@@ -1,0 +1,40 @@
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('web_dashboard.index') }}">{{ _('Maure STC') }}</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="{{ _('Toggle navigation') }}">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('web_dashboard.index') }}">{{ _('Dashboard') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('eshop.index') }}">{{ _('Eshop') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('web_stock.list_products') }}">{{ _('Products') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('web_customers.list_customers') }}">{{ _('Customers') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('web_orders.list_orders') }}">{{ _('Orders') }}</a>
+                </li>
+            </ul>
+            <form class="d-flex ms-3" role="search" action="{{ url_for('eshop.index') }}" method="GET">
+                <input class="form-control me-2 search-box" type="search" placeholder="{{ _('Search products') }}" aria-label="{{ _('Search') }}" name="search">
+                <button class="btn btn-outline-primary" type="submit">{{ _('Search') }}</button>
+            </form>
+            {% if user %}
+            <div class="ms-3">
+                <a href="{{ url_for('web_auth.logout') }}" class="btn btn-outline-danger">{{ _('Logout') }}</a>
+            </div>
+            {% else %}
+            <div class="ms-3">
+                <a href="{{ url_for('web_auth.login') }}" class="btn btn-primary">{{ _('Login') }}</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</nav>

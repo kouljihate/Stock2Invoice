@@ -1,4 +1,5 @@
 import click
+from datetime import datetime
 from flask import Flask, request, redirect, url_for
 from flask_cors import CORS
 
@@ -24,6 +25,8 @@ from .blueprints.web.delivery_notes.routes import web_delivery_notes_bp
 from .blueprints.web.customers.routes import web_customers_bp
 from .blueprints.web.events.routes import web_events_bp
 from .blueprints.web.users.routes import web_users_bp
+
+from .blueprints.eshop.routes import eshop_bp
 
 from .blueprints.mobile.auth.routes import mobile_auth_bp
 from .blueprints.mobile.dashboard.routes import mobile_dashboard_bp
@@ -86,6 +89,8 @@ def create_app(config_class=Config):
     app.register_blueprint(web_events_bp, url_prefix='/web/events')
     app.register_blueprint(web_users_bp, url_prefix='/web/users')
 
+    app.register_blueprint(eshop_bp, url_prefix='/eshop')
+
     app.register_blueprint(mobile_auth_bp, url_prefix='/mobile/auth')
     app.register_blueprint(mobile_dashboard_bp, url_prefix='/mobile/dashboard')
     app.register_blueprint(mobile_stock_bp, url_prefix='/mobile/stock')
@@ -129,13 +134,14 @@ def create_app(config_class=Config):
                         current_company = CompanyModel.to_dict(company)
         except Exception:
             pass
-
+ 
         return {
             'current_lang': lang,
             'available_langs': LANGS,
             'version': VERSION,
             'build_date': BUILD_DATE,
             'current_company': current_company,
+            'now': datetime.now(),
             '_': lambda key: _translate(key, lang),
         }
 
@@ -155,7 +161,7 @@ def create_app(config_class=Config):
             'name': name,
             'email': email.strip().lower(),
             'password': hashed,
-            'role': 'super_admin',
+            'roles': ['Admin'],
         })
         click.echo(f'Super admin created: {email}')
 

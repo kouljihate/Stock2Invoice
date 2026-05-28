@@ -1,6 +1,7 @@
 import logging
 import contextlib
 from bson.objectid import ObjectId
+from flask import request
 from app.core.models.product_model import ProductModel
 from app.core.models.stock_movement_model import StockMovementModel
 from app.core.validators.common_validators import (
@@ -38,6 +39,16 @@ class StockService:
 
     @staticmethod
     def create(data, user_id, company_id):
+        # Handle photo uploads
+        photos = []
+        if 'photos' in request.files:
+            files = request.files.getlist('photos')
+            for file in files:
+                if file and file.filename:
+                    # In a real implementation, you would save the file and store the path/URL
+                    # For now, we'll just store the filename
+                    photos.append(file.filename)
+        
         clean = {
             'name': data['name'].strip(),
             'sku': data['sku'].strip(),
@@ -56,6 +67,7 @@ class StockService:
             'number_of_pack': int(data.get('number_of_pack', 0)),
             'quantity_min': int(data.get('quantity_min', 5)),
             'status': (data.get('status') or 'active').strip(),
+            'photos': photos,
             'company_id': ObjectId(company_id),
         }
         product_id = ProductModel.create(clean)

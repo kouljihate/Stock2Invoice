@@ -71,6 +71,20 @@ def create_product():
     try:
         cid = _company_id()
         data = request.form.to_dict()
+        
+        # Handle photo uploads
+        photos = []
+        if 'photos' in request.files:
+            files = request.files.getlist('photos')
+            for file in files:
+                if file and file.filename:
+                    # In a real implementation, you would save the file and store the path/URL
+                    # For now, we'll just store the filename
+                    photos.append(file.filename)
+        
+        if photos:
+            data['photos'] = photos
+            
         if data.get('supplier_id'):
             sup = SupplierModel.find_by_id(data['supplier_id'])
             data['supplier_name'] = sup.get('name', '') if sup else ''

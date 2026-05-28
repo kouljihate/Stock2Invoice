@@ -1,6 +1,6 @@
 ﻿# StockInvoice
 
-Flask web application for the full **Procure-to-Pay** and **Quote-to-Cash** lifecycle with MongoDB.
+Flask web application for the full **Procure-to-Pay**, **Quote-to-Cash**, **Services**, and **EShop** lifecycle with MongoDB and Role-Based Access Control.
 
 ## Procure-to-Pay (Inbound)
 
@@ -29,10 +29,24 @@ Quote → Customer Order → Delivery Note → Customer Invoice
 | **Delivery Notes** | Record goods dispatched to customers | Ready |
 | **Customer Invoices** | Bill customers with status workflow, PDF download | Ready |
 
+## Services
+
+| Module | Description | Status |
+|--------|-------------|--------|
+| **Services** | Service tracking, scheduling, and closure | Ready |
+
+## EShop
+
+| Module | Description | Status |
+|--------|-------------|--------|
+| **Public Catalog** | Browse products, add to cart | Ready |
+| **Admin Panel** | Manage orders from the eshop | Ready |
+
 ## Cross-Cutting
 
 - **Products (Inventory)** — Stock tracking, movements, low-stock alerts
-- **Multi-tenant** — Company-isolated data with role-based access (super_admin, company_admin, user)
+- **Multi-tenant** — Company-isolated data with role-based access
+- **Role-Based Access Control** — Permission → Role → User hierarchy with wildcard expansion
 - **Admin Panel** — Company and user management, invoice template customization
 - **Invoice PDF** — Server-side PDF via fpdf2 with per-company branding (colors, font, logo, header/footer)
 - **Arrêté** — Auto-generated French legal closing on PDF: amount in words
@@ -78,14 +92,20 @@ StockInvoice/
       logging.py              # Rotating file logger
     core/
       models/                 # Data access layer (PyMongo)
+        user_model.py         # User with roles array, permission expansion
+        role_model.py         # Role with permission strings
+        permission_model.py   # Permission catalog
       services/               # Business logic layer
         pdf_service.py        # fpdf2-based invoice PDF generation
       validators/             # Input validation helpers
       utils/
+        permissions.py        # Wildcard expansion, ALL_PERMISSIONS list
         number_to_french.py   # Convert numbers to French words
     blueprints/
       web/                    # Desktop routes (auth, dashboard, stock, invoices...)
       mobile/                 # Mobile routes (same services, different templates)
+      admin/                  # Super admin panel (companies, users)
+      eshop/                  # EShop public + admin routes
     templates/                # Jinja2 with base layout + partials
     static/                   # CSS, JS, fonts (Comfortaa)
     logs/                     # Rotating log files
@@ -109,6 +129,7 @@ StockInvoice/
 | `/admin/` | Super admin panel (companies, users) |
 | `/web/auth/` | Login, register, logout |
 | `/web/dashboard/` | Dashboard (JWT required) |
+| `/web/customers/` | Customer CRUD |
 | `/web/quotes/` | Quote CRUD + send/validate workflow |
 | `/web/orders/` | Order CRUD + status workflow |
 | `/web/stock/` | Product CRUD |
@@ -119,6 +140,10 @@ StockInvoice/
 | `/web/goods-receipt/` | Goods receipt CRUD |
 | `/web/supplier-invoices/` | Supplier invoice CRUD |
 | `/web/payments/` | Payment CRUD |
+| `/web/users/` | Company user management |
+| `/web/events/` | Activity log |
+| `/web/services/` | Service tracking |
+| `/eshop/` | Public catalog + admin panel |
 | `/mobile/...` | Mobile equivalents of all web routes |
 | `/lang/<code>` | Language switch (en/ar/fr) |
 | `/api/health` | Health check |

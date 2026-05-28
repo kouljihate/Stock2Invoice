@@ -10,8 +10,8 @@ web_auth_bp = Blueprint('web_auth', __name__, template_folder='../../../template
 
 
 def _redirect_after_login(user):
-    role = user.get('role', 'user')
-    if role == 'super_admin':
+    user_dict = UserModel.to_dict(user)
+    if 'Admin' in user_dict.get('role_names', []):
         return redirect(url_for('admin.index'))
     return redirect(url_for('web_dashboard.index'))
 
@@ -34,8 +34,9 @@ def login():
             logger.warning('Web login failed for %s', form.email)
             return render_template('auth/login.html', mode='web')
 
+        user_dict = UserModel.to_dict(user)
         claims = {
-            'role': user.get('role', 'user'),
+            'role_names': user_dict.get('role_names', []),
         }
         company_id = user.get('company_id')
         if company_id:

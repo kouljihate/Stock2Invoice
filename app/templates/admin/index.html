@@ -49,7 +49,7 @@
                 <div class="mt-2 d-flex gap-1" style="height:32px;align-items:end;">
                     {% for role, count in role_breakdown.items() %}
                     <div class="flex-grow-1 text-center" style="position:relative;">
-                        <div style="height:{{ (count / max_role_count * 28)|round if max_role_count > 0 else 0 }}px;background:{{ 'var(--bs-danger)' if role == 'super_admin' else 'var(--bs-success)' if role == 'company_admin' else 'var(--bs-primary)' }};border-radius:3px 3px 0 0;"></div>
+                        <div style="height:{{ (count / max_role_count * 28)|round if max_role_count > 0 else 0 }}px;background:{{ 'var(--bs-danger)' if role == 'Admin' else 'var(--bs-success)' if role == 'Manager' else 'var(--bs-primary)' if role == 'Customer' else 'var(--bs-info)' }};border-radius:3px 3px 0 0;"></div>
                         <small class="text-muted" style="font-size:9px;">{{ role[:4] }}</small>
                     </div>
                     {% endfor %}

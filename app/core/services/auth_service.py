@@ -37,7 +37,7 @@ class AuthService:
             'name': data['name'].strip(),
             'email': data['email'].strip().lower(),
             'password': hashed,
-            'role': data.get('role', 'user'),
+            'roles': ['Customer'],
         }
         if company_id:
             from bson.objectid import ObjectId
@@ -55,5 +55,5 @@ class AuthService:
         if not bcrypt.check_password_hash(user['password'], password):
             logger.warning('Login failed — wrong password: %s', email)
             return None
-        logger.info('Login success: %s (role=%s, company=%s)', email, user.get('role'), user.get('company_id'))
+        logger.info('Login success: %s (company=%s)', email, user.get('company_id'))
         return user

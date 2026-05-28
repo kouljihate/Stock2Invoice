@@ -20,7 +20,7 @@
         </form>
     </div>
     <div class="card-body p-0">
-        <table class="table table-hover mb-0">
+        <table class="table table-hover mb-0 align-middle">
             <thead class="table-light">
                 <tr>
                     <th>{{ _('Name') }}</th>
@@ -34,22 +34,25 @@
             <tbody>
                 {% for u in users %}
                 <tr>
-                    <td><strong>{{ u.name }}</strong></td>
+                    <td>{{ u.name }}</td>
                     <td>{{ u.email }}</td>
                     <td>
-                        <span class="badge bg-{{ 'danger' if u.role == 'super_admin' else 'info' if u.role == 'company_admin' else 'secondary' }}">
-                            {{ u.role }}
-                        </span>
+                        {% set role_names = u.role_names or ['Customer'] %}
+                        {% for rn in role_names %}
+                        <span class="badge bg-{{ 'danger' if rn == 'Admin' else 'info' if rn == 'Manager' else 'primary' if rn == 'Customer' else 'secondary' }} me-1">{{ rn }}</span>
+                        {% endfor %}
                     </td>
-                    <td><small>{{ u.company_name }}</small></td>
-                    <td><small>{{ u.created_at[:10] if u.created_at else '-' }}</small></td>
+                    <td>{{ u.company_name }}</td>
+                    <td>{{ u.created_at[:10] if u.created_at else '-' }}</td>
                     <td class="text-end">
-                        {% if u.role != 'super_admin' %}
-                        <a href="{{ url_for('admin.edit_user', user_id=u.id) }}" class="btn btn-sm btn-outline-primary">
+                        {% if 'Admin' not in u.role_names %}
+                        <a href="{{ url_for('admin.edit_user', user_id=u.id) }}" class="btn btn-sm btn-outline-primary rounded-circle" style="width:32px;height:32px;padding:0;" title="{{ _('Edit') }}">
                             <i class="bi bi-pencil"></i>
                         </a>
                         <form method="POST" action="{{ url_for('admin.delete_user', user_id=u.id) }}" class="d-inline" onsubmit="return confirm('Delete user {{ u.email }}?')">
-                            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle" style="width:32px;height:32px;padding:0;" title="{{ _('Delete') }}">
+                                <i class="bi bi-trash"></i>
+                            </button>
                         </form>
                         {% else %}
                         <span class="text-muted small">—</span>

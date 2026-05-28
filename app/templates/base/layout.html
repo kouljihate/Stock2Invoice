@@ -27,9 +27,11 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body class="{% if mode == 'mobile' %}bg-light{% else %}bg-white{% endif %} {% block body_class %}{% endblock %}">
-    {% if user %}
-        {% include 'base/navbar.html' %}
-    {% endif %}
+    {% block navbar %}
+        {% if user %}
+            {% include 'base/navbar.html' %}
+        {% endif %}
+    {% endblock %}
     <div class="container-fluid">
         <div class="row">
             {% if user and mode != 'mobile' %}

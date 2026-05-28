@@ -1,0 +1,179 @@
+{% extends "base/layout.html" %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block extra_head %}
+<style>
+    .navbar-custom {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    .search-box {
+        max-width: 300px;
+        width: 100%;
+    }
+    
+    .nav-link {
+        color: #495057 !important;
+    }
+    
+    .nav-link:hover {
+        color: #212529 !important;
+    }
+    
+    .btn-outline-primary {
+        border-color: #0d6efd;
+        color: #0d6efd;
+    }
+    
+    .btn-outline-primary:hover {
+        background-color: #0d6efd;
+        color: white;
+    }
+    
+    .btn-outline-danger {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+    
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+    
+    .product-image {
+        height: 500px;
+        object-fit: cover;
+    }
+    
+    .price-current {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+    
+    .price-old {
+        font-size: 1.2rem;
+    }
+    
+    .badge {
+        font-weight: 500;
+        padding: 0.5em 0.8em;
+    }
+    
+    .btn-primary {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+    
+    .btn-primary:hover {
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
+    }
+    
+    .btn-outline-secondary {
+        border-color: #6c757d;
+        color: #6c757d;
+    }
+    
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% include 'base/header.html' %}
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-lg-6">
+            <div id="productCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {% if product.photos and product.photos|length > 0 %}
+                    {% for i, photo in enumerate(product.photos) %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <img src="{{ photo }}" class="d-block w-100" alt="{{ product.name }}">
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="carousel-item active">
+                        <img src="https://via.placeholder.com/800x600?text={{ _('No Image') }}" class="d-block w-100" alt="{{ _('No Image') }}">
+                    </div>
+                    {% endif %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">{{ _('Previous') }}</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">{{ _('Next') }}</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="mb-4">
+                <h1>{{ product.name }}</h1>
+                {% if product.sku %}
+                <p class="text-muted mb-3"><small>{{ _('SKU:') }} {{ product.sku }}</small></p>
+                {% endif %}
+            </div>
+            
+            <div class="mb-4">
+                <p class="lead">{{ product.description }}</p>
+            </div>
+            
+            <div class="mb-4">
+                <h3 class="h5">{{ product.price }} {{ _('DH') }}</h3>
+                {% if product.purchase_price %}
+                <small class="text-decoration-line-through">{{ product.purchase_price }} {{ _('DH') }}</small>
+                {% endif %}
+            </div>
+            
+            <div class="mb-4">
+                <label for="quantity" class="form-label">{{ _('Quantity:') }}</label>
+                <input type="number" class="form-control" id="quantity" min="1" value="1">
+            </div>
+            
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary btn-lg" type="button">{{ _('Add to Cart') }}</button>
+                <button class="btn btn-outline-secondary btn-lg" type="button">{{ _('Add to Wishlist') }}</button>
+            </div>
+        </div>
+    </div>
+    
+    <hr class="my-5">
+    
+    <div class="mb-4">
+        <h2>{{ _('Product Details') }}</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>{{ _('Category:') }}</strong> {{ product.category }}</p>
+                {% if product.subcategory %}
+                <p><strong>{{ _('Subcategory:') }}</strong> {{ product.subcategory }}</p>
+                {% endif %}
+                <p><strong>{{ _('Brand:') }}</strong> {{ product.brand }}</p>
+                {% if product.package_type %}
+                <p><strong>{{ _('Package Type:') }}</strong> {{ product.package_type }}</p>
+                {% endif %}
+            </div>
+            <div class="col-md-6">
+                {% if product.pack_size and product.pack_size_unit %}
+                <p><strong>{{ _('Pack Size:') }}</strong> {{ product.pack_size }} {{ product.pack_size_unit }}</p>
+                {% endif %}
+                {% if product.number_of_pack %}
+                <p><strong>{{ _('Number of Packs:') }}</strong> {{ product.number_of_pack }}</p>
+                {% endif %}
+                <p><strong>{{ _('Availability:') }}</strong> 
+                    <span class="badge bg-success">{{ _('In Stock') }} ({{ product.quantity }} {{ _('available') }})</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'base/footer.html' %}
+{% endblock %}

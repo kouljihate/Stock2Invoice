@@ -1,8 +1,9 @@
 import logging
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
 from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
 from app.core.models.user_model import UserModel
 from app.core.models.company_model import CompanyModel
+from app.core.models.role_model import RoleModel
 from app.core.utils.helpers import oid
 
 logger = logging.getLogger(__name__)
@@ -17,8 +18,9 @@ def _company_id():
 def _company_admin_required(user):
     if not user:
         return False
-    role = user.get('role', '')
-    return role in ('company_admin', 'super_admin')
+    user_dict = UserModel.to_dict(user)
+    role_names = user_dict.get('role_names', [])
+    return 'Admin' in role_names or 'Manager' in role_names
 
 
 @web_users_bp.route('')
@@ -50,8 +52,7 @@ def create_user():
     user_id = get_jwt_identity()
     user = UserModel.find_by_id(user_id)
     if not _company_admin_required(user):
-        flash('Permission denied.', 'danger')
-        return redirect(url_for('web_users.list_users'))
+        abort(403)
 
     cid = _company_id()
     if not cid:
@@ -61,15 +62,12 @@ def create_user():
     email = (request.form.get('email') or '').strip().lower()
     password = request.form.get('password', '')
     name = (request.form.get('name') or '').strip()
-    role = request.form.get('role', 'user')
 
     errors = []
     if not email:
         errors.append('Email is required.')
     if len(password) < 8:
         errors.append('Password must be at least 8 characters.')
-    if role not in ('user', 'company_admin'):
-        errors.append('Invalid role.')
     if not name:
         errors.append('Name is required.')
 
@@ -89,11 +87,11 @@ def create_user():
         'name': name,
         'email': email,
         'password': hashed,
-        'role': role,
+        'roles': ['Customer'],
         'company_id': ObjectId(cid),
     })
 
-    logger.info('User %s added to company %s (role=%s)', email, cid, role)
+    logger.info('User %s added to company %s', email, cid)
     flash(f'User "{email}" created.', 'success')
     return redirect(url_for('web_users.list_users'))
 
@@ -103,8 +101,7 @@ def create_user():
 def set_role(user_id):
     current_user = UserModel.find_by_id(get_jwt_identity())
     if not _company_admin_required(current_user):
-        flash('Permission denied.', 'danger')
-        return redirect(url_for('web_users.list_users'))
+        abort(403)
 
     cid = _company_id()
     target = UserModel.find_by_id(user_id)
@@ -116,16 +113,23 @@ def set_role(user_id):
         flash('Cannot manage users from other companies.', 'danger')
         return redirect(url_for('web_users.list_users'))
 
-    if target.get('role') == 'super_admin':
-        flash('Cannot change super admin role.', 'danger')
+    target_dict = UserModel.to_dict(target)
+    if 'Admin' in target_dict.get('role_names', []):
+        flash('Cannot change admin role.', 'danger')
         return redirect(url_for('web_users.list_users'))
 
-    new_role = request.form.get('role', '')
-    if new_role not in ('user', 'company_admin'):
+    new_role_name = request.form.get('role', '')
+    if new_role_name not in ('user', 'company_admin'):
         flash('Invalid role.', 'danger')
     else:
-        UserModel.update(user_id, {'role': new_role})
-        logger.info('User %s role changed to %s', target.get('email'), new_role)
-        flash(f'User role updated to {new_role}.', 'success')
+        # Map old role names to new RBAC role names
+        target_role_name = 'Customer' if new_role_name == 'user' else 'Manager'
+        role = RoleModel.find_by_name(target_role_name)
+        if role:
+            UserModel.update(user_id, {'roles': [target_role_name]})
+            logger.info('User %s role changed to %s', target.get('email'), target_role_name)
+            flash(f'User role updated to {target_role_name}.', 'success')
+        else:
+            flash(f'Role "{target_role_name}" not found.', 'danger')
 
     return redirect(url_for('web_users.list_users'))
