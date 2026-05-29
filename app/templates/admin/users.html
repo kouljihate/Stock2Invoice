@@ -33,7 +33,7 @@
             </thead>
             <tbody>
                 {% for u in users %}
-                <tr>
+                <tr class="align-middle">
                     <td>{{ u.name }}</td>
                     <td>{{ u.email }}</td>
                     <td>
@@ -46,7 +46,7 @@
                     <td>{{ u.created_at[:10] if u.created_at else '-' }}</td>
                     <td class="text-end">
                         {% if 'Admin' not in u.role_names %}
-                        <a href="{{ url_for('admin.edit_user', user_id=u.id) }}" class="btn btn-sm btn-outline-primary rounded-circle" style="width:32px;height:32px;padding:0;" title="{{ _('Edit') }}">
+                        <a href="{{ url_for('admin.edit_user', user_id=u.id) }}" class="btn btn-sm btn-outline-primary rounded-circle" style="width:32px;height:32px;padding:0;display:inline-flex;align-items:center;justify-content:center;" title="{{ _('Edit') }}">
                             <i class="bi bi-pencil"></i>
                         </a>
                         <form method="POST" action="{{ url_for('admin.delete_user', user_id=u.id) }}" class="d-inline" onsubmit="return confirm('Delete user {{ u.email }}?')">

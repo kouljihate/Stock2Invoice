@@ -6,7 +6,9 @@
             </a>
         </li>
 
-        {# Procure-to-Pay Module - shown to all users #}
+        {# Admin users see only General; non-admin users see all modules #}
+        {% if 'Admin' not in user.role_names %}
+        {# Procure-to-Pay Module - shown to non-admin users #}
         <li class="nav-item mt-2">
             <a class="nav-link link-dark d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#p2pCollapse" role="button" aria-expanded="{{ 'true' if _p2p_active else 'false' }}">
                 <span><span class="material-symbols-outlined me-1" style="font-size:1.3rem;vertical-align:middle;">add_shopping_cart</span> <strong>{{ _('Procure-to-Pay') }}</strong></span>
@@ -43,7 +45,7 @@
             </div>
         </li>
 
-        {# Quote-to-Cash Module - shown to all users #}
+        {# Quote-to-Cash Module - shown to non-admin users #}
         <li class="nav-item mt-2">
             <a class="nav-link link-dark d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#q2cCollapse" role="button" aria-expanded="{{ 'true' if _q2c_active else 'false' }}">
                 <span><span class="material-symbols-outlined me-1" style="font-size:1.3rem;vertical-align:middle;">point_of_sale</span> <strong>{{ _('Quote-to-Cash') }}</strong></span>
@@ -80,7 +82,7 @@
             </div>
         </li>
 
-        {# Eshop Module - shown to all users #}
+        {# Eshop Module - shown to non-admin users #}
         <li class="nav-item mt-2">
             <a class="nav-link link-dark d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#eshopCollapse" role="button" aria-expanded="{{ 'true' if _eshop_active else 'false' }}">
                 <span><span class="material-symbols-outlined me-1" style="font-size:1.3rem;vertical-align:middle;">store</span> <strong>{{ _('Eshop') }}</strong></span>
@@ -101,6 +103,7 @@
                 </ul>
             </div>
         </li>
+        {% endif %}{# end Admin check #}
 
         {# General Module - shown to all users #}
         <li class="nav-item mt-2">
@@ -110,6 +113,31 @@
             </a>
             <div class="collapse{% if _gen_active %} show{% endif %}" id="generalCollapse">
                 <ul class="nav nav-pills flex-column ms-3">
+                    {% if 'Admin' in user.role_names %}
+                    {# Admin users see only admin-specific items #}
+                    {% if 'general.companies' in user.permissions %}
+                    <li>
+                        <a href="{{ url_for('admin.companies') }}" class="nav-link link-dark py-1 {% if request.endpoint and request.endpoint.startswith('admin.') %}active{% endif %}">
+                            <i class="bi bi-buildings me-2"></i>{{ _('Companies') }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if 'general.allusers' in user.permissions %}
+                    <li>
+                        <a href="{{ url_for('admin.list_users') }}" class="nav-link link-dark py-1 {% if request.endpoint == 'admin.list_users' %}active{% endif %}">
+                            <i class="bi bi-people me-2"></i>{{ _('All Users') }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if 'general.activities' in user.permissions %}
+                    <li>
+                        <a href="{{ url_for('web_events.list_events') }}" class="nav-link link-dark py-1 {% if request.endpoint and 'events' in request.endpoint %}active{% endif %}">
+                            <i class="bi bi-activity me-2"></i>{{ _('Activity Log') }}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% else %}
+                    {# Non-admin users see standard items #}
                     <li>
                         <a href="{{ url_for('web_stock.list_products') }}" class="nav-link link-dark py-1 {% if request.endpoint and 'stock' in request.endpoint %}active{% endif %}">
                             <i class="bi bi-box me-2"></i>{{ _('Products / Stock') }}
@@ -140,6 +168,7 @@
                             <i class="bi bi-activity me-2"></i>{{ _('Activity Log') }}
                         </a>
                     </li>
+                    {% endif %}
                     {% endif %}
                 </ul>
             </div>

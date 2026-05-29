@@ -64,7 +64,7 @@ class UserModel:
         role_names = user.get('roles', [])
         user_role_permissions = []
         if role_names:
-            roles = list(mongo.db['roles'].find({'name': {'$in': role_names}}))
+            roles = list(mongo.db['roles'].find({'_id': {'$in': [n.lower() for n in role_names]}}))
             for role in roles:
                 perms = role.get('permissions', [])
                 if perms:
@@ -92,7 +92,7 @@ class UserModel:
             role_names = getattr(user, 'roles', [])
         if not role_names:
             return False
-        roles = list(mongo.db['roles'].find({'name': {'$in': role_names}}))
+        roles = list(mongo.db['roles'].find({'_id': {'$in': [n.lower() for n in role_names]}}))
         role_perms = []
         for role in roles:
             role_perms.extend(role.get('permissions', []))

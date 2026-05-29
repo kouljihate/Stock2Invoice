@@ -7,6 +7,8 @@ class RoleModel:
 
     @staticmethod
     def create(data):
+        name = data.get('name', '')
+        data['_id'] = name.lower()
         data['created_at'] = datetime.now(timezone.utc)
         data['updated_at'] = datetime.now(timezone.utc)
         result = mongo.db[RoleModel.collection].insert_one(data)
@@ -14,30 +16,28 @@ class RoleModel:
 
     @staticmethod
     def find_by_name(name):
-        return mongo.db[RoleModel.collection].find_one({'name': name})
+        return mongo.db[RoleModel.collection].find_one({'_id': name.lower()})
 
     @staticmethod
     def find_all():
         return list(mongo.db[RoleModel.collection].find().sort('name', 1))
 
     @staticmethod
-    def update(role_id, data):
-        from bson.objectid import ObjectId
+    def update(role_name, data):
         data['updated_at'] = datetime.now(timezone.utc)
         mongo.db[RoleModel.collection].update_one(
-            {'_id': ObjectId(role_id)},
+            {'_id': role_name.lower()},
             {'$set': data},
         )
 
     @staticmethod
-    def delete(role_id):
-        from bson.objectid import ObjectId
-        mongo.db[RoleModel.collection].delete_one({'_id': ObjectId(role_id)})
+    def delete(role_name):
+        mongo.db[RoleModel.collection].delete_one({'_id': role_name.lower()})
 
     @staticmethod
     def to_dict(role):
         return {
-            'id': str(role['_id']),
+            'id': role['_id'],
             'name': role.get('name'),
             'description': role.get('description'),
             'permissions': role.get('permissions', []),

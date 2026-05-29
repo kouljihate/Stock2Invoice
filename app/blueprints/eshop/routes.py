@@ -81,7 +81,8 @@ def admin():
         user_dict = UserModel.to_dict(user) if user else {}
         role_names = user_dict.get('role_names', [])
         # Check if user has permission (Admin or Manager)
-        if 'Admin' not in role_names and 'Manager' not in role_names:
+        # if 'Admin' not in role_names and 'Manager' not in role_names:
+        if role_names not in ("Admin", "Manager"):
             abort(403)
         
         return render_template('eshop/admin.html',

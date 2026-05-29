@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.3.0] — 2026-05-28
+### Added
+- `fixes/` and `migrations/` directories to organise one-time scripts
+
+### Changed
+- Role collection: `_id` changed from ObjectId to lowercase role name (e.g., `"manager"`) — all role lookups use `_id` directly
+- Sidebar: Admin users now see only General module with Companies, All Users, Activity Log; all other modules (P2P, Q2C, EShop) hidden
+- General module sub-items split: Admin users see only admin items (Companies, All Users, Activity Log), non-admin users see Products/Stock and Users
+- UserModel role lookup query switched from `{'name': {'$in': role_names}}` to `{'_id': {'$in': [n.lower() for n in role_names]}}`
+
+### Fixed
+- EShop routes: `abort(403)` import and usage for unauthorized admin access
+
 ## [2.2.0] — 2026-05-28
 ### Added
 - Role-Based Access Control (RBAC): Permission and Role collections, wildcard permission expansion
