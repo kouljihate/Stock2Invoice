@@ -209,7 +209,7 @@ class OrderService:
         if company_id:
             query['company_id'] = ObjectId(company_id)
         items, total = CustomerOrderModel.find_all(page, per_page, query)
-        return [OrderModel.to_dict(item) for item in items], total
+        return [CustomerOrderModel.to_dict(item) for item in items], total
 
     @staticmethod
     def get_recent(limit=5, company_id=None):

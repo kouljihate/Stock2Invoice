@@ -1,0 +1,25 @@
+/* ── Table Base ── */
+.table > :not(caption) > * > * {
+  vertical-align: middle;
+}
+
+.table thead {
+  font-size: 16px;
+}
+
+.table tbody {
+  font-size: 14px;
+}
+
+.table tbody tr:hover {
+  background-color: #f0f7ff;
+}
+
+/* ── Compact variant (12px) ── */
+.table-sm-compact thead {
+  font-size: 14px;
+}
+
+.table-sm-compact tbody {
+  font-size: 12px;
+}

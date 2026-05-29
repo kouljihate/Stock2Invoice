@@ -8,7 +8,8 @@
 
         {# Admin users see only General; non-admin users see all modules #}
         {% if 'Admin' not in user.role_names %}
-        {# Procure-to-Pay Module - shown to non-admin users #}
+        {# Procure-to-Pay Module - shown only if user has p2p.view #}
+        {% if 'p2p.view' in user.permissions %}
         <li class="nav-item mt-2">
             <a class="nav-link link-dark d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#p2pCollapse" role="button" aria-expanded="{{ 'true' if _p2p_active else 'false' }}">
                 <span><span class="material-symbols-outlined me-1" style="font-size:1.3rem;vertical-align:middle;">add_shopping_cart</span> <strong>{{ _('Procure-to-Pay') }}</strong></span>
@@ -44,6 +45,7 @@
                 </ul>
             </div>
         </li>
+        {% endif %}
 
         {# Quote-to-Cash Module - shown to non-admin users #}
         <li class="nav-item mt-2">
@@ -82,7 +84,8 @@
             </div>
         </li>
 
-        {# Eshop Module - shown to non-admin users #}
+        {# Eshop Module - shown only if user has eshop.view #}
+        {% if 'eshop.view' in user.permissions %}
         <li class="nav-item mt-2">
             <a class="nav-link link-dark d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#eshopCollapse" role="button" aria-expanded="{{ 'true' if _eshop_active else 'false' }}">
                 <span><span class="material-symbols-outlined me-1" style="font-size:1.3rem;vertical-align:middle;">store</span> <strong>{{ _('Eshop') }}</strong></span>
@@ -90,7 +93,7 @@
             </a>
             <div class="collapse{% if _eshop_active %} show{% endif %}" id="eshopCollapse">
                 <ul class="nav nav-pills flex-column ms-3">
-                    {% if 'eshop.administration' in user.permissions or 'Admin' in user.role_names %}
+                    {% if 'eshop.administration' in user.permissions %}
                     <li>
                         <a href="{{ url_for('eshop.admin') }}" class="nav-link link-dark py-1">{{ _('Administration') }}</a>
                     </li>
@@ -103,6 +106,7 @@
                 </ul>
             </div>
         </li>
+        {% endif %}{# end eshop.view #}
         {% endif %}{# end Admin check #}
 
         {# General Module - shown to all users #}

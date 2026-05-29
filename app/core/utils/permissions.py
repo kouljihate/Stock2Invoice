@@ -5,7 +5,8 @@ ALL_PERMISSIONS = [
     'stock.view', 'stock.adjust', 'stock.transfer', 'stock.audit',
     'service.view', 'service.create', 'service.schedule', 'service.close',
     'user.view', 'user.manage', 'role.manage', 'settings.update',
-    'eshop.administration', 'eshop.link',
+    'p2p.view',
+    'eshop.view', 'eshop.administration', 'eshop.link',
     'general.companies', 'general.allusers', 'general.activities',
 ]
 

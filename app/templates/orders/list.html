@@ -22,7 +22,7 @@
 </form>
 
 <div class="table-responsive">
-    <table class="table table-hover align-middle">
+        <table class="table table-hover align-middle">
         <thead class="table-light">
             <tr>
                 <th>#</th>
@@ -37,9 +37,9 @@
         <tbody>
             {% for o in orders %}
             <tr>
-                <td><code>{{ o.order_number }}</code></td>
+                <td>{{ o.order_number }}</td>
                 <td>{{ o.customer_name }}</td>
-                <td><small>{{ o.created_at[:10] if o.created_at else '-' }}</small></td>
+                <td>{{ o.created_at[:10] if o.created_at else '-' }}</td>
                 <td>
                     <span class="badge bg-{% if o.status == 'confirmed' %}primary{% elif o.status == 'shipped' %}info{% elif o.status == 'delivered' %}success{% elif o.status == 'cancelled' %}danger{% else %}secondary{% endif %}">
                         {{ _(o.status) }}

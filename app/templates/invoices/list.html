@@ -21,7 +21,7 @@
 </form>
 
 <div class="table-responsive">
-    <table class="table table-hover align-middle">
+        <table class="table table-hover align-middle">
         <thead class="table-light">
             <tr>
                 <th>#</th>
@@ -35,9 +35,9 @@
         <tbody>
             {% for inv in invoices %}
             <tr>
-                <td><code>{{ inv.invoice_number }}</code></td>
+                <td>{{ inv.invoice_number }}</td>
                 <td>{{ inv.customer_name }}</td>
-                <td><small>{{ inv.created_at[:10] if inv.created_at else '-' }}</small></td>
+                <td>{{ inv.created_at[:10] if inv.created_at else '-' }}</td>
                 <td>
                     <span class="badge bg-{% if inv.status == 'paid' %}success{% elif inv.status == 'draft' %}secondary{% elif inv.status == 'sent' %}info{% else %}danger{% endif %}">
                         {{ _(inv.status) }}

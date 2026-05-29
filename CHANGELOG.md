@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.4.0] — 2026-05-29
+### Added
+- `static/css/tables.css` — centralized table styling (16px thead, 14px tbody default, 12px compact variant)
+- Local Bootswatch BRITE theme (`static/css/themes/brite.css`) replaces CDN Bootstrap
+
+### Changed
+- All list tables: removed inline `font-size`, removed `small` class, now inherit from `tables.css`
+- Tables default to `vertical-align: middle` on all cells (eliminates `align-middle` boilerplate)
+- Delivery Notes table uses `table-sm-compact` class for 12px tbody
+
+### Fixed
+- Auth card width: `display:flex` on main caused inner `.row` to shrink — added `width:100%` to `.auth-body main .row`
+- `NameError: name 'OrderModel' is not defined` in `order_service.py` — changed to `CustomerOrderModel`
+- Quotes, Orders, Invoices, Customer Quotes, Delivery Notes tables: consistent font sizing
+- Loader overlay on form submit, button click, nav-link click
+
 ## [2.3.0] — 2026-05-28
 ### Added
 - `fixes/` and `migrations/` directories to organise one-time scripts

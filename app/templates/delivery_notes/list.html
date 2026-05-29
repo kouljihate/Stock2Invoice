@@ -7,17 +7,17 @@
 </div>
 <div class="card shadow-sm">
     <div class="card-body p-0">
-        <table class="table table-hover mb-0 small">
+        <table class="table table-hover mb-0">
             <thead class="table-light">
                 <tr><th>{{ _('DN #') }}</th><th>{{ _('Order #') }}</th><th>{{ _('Customer') }}</th><th>{{ _('Date') }}</th><th class="text-end">{{ _('Actions') }}</th></tr>
             </thead>
             <tbody>
                 {% for dn in notes %}
-                <tr>
-                    <td><code>{{ dn.dn_number or dn.id[:8] }}</code></td>
+                <tr class="align-middle">
+                    <td>{{ dn.dn_number or dn.id[:8] }}</td>
                     <td>{{ dn.order_number or '-' }}</td>
                     <td>{{ dn.customer_name or '-' }}</td>
-                    <td><small>{{ dn.created_at[:10] if dn.created_at else '-' }}</small></td>
+                    <td>{{ dn.created_at[:10] if dn.created_at else '-' }}</td>
                     <td class="text-end">
                         <form method="POST" action="{{ url_for('web_delivery_notes.delete_delivery_note', dn_id=dn.id) }}" class="d-inline" onsubmit="return confirm('{{ _('Delete') }} {{ dn.dn_number or dn.id[:8] }}?')">
                             <button type="submit" class="btn btn-sm btn-outline-danger btn-icon-circle" title="{{ _('Delete') }}"><i class="bi bi-trash"></i></button>

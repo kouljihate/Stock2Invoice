@@ -7,19 +7,19 @@
 </div>
 <div class="card shadow-sm">
     <div class="card-body p-0">
-        <table class="table table-hover mb-0 small align-middle">
+        <table class="table table-hover mb-0 align-middle">
             <thead class="table-light">
                 <tr><th>{{ _('Quote #') }}</th><th>{{ _('Customer') }}</th><th>{{ _('Status') }}</th><th class="text-end">{{ _('Total') }}</th><th>{{ _('Valid Until') }}</th><th>{{ _('Date') }}</th><th class="text-end">{{ _('Actions') }}</th></tr>
             </thead>
             <tbody>
                 {% for q in quotes %}
                 <tr>
-                    <td><code>{{ q.quote_number or q.id[:8] }}</code></td>
+                    <td>{{ q.quote_number or q.id[:8] }}</td>
                     <td>{{ q.customer_name or '-' }}</td>
                     <td><span class="badge bg-{{ 'success' if q.status in ('accepted','confirmed') else 'warning' if q.status in ('draft','sent') else 'danger' }}">{{ _(q.status) }}</span></td>
                     <td class="text-end">{{  "{:,.2f}".format(q.total)|replace(",", " ") }} MAD</td>
-                    <td><small>{{ q.valid_until[:10] if q.valid_until else '-' }}</small></td>
-                    <td><small>{{ q.created_at[:10] if q.created_at else '-' }}</small></td>
+                    <td>{{ q.valid_until[:10] if q.valid_until else '-' }}</td>
+                    <td>{{ q.created_at[:10] if q.created_at else '-' }}</td>
                     <td class="text-end">
                         <div class="d-flex gap-1 justify-content-end">
                             <a href="{{ url_for('web_customer_quotes.view_quote', quote_id=q.id) }}" class="btn btn-sm btn-outline-info btn-icon-circle" title="{{ _('View') }}"><i class="bi bi-eye"></i></a>

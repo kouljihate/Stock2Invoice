@@ -42,6 +42,10 @@
   justify-content: center;
 }
 
+.auth-body main .row {
+  width: 35%;
+}
+
 .auth-body .sidebar-col,
 .auth-body .navbar {
   display: none !important;
@@ -49,7 +53,7 @@
 
 .auth-card {
   width: 100%;
-  max-width: 100%;
+  max-width: none;
   background: #fff;
   border-radius: 20px;
   padding: 3rem 2.5rem;
