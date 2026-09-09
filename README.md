@@ -153,10 +153,11 @@ StockInvoice/
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `SECRET_KEY` | dev-secret-key | Flask session key |
-| `MONGO_URI` | `mongodb://localhost:27017/maure_stc` | MongoDB connection string |
+| `MONGO_URI` | `mongodb://localhost:27017/stockinvoice` | MongoDB connection string |
 | `JWT_SECRET_KEY` | jwt-dev-secret | JWT signing key |
 | `JWT_ACCESS_TOKEN_EXPIRES` | 86400 | Token lifetime (seconds) |
 | `FLASK_ENV` | development | runtime mode |
+| `PORT` | 5002 | App port (overridden by `PORT` env var) |
 
 ## Test Scripts
 

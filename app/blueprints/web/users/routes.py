@@ -32,16 +32,28 @@ def list_users():
         flash('User not found.', 'danger')
         return redirect(url_for('web_auth.login'))
 
+    user_dict = UserModel.to_dict(user)
+    role_names = user_dict.get('role_names', [])
+    is_admin = 'Admin' in role_names
+
     cid = _company_id()
-    if not cid:
+    if not cid and not is_admin:
         flash('No company assigned.', 'danger')
         return redirect(url_for('web_dashboard.index'))
+
+    if is_admin:
+        users = UserModel.find_all()
+        company = None
+        return render_template('web/users/list.html', mode='web',
+                               user=user_dict,
+                               users=[UserModel.to_dict(u) for u in users],
+                               company=company)
 
     users = UserModel.find_by_company(cid)
     company = CompanyModel.find_by_id(cid)
 
     return render_template('web/users/list.html', mode='web',
-                           user=UserModel.to_dict(user),
+                           user=user_dict,
                            users=[UserModel.to_dict(u) for u in users],
                            company=company)
 

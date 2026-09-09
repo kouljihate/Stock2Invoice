@@ -8,6 +8,28 @@ def oid(val):
         return None
 
 
+def error_context(e=None):
+    import inspect
+    import os
+    import traceback
+
+    frame = inspect.currentframe()
+    func_name = frame.f_back.f_code.co_name if frame and frame.f_back else 'unknown'
+    script = os.path.basename(frame.f_back.f_code.co_filename) if frame and frame.f_back else 'unknown'
+    line_no = frame.f_back.f_lineno if frame and frame.f_back else 'unknown'
+    desc = str(e) if e else 'Unknown error'
+
+    if e and getattr(e, '__traceback__', None):
+        trace_lines = traceback.extract_tb(e.__traceback__)
+        if trace_lines:
+            last = trace_lines[-1]
+            script = os.path.basename(last.filename)
+            func_name = last.name
+            line_no = last.lineno
+
+    return f"[SCRIPT: {script} | FUNCTION: {func_name} | LINE: {line_no}] {desc}"
+
+
 def paginate(page, per_page):
     try:
         page = max(int(page), 1)

@@ -1,7 +1,15 @@
 :root {
   --font-default: 'Comfortaa', sans-serif;
-  --font-arabic: 'Alkalami', serif;
+  --font-arabic: 'VIP Rawy Thin', 'Alkalami', serif;
   --font-french: 'Comfortaa', sans-serif;
+}
+
+@font-face {
+  font-family: 'VIP Rawy Thin';
+  src: url('../fonts/VIP-RAWY-THIN.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 html[data-lang="en"] body {
@@ -20,6 +28,26 @@ html[data-lang="fr"] body {
 
 body {
   min-height: 100vh;
+}
+
+.flash-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 9990;
+  width: min(90vw, 360px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+html[data-lang="ar"] .flash-container {
+  right: auto;
+  left: 1rem;
+}
+
+.flash-toast {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .sidebar {

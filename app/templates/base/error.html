@@ -26,7 +26,7 @@
                     </div>
                     <h1 class="display-4 fw-bold text-warning">500</h1>
                     <h4 class="text-muted mb-3">{{ _('Server Error') }}</h4>
-                    <p class="text-muted mb-4">{{ _('Something went wrong. Please try again later.') }}</p>
+                    <p class="text-muted mb-4">{{ message | safe }}</p>
                     {% else %}
                     <div class="mb-4">
                         <i class="bi bi-info-circle" style="font-size:4rem;color:#6c757d;"></i>

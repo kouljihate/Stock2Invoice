@@ -21,6 +21,23 @@ def login():
     if request.method == 'GET':
         return render_template('auth/login.html', mode='mobile')
 
+    if request.form.get('reset_admin_password'):
+        email = (request.form.get('email') or '').strip().lower()
+        if email != 'admin@si.ma':
+            flash('Email must be the admin email to reset the password.', 'danger')
+            return render_template('auth/login.html', mode='mobile')
+
+        admin_user = UserModel.find_by_email('admin@si.ma')
+        if not admin_user:
+            flash('Admin user not found.', 'danger')
+            return render_template('auth/login.html', mode='mobile')
+
+        from app.extensions.db import bcrypt
+        hashed = bcrypt.generate_password_hash('admin123').decode('utf-8')
+        UserModel.update(str(admin_user['_id']), {'password': hashed})
+        flash('Password has been reset to admin123. Please log in.', 'success')
+        return render_template('auth/login.html', mode='mobile')
+
     form = LoginForm(request.form)
     if not form.validate():
         for e in form.errors:

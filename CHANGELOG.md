@@ -1,5 +1,24 @@
 # Changelog
 
+## [2.5.0] — 2026-09-09
+### Added
+- Admin quick password reset from the login page: fill Email, click **Reset Password** to reset `admin@SI.ma` to `admin123` directly (no old/new password prompts)
+- Global exception handling: uncaught route errors now return a clear message with script name, function name, line number, and error description (HTML + JSON)
+- Ctrl+C (KeyboardInterrupt) handling in `run.py` that stops the server with a clear "Application terminated by user" message
+- `error_context()` helper in `app/core/utils/helpers.py` for formatted error reporting
+
+### Changed
+- Default port: `5000` → `5002`
+- MONGO_URI points to local MongoDB (`mongodb://localhost:27017/stockinvoice`) in `.env.example`
+- Flash/alert messages now appear as stacked toasts in the top-right corner and auto-dismiss after 5 seconds
+- Arabic font changed to **VIP Rawy Thin** (bundled in `app/static/fonts/`)
+- General → Users: Administrator role users now list **all** users for management instead of a "No company assigned" error
+- Error 500 page now displays the detailed error context message
+
+### Fixed
+- `ImportError: cannot import name 'bcrypt' from 'app.extensions'` — use `app.extensions.db.bcrypt`
+- Admin user lookup on reset now correctly matches the stored lowercase `admin@si.ma` email
+
 ## [2.4.0] — 2026-05-29
 ### Added
 - `static/css/tables.css` — centralized table styling (16px thead, 14px tbody default, 12px compact variant)

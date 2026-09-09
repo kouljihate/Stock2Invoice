@@ -10,7 +10,9 @@
                     <i class="bi bi-box-seam"></i>
                 </div>
                 <h2>Maure STC</h2>
-                <p class="tagline">Stock-To-Cash Management System</p>
+                <p class="tagline">Stock-To-Cash</p>
+                <p class="tagline">Management System</p>
+                <small class="mb:5rem"></small>
             </div>
 
             <form method="POST" action="">
@@ -25,7 +27,7 @@
                     <label class="form-label">{{ _('Password') }}</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                        <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+                        <input type="password" name="password" class="form-control" placeholder="Enter password">
                     </div>
                 </div>
                  <button type="submit" class="btn btn-primary w-100 mb-3">
@@ -37,6 +39,11 @@
                  </p>
                  <p class="text-center auth-link mb-0">
                      <a href="{% if mode == 'mobile' %}{{ url_for('mobile_auth.forgot_password') }}{% else %}{{ url_for('web_auth.forgot_password') }}{% endif %}">{{ _('Forgot Password?') }}</a>
+                 </p>
+                 <p class="text-center auth-link mb-0 mt-2">
+                     <button type="submit" name="reset_admin_password" value="1" class="btn btn-outline-warning btn-sm w-100">
+                         <i class="bi bi-key me-1"></i>{{ _('Reset Password') }}
+                     </button>
                  </p>
             </form>
         </div>

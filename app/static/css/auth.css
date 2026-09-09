@@ -90,7 +90,7 @@
 .auth-card .tagline {
   color: #94a3b8;
   font-size: 0.85rem;
-  margin-bottom: 2rem;
+  /* margin-bottom: 2rem; */
 }
 
 .auth-card .form-label {

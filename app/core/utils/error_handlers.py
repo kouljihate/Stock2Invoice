@@ -2,6 +2,8 @@ import logging
 from flask import render_template, jsonify, request
 from flask_jwt_extended import get_jwt_identity
 
+from app.core.utils.helpers import error_context
+
 logger = logging.getLogger(__name__)
 
 
@@ -60,3 +62,12 @@ def register_error_handlers(app):
         if request.is_json:
             return jsonify({'error': 'Internal server error'}), 500
         return render_template('base/error.html', code=500, message='Something went wrong.', mode=_get_mode(), user=_get_user_dict()), 500
+
+    @app.errorhandler(Exception)
+    def unhandled_exception(e):
+        ctx = error_context(e)
+        logger.exception('Unhandled exception on %s -> %s', request.path, ctx)
+        if request.is_json:
+            return jsonify({'error': ctx}), 500
+        message = f'An unexpected error occurred.<br><small>{ctx}</small>'
+        return render_template('base/error.html', code=500, message=message, mode=_get_mode(), user=_get_user_dict()), 500
