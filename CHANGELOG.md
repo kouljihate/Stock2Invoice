@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.5.1] — 2026-09-09
+### Fixed
+- Gunicorn WSGI load: expose `app=create_app()` on app package, reuse in `run.py`
+
 ## [2.5.0] — 2026-09-09
 ### Added
 - Admin quick password reset from the login page: fill Email, click **Reset Password** to reset `admin@SI.ma` to `admin123` directly (no old/new password prompts)
