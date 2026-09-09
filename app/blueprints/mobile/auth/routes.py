@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_jwt_extended import create_access_token, set_access_cookies, unset_jwt_cookies, jwt_required, get_jwt_identity
 from app.core.services.auth_service import AuthService
 from app.core.models.user_model import UserModel
+from app.core.services.event_service import EventService
 from .forms import LoginForm, RegisterForm
 
 logger = logging.getLogger(__name__)
@@ -54,6 +55,8 @@ def login():
         user_dict = UserModel.to_dict(user)
         claims = {
             'role_names': user_dict.get('role_names', []),
+            'user_name': user_dict.get('name', ''),
+            'user_email': user_dict.get('email', ''),
         }
         company_id = user.get('company_id')
         if company_id:
@@ -66,7 +69,11 @@ def login():
         resp = _redirect_after_login(user)
         set_access_cookies(resp, token)
         flash('Welcome back!', 'success')
-        logger.info('Mobile login success: %s', form.email)
+        EventService.record(
+            company_id, 'session', str(user['_id']), form.email, 'login',
+            user_id=str(user['_id']), user_name=user_dict.get('name', ''),
+        )
+        logger.info('Mobile SESSION START: %s', form.email)
         return resp
     except Exception as e:
         logger.exception('Mobile login error')
@@ -102,10 +109,23 @@ def register():
 
 @mobile_auth_bp.route('/logout', methods=['GET'])
 def logout():
+    uid = None
+    try:
+        uid = get_jwt_identity()
+    except Exception:
+        uid = None
+    email = '-'
+    u = UserModel.find_by_id(uid) if uid else None
+    if u:
+        email = u.get('email', '-')
+        EventService.record(
+            u.get('company_id'), 'session', str(u['_id']), email, 'logout',
+            user_id=uid, user_name=u.get('name', ''),
+        )
     resp = redirect(url_for('mobile_auth.login'))
     unset_jwt_cookies(resp)
     flash('You have been logged out.', 'info')
-    logger.info('Mobile logout')
+    logger.info('Mobile SESSION END: %s', email)
     return resp
 
 

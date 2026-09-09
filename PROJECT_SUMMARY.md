@@ -24,7 +24,7 @@ StockInvoice is a Flask + MongoDB multi-tenant business application that support
 - Automated data-generation/lifecycle scripts under `tests/`
 
 ## Current Version
-- Version: 2.5.1
+- Version: 2.6.0
 - Build date: 2026-09-09
 
 ## Notable Observations

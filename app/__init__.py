@@ -5,7 +5,7 @@ from flask_cors import CORS
 
 from .config import Config
 from .extensions.db import mongo, bcrypt, jwt
-from .extensions.logging import setup_logging
+from .extensions.logging import setup_logging, setup_request_logging
 from .core.utils.error_handlers import register_error_handlers
 
 from .blueprints.web.auth.routes import web_auth_bp
@@ -69,6 +69,7 @@ def create_app(config_class=Config):
         return jsonify({'msg': str(reason)}), 401
 
     setup_logging(app)
+    setup_request_logging(app)
     register_error_handlers(app)
 
     app.register_blueprint(web_auth_bp, url_prefix='/web/auth')

@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.6.0] — 2026-09-09
+### Added
+- Full session activity logging from login to logout:
+  - Every action logged to `app/logs/app.log` with user identity, IP, method, path, status code, and duration
+  - `before_request`/`after_request` hooks attach the JWT user context to each request
+  - `login`/`logout` session markers recorded in the Activity Log (`events` collection) and as `SESSION START`/`SESSION END` log lines
+  - `user_name`/`user_email` JWT claims included for readable user attribution
+- Static assets, favicon, health checks, and CORS preflights excluded from access logging
+
+### Changed
+- Log format now uses the acting user (`Name (id)`) instead of a generic `anonymous`
+- Web and mobile login claims enriched with `user_name`/`user_email`
+
 ## [2.5.1] — 2026-09-09
 ### Fixed
 - Gunicorn WSGI load: expose `app=create_app()` on app package, reuse in `run.py`
