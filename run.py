@@ -4,12 +4,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from app import create_app
+from app import app
 from app.core.utils.helpers import error_context
 
 
 def _main():
-    app = create_app()
     app.run(
         host=os.getenv('HOST', '0.0.0.0'),
         port=int(os.getenv('PORT', 5002)),

@@ -174,3 +174,6 @@ def create_app(config_class=Config):
         return {'status': 'ok'}
 
     return app
+
+
+app = create_app()
