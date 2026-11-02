@@ -1,4 +1,5 @@
 import logging
+import re
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.services.stock_service import StockService
@@ -33,9 +34,10 @@ def list_products():
         if request.args.get('category'):
             filters['category'] = request.args['category']
         if request.args.get('search'):
-            import re
             regex = {'$regex': re.escape(request.args['search']), '$options': 'i'}
             filters['$or'] = [{'name': regex}, {'sku': regex}]
+        if request.args.get('brand'):
+            filters['brand'] = {'$regex': re.escape(request.args['brand']), '$options': 'i'}
         if request.args.get('status'):
             filters['status'] = request.args['status']
         if request.args.get('low_stock'):
@@ -347,6 +349,7 @@ def api_lookup():
         'sku': p.get('sku', ''),
         'name': p.get('name', ''),
         'price': float(p.get('price', 0)),
+        'purchase_price': float(p.get('purchase_price', 0)),
         'quantity': p.get('quantity', 0),
         'package_type': p.get('package_type', ''),
         'pack_size': p.get('pack_size', ''),

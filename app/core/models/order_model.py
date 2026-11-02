@@ -47,7 +47,7 @@ class CustomerOrderModel:
     @staticmethod
     def delete(order_id):
         from bson.objectid import ObjectId
-        mongo.db[OrderModel.collection].delete_one({'_id': ObjectId(order_id)})
+        mongo.db[CustomerOrderModel.collection].delete_one({'_id': ObjectId(order_id)})
 
     @staticmethod
     def to_dict(order):

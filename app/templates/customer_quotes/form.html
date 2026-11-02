@@ -1,5 +1,5 @@
 {% extends 'base/layout.html' %}
-{% block title %}{% if quote and quote.id %}{{ _('Edit Quote') }}{% else %}{{ _('New Customer Quote') }}{% endif %} — Maure STC{% endblock %}
+{% block title %}{% if quote and quote.id %}{{ _('Edit Quote') }}{% else %}{{ _('New Customer Quote') }}{% endif %} — Maure S2C{% endblock %}
 {% block content %}
 <h4 class="mb-4"><i class="bi bi-{% if quote and quote.id %}pencil{% else %}plus-circle{% endif %} me-2"></i>{% if quote and quote.id %}{{ _('Edit Quote') }}{% else %}{{ _('New Customer Quote') }}{% endif %}</h4>
 <form method="POST" action="" class="card shadow-sm" id="quoteForm">

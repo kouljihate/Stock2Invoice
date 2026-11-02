@@ -3,6 +3,7 @@ import contextlib
 from bson.objectid import ObjectId
 from flask import request
 from app.core.models.product_model import ProductModel
+from app.core.utils.helpers import tenant_filter
 from app.core.models.stock_movement_model import StockMovementModel
 from app.core.validators.common_validators import (
     validate_required,
@@ -78,9 +79,13 @@ class StockService:
         return product_id
 
     @staticmethod
-    def get_by_id(product_id, company_id=None):
+    def get_by_id(product_id, company_id=None, allow_unscoped=False):
         product = ProductModel.find_by_id(product_id)
-        if product and company_id and str(product.get('company_id', '')) != str(company_id):
+        if not product:
+            return None
+        if not company_id:
+            return product if allow_unscoped else None
+        if str(product.get('company_id', '')) != str(company_id):
             return None
         return product
 
@@ -89,10 +94,10 @@ class StockService:
         return ProductModel.find_by_sku(sku, company_id)
 
     @staticmethod
-    def list(page, per_page, filters=None, company_id=None):
+    def list(page, per_page, filters=None, company_id=None, allow_unscoped=False):
         query = filters or {}
-        if company_id:
-            query['company_id'] = ObjectId(company_id)
+        if company_id or not allow_unscoped:
+            query.update(tenant_filter(company_id))
         items, total = ProductModel.find_all(page, per_page, query)
         return [ProductModel.to_dict(item) for item in items], total
 
@@ -148,31 +153,23 @@ class StockService:
 
     @staticmethod
     def get_low_stock(company_id=None):
-        filters = {}
-        if company_id:
-            filters['company_id'] = ObjectId(company_id)
+        filters = tenant_filter(company_id)
         products = ProductModel.find_all_unpaginated(filters)
         return [ProductModel.to_dict(p) for p in products if p.get('quantity', 0) <= p.get('quantity_min', 5)]
 
     @staticmethod
     def get_category_summary(company_id=None):
         pipeline = [
-            {'$match': {'company_id': ObjectId(company_id)}} if company_id else {'$match': {}},
+            {'$match': tenant_filter(company_id)},
             {'$group': {'_id': '$category', 'count': {'$sum': 1}, 'total_qty': {'$sum': '$quantity'},
                         'total_value': {'$sum': {'$multiply': ['$quantity', '$price']}}}},
             {'$sort': {'_id': 1}},
         ]
-        if company_id:
-            pipeline[0] = {'$match': {'company_id': ObjectId(company_id)}}
-        if not company_id:
-            pipeline = pipeline[1:]
         return ProductModel.aggregate(pipeline)
 
     @staticmethod
     def get_total_valuation(company_id=None):
-        pipeline = []
-        if company_id:
-            pipeline.append({'$match': {'company_id': ObjectId(company_id)}})
+        pipeline = [{'$match': tenant_filter(company_id)}]
         pipeline.append({'$group': {'_id': None, 'total_value': {'$sum': {'$multiply': ['$quantity', '$price']}},
                                     'total_products': {'$sum': 1}, 'total_qty': {'$sum': '$quantity'}}})
         result = ProductModel.aggregate(pipeline)
@@ -194,9 +191,7 @@ class StockService:
 
     @staticmethod
     def get_movements(page, per_page, product_id=None, company_id=None):
-        filters = {}
-        if company_id:
-            filters['company_id'] = ObjectId(company_id)
+        filters = tenant_filter(company_id)
         if product_id:
             filters['product_id'] = ObjectId(product_id)
         items, total = StockMovementModel.find_all(page, per_page, filters)
@@ -204,9 +199,7 @@ class StockService:
 
     @staticmethod
     def get_recent_movements(limit=10, company_id=None):
-        filters = {}
-        if company_id:
-            filters['company_id'] = ObjectId(company_id)
+        filters = tenant_filter(company_id)
         items = StockMovementModel.recent(limit, filters)
         return [StockMovementModel.to_dict(item) for item in items]
 

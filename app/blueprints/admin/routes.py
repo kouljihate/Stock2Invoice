@@ -8,6 +8,7 @@ from app.core.models.company_model import CompanyModel
 from app.core.models.user_model import UserModel
 from app.core.models.role_model import RoleModel
 from app.core.services.auth_service import AuthService
+from app.core.services.rabbitmq_service import get_overview, get_top_queues
 from app.extensions.db import mongo
 from functools import wraps
 
@@ -60,16 +61,32 @@ def index():
     thirty_days_ago = now - timedelta(days=30)
 
     companies = CompanyModel.find_all()
+
+    # One grouped query per collection instead of one count per company per
+    # collection: 6 queries total rather than 6 x N (+ N for users).
+    def _counts_by_company(collection):
+        counts = {}
+        for row in mongo.db[collection].aggregate([
+            {'$group': {'_id': '$company_id', 'n': {'$sum': 1}}},
+        ]):
+            if row['_id'] is not None:
+                counts[str(row['_id'])] = row['n']
+        return counts
+
+    counters = {
+        'user_count': _counts_by_company('users'),
+        'product_count': _counts_by_company('products'),
+        'order_count': _counts_by_company('orders'),
+        'invoice_count': _counts_by_company('invoices'),
+        'movement_count': _counts_by_company('stock_movements'),
+        'po_count': _counts_by_company('purchase_orders'),
+    }
+
     company_list = []
     for c in companies:
         d = CompanyModel.to_dict(c)
-        cid = ObjectId(d['id'])
-        d['user_count'] = UserModel.count({'company_id': cid})
-        d['product_count'] = mongo.db['products'].count_documents({'company_id': cid})
-        d['order_count'] = mongo.db['orders'].count_documents({'company_id': cid})
-        d['invoice_count'] = mongo.db['invoices'].count_documents({'company_id': cid})
-        d['movement_count'] = mongo.db['stock_movements'].count_documents({'company_id': cid})
-        d['po_count'] = mongo.db['purchase_orders'].count_documents({'company_id': cid})
+        for key, counts in counters.items():
+            d[key] = counts.get(d['id'], 0)
         company_list.append(d)
 
     total_companies = len(company_list)
@@ -87,7 +104,9 @@ def index():
     growth_labels = [g['_id'] for g in company_growth]
     growth_data = [g['count'] for g in company_growth]
     growth_max = max(growth_data) if growth_data else 1
-    growth_len = len(growth_data) or 1
+    # Guard both denominators: a single data point (or a single company in
+    # the window) would otherwise divide by zero.
+    growth_len = max(len(growth_data), 2)
     growth_points = ' '.join(
         f'{int(i * 200 / (growth_len - 1))},{int(32 - (v / growth_max * 28))}'
         for i, v in enumerate(growth_data)
@@ -127,8 +146,15 @@ def index():
     db_labels = [d['_id'] for d in db_usage_30d]
     db_data = [d['count'] for d in db_usage_30d]
 
+    # RabbitMQ monitor widget. This blueprint is Admin-only
+    # (@super_admin_required), so the block is never exposed to other roles.
+    rabbitmq = get_overview()
+    rabbitmq_queues = get_top_queues() if rabbitmq.get('ok') else []
+
     return render_template('admin/index.html', mode='web',
                            user=UserModel.to_dict(user) if user else None,
+                           rabbitmq=rabbitmq,
+                           rabbitmq_queues=rabbitmq_queues,
                            companies=company_list,
                            total_companies=total_companies,
                            total_users=total_users,
@@ -463,6 +489,9 @@ def add_user(company_id):
         errors.append('Password must be at least 8 characters.')
     if not roles:
         errors.append('At least one role must be selected.')
+    if 'Admin' in roles:
+        errors.append('The Admin profile belongs to the single platform administrator '
+                      'and cannot be assigned here.')
 
     existing_user = UserModel.find_by_email(email)
     if existing_user:
@@ -507,8 +536,9 @@ def set_user_role(user_id):
     if new_role_name not in ('user', 'company_admin'):
         flash('Invalid role.', 'danger')
     else:
-        # Map old role names to new RBAC role names
-        target_role = 'Customer' if new_role_name == 'user' else 'Manager'
+        # Map old role names to RBAC role names: the company-owner profile is
+        # PME-Admin, the ordinary member profile is Customer.
+        target_role = 'Customer' if new_role_name == 'user' else 'PME-Admin'
         role = RoleModel.find_by_name(target_role)
         if role:
             UserModel.update(user_id, {'roles': [target_role]})
@@ -550,6 +580,57 @@ def list_users():
                            total=total, search=search)
 
 
+@admin_bp.route('/users/create-pme-admin', methods=['GET', 'POST'])
+@jwt_required()
+@super_admin_required
+def create_pme_admin():
+    """Create a PME-Admin account that has no company yet.
+
+    The platform Admin manages every other user profile; the PME-Admin
+    registers his own personal and company details on his first login
+    (``web_profile.setup``), which is what gives him his own stock and
+    customer data space.
+    """
+    user = _get_user()
+
+    if request.method == 'GET':
+        return render_template('admin/create_pme_admin.html', mode='web',
+                               user=UserModel.to_dict(user) if user else None)
+
+    email = (request.form.get('email') or '').strip().lower()
+    password = request.form.get('password', '')
+    name = (request.form.get('name') or '').strip()
+
+    errors = []
+    if not name:
+        errors.append('Name is required.')
+    if not email or '@' not in email:
+        errors.append('A valid email is required.')
+    if len(password) < 8:
+        errors.append('Password must be at least 8 characters.')
+    if UserModel.find_by_email(email):
+        errors.append('Email already registered.')
+
+    if errors:
+        for e in errors:
+            flash(e, 'danger')
+        return render_template('admin/create_pme_admin.html', mode='web',
+                               user=UserModel.to_dict(user) if user else None)
+
+    from app.extensions.db import bcrypt
+    hashed = bcrypt.generate_password_hash(password).decode('utf-8')
+    UserModel.create({
+        'name': name,
+        'email': email,
+        'password': hashed,
+        'roles': ['PME-Admin'],
+        # Deliberately no company_id: the first login collects it.
+    })
+    logger.info('PME-Admin account created: %s', email)
+    flash(f'PME-Admin "{email}" created. He will register his company on first login.', 'success')
+    return redirect(url_for('admin.list_users'))
+
+
 @admin_bp.route('/users/<user_id>/edit', methods=['GET', 'POST'])
 @jwt_required()
 @super_admin_required
@@ -588,6 +669,10 @@ def edit_user(user_id):
     # Validate roles - must have at least one
     if not roles:
         errors.append('At least one role must be selected.')
+    if 'Admin' in roles and 'Admin' not in target_dict.get('role_names', []):
+        errors.append('Exactly one Admin account is allowed; this user cannot be made an Admin.')
+    if 'Admin' in target_dict.get('role_names', []) and 'Admin' not in roles:
+        errors.append('The Admin profile cannot be removed — it is the only platform administrator.')
 
     existing = UserModel.find_by_email(email)
     if existing and str(existing['_id']) != user_id:

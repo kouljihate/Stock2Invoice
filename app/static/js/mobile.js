@@ -1,1 +1,1 @@
-﻿console.log('Maure STC Mobile loaded');
+﻿console.log('Maure S2C Mobile loaded');

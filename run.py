@@ -10,9 +10,11 @@ from app.core.utils.helpers import error_context
 
 def _main():
     app.run(
-        host=os.getenv('HOST', '0.0.0.0'),
+        host=os.getenv('HOST', '127.0.0.1'),
         port=int(os.getenv('PORT', 5002)),
-        debug=os.getenv('FLASK_ENV', 'development') == 'development',
+        # The interactive debugger is a remote-code-execution surface: it is
+        # opt-in via FLASK_DEBUG=1, never implied by FLASK_ENV.
+        debug=os.getenv('FLASK_DEBUG', '0').strip().lower() in ('1', 'true', 'yes'),
     )
 
 

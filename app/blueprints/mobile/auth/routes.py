@@ -1,13 +1,27 @@
 import logging
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, current_app, render_template, request, redirect, url_for, flash
 from flask_jwt_extended import create_access_token, set_access_cookies, unset_jwt_cookies, jwt_required, get_jwt_identity
 from app.core.services.auth_service import AuthService
 from app.core.models.user_model import UserModel
 from app.core.services.event_service import EventService
+from app.core.utils.rate_limit import check_rate_limit, client_ip
 from .forms import LoginForm, RegisterForm
 
 logger = logging.getLogger(__name__)
 mobile_auth_bp = Blueprint('mobile_auth', __name__, template_folder='../../../templates')
+
+REGISTER_LIMIT = 5
+REGISTER_WINDOW = 3600
+
+
+def _throttled(bucket, limit=None):
+    """True when this client has exhausted its allowance for ``bucket``."""
+    cfg = current_app.config
+    return check_rate_limit(
+        f'{bucket}:{client_ip()}',
+        limit or cfg['AUTH_RATE_LIMIT'],
+        cfg['AUTH_RATE_WINDOW'],
+    )
 
 
 def _redirect_after_login(user):
@@ -22,21 +36,9 @@ def login():
     if request.method == 'GET':
         return render_template('auth/login.html', mode='mobile')
 
-    if request.form.get('reset_admin_password'):
-        email = (request.form.get('email') or '').strip().lower()
-        if email != 'admin@si.ma':
-            flash('Email must be the admin email to reset the password.', 'danger')
-            return render_template('auth/login.html', mode='mobile')
-
-        admin_user = UserModel.find_by_email('admin@si.ma')
-        if not admin_user:
-            flash('Admin user not found.', 'danger')
-            return render_template('auth/login.html', mode='mobile')
-
-        from app.extensions.db import bcrypt
-        hashed = bcrypt.generate_password_hash('admin123').decode('utf-8')
-        UserModel.update(str(admin_user['_id']), {'password': hashed})
-        flash('Password has been reset to admin123. Please log in.', 'success')
+    if _throttled('login'):
+        logger.warning('Login rate-limited for %s', client_ip())
+        flash('Too many attempts. Please wait a few minutes and try again.', 'danger')
         return render_template('auth/login.html', mode='mobile')
 
     form = LoginForm(request.form)
@@ -75,7 +77,7 @@ def login():
         )
         logger.info('Mobile SESSION START: %s', form.email)
         return resp
-    except Exception as e:
+    except Exception:
         logger.exception('Mobile login error')
         flash('An error occurred.', 'danger')
         return render_template('auth/login.html', mode='mobile')
@@ -83,7 +85,16 @@ def login():
 
 @mobile_auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
+    if not current_app.config['ALLOW_PUBLIC_REGISTRATION']:
+        flash('Self-service registration is disabled on this instance.', 'info')
+        return redirect(url_for('mobile_auth.login'))
+
     if request.method == 'GET':
+        return render_template('auth/register.html', mode='mobile')
+
+    if _throttled('register', REGISTER_LIMIT):
+        logger.warning('Registration rate-limited for %s', client_ip())
+        flash('Too many attempts. Please wait and try again.', 'danger')
         return render_template('auth/register.html', mode='mobile')
 
     form = RegisterForm(request.form)
@@ -101,13 +112,13 @@ def register():
         AuthService.register({'name': form.name, 'email': form.email, 'password': form.password})
         flash('Registration successful. Please log in.', 'success')
         return redirect(url_for('mobile_auth.login'))
-    except Exception as e:
+    except Exception:
         logger.exception('Mobile registration error')
         flash('An error occurred.', 'danger')
         return render_template('auth/register.html', mode='mobile')
 
 
-@mobile_auth_bp.route('/logout', methods=['GET'])
+@mobile_auth_bp.route('/logout', methods=['POST'])
 def logout():
     uid = None
     try:
@@ -132,18 +143,18 @@ def logout():
 @mobile_auth_bp.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
     if request.method == 'POST':
+        if _throttled('forgot', REGISTER_LIMIT):
+            flash('Too many attempts. Please wait and try again.', 'danger')
+            return render_template('auth/forgot_password.html', mode='mobile')
+
         email = request.form.get('email')
         if not email:
             flash('Please enter your email address.', 'danger')
             return render_template('auth/forgot_password.html', mode='mobile')
 
-        # In a real application, you would:
-        # 1. Check if the email exists in the database
-        # 2. Generate a reset token
-        # 3. Send an email with the reset link
-        # For now, we'll just show a success message (to prevent user enumeration)
+        # Password resets are not self-service: no token is generated and no
+        # mail is sent, so the response is identical whether or not the
+        # address exists (prevents account enumeration).
         flash('If your email is registered, you will receive a password reset link.', 'info')
-        # Fall through to render the template again with the message
 
-    # For both GET and POST (after processing), render the template
     return render_template('auth/forgot_password.html', mode='mobile')

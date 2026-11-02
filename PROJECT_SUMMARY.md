@@ -9,11 +9,13 @@ StockInvoice is a Flask + MongoDB multi-tenant business application that support
 - Services: Service tracking with scheduling and closure workflows
 - EShop: Public product catalog with admin order management panel
 - Shared: Inventory/Stock, Users, Events/Activity Log, Admin panel, language switching (EN/AR/FR)
+- Admin monitoring: live RabbitMQ broker metrics (queues, connections, consumers, message backlog) via the management HTTP API
 - RBAC: Permission → Role → User hierarchy with wildcard expansion and route-level 403 enforcement
 
 ## Tech Stack
 - Backend: Flask 3.1, PyMongo, Flask-JWT-Extended, Flask-Bcrypt
 - Database: MongoDB (local or Atlas)
+- Messaging: RabbitMQ (broker + management HTTP API)
 - Templates/UI: Jinja2 + Bootstrap 5 + static CSS/JS (web + mobile blueprints)
 - Document output: fpdf2 (invoice PDF generation)
 
@@ -24,8 +26,8 @@ StockInvoice is a Flask + MongoDB multi-tenant business application that support
 - Automated data-generation/lifecycle scripts under `tests/`
 
 ## Current Version
-- Version: 2.6.0
-- Build date: 2026-09-09
+- Version: 2.7.0
+- Build date: 2026-11-02
 
 ## Notable Observations
 - The codebase is feature-rich and well-structured for CRUD-heavy workflows with multi-tenant isolation.

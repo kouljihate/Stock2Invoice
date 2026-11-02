@@ -1,0 +1,8 @@
+# Dependencies for running the domain services locally (no Docker):
+#   pip install -r services/requirements.txt
+# Docker images install the shared kernel + uvicorn directly instead.
+../shared
+fastapi>=0.110
+uvicorn[standard]>=0.27
+requests>=2.31
+python-multipart>=0.0.9

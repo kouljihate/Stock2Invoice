@@ -4,7 +4,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.services.order_service import OrderService
 from app.core.models.product_model import ProductModel
 from app.core.models.user_model import UserModel
-from app.core.utils.helpers import paginate, oid
+from app.core.utils.helpers import paginate, oid, tenant_filter
 
 logger = logging.getLogger(__name__)
 mobile_orders_bp = Blueprint('mobile_orders', __name__, template_folder='../../../templates')
@@ -49,7 +49,7 @@ def create_order():
     user = _get_user()
     cid = _company_id()
     if request.method == 'GET':
-        products = ProductModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else ProductModel.find_all_unpaginated()
+        products = ProductModel.find_all_unpaginated(tenant_filter(cid))
         return render_template('orders/edit.html', mode='mobile',
                                user=UserModel.to_dict(user) if user else None,
                                order=None, products=products)
@@ -82,7 +82,7 @@ def create_order():
         if errors:
             for e in errors:
                 flash(e, 'danger')
-            products = ProductModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else ProductModel.find_all_unpaginated()
+            products = ProductModel.find_all_unpaginated(tenant_filter(cid))
             return render_template('orders/edit.html', mode='mobile',
                                    user=UserModel.to_dict(user) if user else None,
                                    order=payload, products=products)
@@ -94,7 +94,7 @@ def create_order():
     except Exception as e:
         logger.exception('Mobile order create error')
         flash('Could not create order.', 'danger')
-        products = ProductModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else ProductModel.find_all_unpaginated()
+        products = ProductModel.find_all_unpaginated(tenant_filter(cid))
         return render_template('orders/edit.html', mode='mobile',
                                user=UserModel.to_dict(user) if user else None,
                                order=request.form, products=products)

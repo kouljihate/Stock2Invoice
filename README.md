@@ -51,6 +51,20 @@ Quote → Customer Order → Delivery Note → Customer Invoice
 - **Invoice PDF** — Server-side PDF via fpdf2 with per-company branding (colors, font, logo, header/footer)
 - **Arrêté** — Auto-generated French legal closing on PDF: amount in words
 - **Multi-language** — EN/AR/FR with language switcher
+- **RabbitMQ Monitor** — Admin-only live broker metrics (queues, connections, channels, consumers, backlog, alarms, busiest queues) on the admin dashboard, read from the management HTTP API
+
+## Profiles & Onboarding
+
+The application is built around two user profiles:
+
+| Profile | Scope | Created by |
+|---|---|---|
+| **Admin** | Platform: manages **all** other user profiles, companies and settings. **Exactly one** Admin account is allowed — the CLI (`flask create-super-admin`, `flask promote <email> Admin`) and the admin panel both refuse to mint a second one. | `flask create-super-admin` (first run) |
+| **PME-Admin** | One PME (small business): his **own stock, own customers and own users**, fully isolated from every other company. | Admin panel → *Create PME-Admin* |
+
+Inside a company, an owner can additionally grant the **Manager** and **Customer** roles.
+
+**First login:** a PME-Admin is created *without* a company. On his first login he is redirected to `/web/profile/setup`, a wizard that collects his personal information (name, phone) and his company's (name, address, city, contacts, ICE/RC/IF/CNSS). Only after submitting it does his company — and therefore his private data space — come into existence; until then every application area redirects to the wizard. The platform Admin never sees it.
 
 ## Quick Start
 
@@ -64,6 +78,7 @@ venv\Scripts\activate      # Windows
 
 # 3. Install dependencies
 pip install -r requirements.txt
+pip install -r requirements-dev.txt   # only needed to run the test suite
 
 # 4. Configure environment
 cp .env.example .env
@@ -121,6 +136,31 @@ StockInvoice/
 | Command | Description |
 |---------|-------------|
 | `flask create-super-admin <email> <password> [name]` | Create initial super admin |
+| `flask bootstrap` | Seed the RBAC roles and create the MongoDB indexes (idempotent; also runs at startup) |
+| `flask promote <email> <role>` | Set a user's role — `Admin`, `Manager` or `Customer` |
+
+> Use `python -m flask ...` if the `flask` executable on your `PATH` belongs to
+> a different Python than the one with the dependencies installed.
+
+## Tests
+
+```bash
+python -m pytest                                   # unit tests (no server, no data written)
+RUN_E2E=1 python -m pytest tests/test_create_company.py   # Playwright walkthroughs
+```
+
+The script-style helpers in `tests/` (data generators, connection checks) are
+not collected by pytest — run them directly with `python tests/<file>`.
+
+## Production
+
+```bash
+gunicorn -c gunicorn.conf.py app:app
+```
+
+Set `COOKIE_SECURE=1` behind HTTPS, keep `FLASK_DEBUG` unset/0, and never ship
+the example `SECRET_KEY` / `JWT_SECRET_KEY` values — production refuses to
+start while either is a placeholder.
 
 ## Routes
 
@@ -152,11 +192,17 @@ StockInvoice/
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `SECRET_KEY` | dev-secret-key | Flask session key |
+| `SECRET_KEY` | dev-secret-key | Flask session key (**must** be a random value of 32+ chars) |
+| `RABBITMQ_URL` | `amqp://guest:guest@rabbitmq:5672/%2f` | AMQP endpoint; the admin dashboard monitor derives the management API host/credentials from it. `RABBITMQ_MGMT_URL` overrides the full management URL. |
 | `MONGO_URI` | `mongodb://localhost:27017/stockinvoice` | MongoDB connection string |
-| `JWT_SECRET_KEY` | jwt-dev-secret | JWT signing key |
-| `JWT_ACCESS_TOKEN_EXPIRES` | 86400 | Token lifetime (seconds) |
+| `JWT_SECRET_KEY` | jwt-dev-secret | JWT signing key (**must** be a random value of 32+ chars) |
+| `JWT_ACCESS_TOKEN_EXPIRES` | 3600 | Token lifetime (seconds) |
+| `COOKIE_SECURE` | 0 | Set `1` when serving over HTTPS |
+| `ALLOW_PUBLIC_REGISTRATION` | 0 | Enable self-service sign-up (accounts are created without a company) |
+| `AUTH_RATE_LIMIT` | 10 | Auth attempts allowed per client per window |
+| `AUTH_RATE_WINDOW` | 300 | Auth throttle window (seconds) |
 | `FLASK_ENV` | development | runtime mode |
+| `FLASK_DEBUG` | 0 | `1` enables the Werkzeug debugger — local use only |
 | `PORT` | 5002 | App port (overridden by `PORT` env var) |
 
 ## Test Scripts

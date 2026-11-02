@@ -20,7 +20,8 @@ def _company_admin_required(user):
         return False
     user_dict = UserModel.to_dict(user)
     role_names = user_dict.get('role_names', [])
-    return 'Admin' in role_names or 'Manager' in role_names
+    return ('Admin' in role_names or 'Manager' in role_names
+            or 'PME-Admin' in role_names)
 
 
 @web_users_bp.route('')
@@ -74,6 +75,11 @@ def create_user():
     email = (request.form.get('email') or '').strip().lower()
     password = request.form.get('password', '')
     name = (request.form.get('name') or '').strip()
+    # The modal offers two in-company profiles; the platform 'Admin' profile
+    # is never assignable here (exactly one Admin exists, created by CLI or
+    # the admin panel).
+    role_choice = request.form.get('role', 'user')
+    role = 'PME-Admin' if role_choice == 'company_admin' else 'Customer'
 
     errors = []
     if not email:
@@ -99,11 +105,11 @@ def create_user():
         'name': name,
         'email': email,
         'password': hashed,
-        'roles': ['Customer'],
+        'roles': [role],
         'company_id': ObjectId(cid),
     })
 
-    logger.info('User %s added to company %s', email, cid)
+    logger.info('User %s added to company %s (role=%s)', email, cid, role)
     flash(f'User "{email}" created.', 'success')
     return redirect(url_for('web_users.list_users'))
 
@@ -134,8 +140,10 @@ def set_role(user_id):
     if new_role_name not in ('user', 'company_admin'):
         flash('Invalid role.', 'danger')
     else:
-        # Map old role names to new RBAC role names
-        target_role_name = 'Customer' if new_role_name == 'user' else 'Manager'
+        # Map the UI choices to RBAC roles: the company-owner profile is
+        # PME-Admin, the ordinary member profile is Customer. The platform
+        # 'Admin' profile cannot be granted here.
+        target_role_name = 'Customer' if new_role_name == 'user' else 'PME-Admin'
         role = RoleModel.find_by_name(target_role_name)
         if role:
             UserModel.update(user_id, {'roles': [target_role_name]})

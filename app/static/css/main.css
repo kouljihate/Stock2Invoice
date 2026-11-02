@@ -1,6 +1,6 @@
 :root {
   --font-default: 'Comfortaa', sans-serif;
-  --font-arabic: 'VIP Rawy Thin', 'Alkalami', serif;
+  --font-arabic: 'VIP Rawy Thin', 'Comfortaa', 'Alkalami', serif;
   --font-french: 'Comfortaa', sans-serif;
 }
 
@@ -10,10 +10,21 @@
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+  /* Arabic + Latin selectors EXCLUDING digits (U+0030-0039, U+0660-0669)
+     so all numbers fall back to the Comfortaa family. */
+  unicode-range: U+0020-002F, U+003A-007E, U+00A0, U+060C, U+061B, U+061F,
+    U+0621-063A, U+0640-0652, U+066A, U+066D,
+    U+FB56-FB59, U+FB6A-FB6D, U+FB7A-FB7D, U+FB8A-FB8B, U+FDF2, U+FE80-FEFC;
 }
 
 html[data-lang="en"] body {
   font-family: var(--font-default);
+}
+
+html[data-lang="ar"] {
+  --bs-body-font-family: var(--font-arabic);
+  --bs-btn-font-family: var(--font-arabic);
+  --bs-font-sans-serif: var(--font-arabic);
 }
 
 html[data-lang="ar"] body {
@@ -24,6 +35,40 @@ html[data-lang="ar"] body {
 html[data-lang="fr"] body {
   font-family: var(--font-french);
   font-weight: 500;
+}
+
+/* VIP Rawy Thin on every control and component when language is Arabic */
+html[data-lang="ar"] body,
+html[data-lang="ar"] input,
+html[data-lang="ar"] select,
+html[data-lang="ar"] textarea,
+html[data-lang="ar"] button,
+html[data-lang="ar"] .btn,
+html[data-lang="ar"] .form-control,
+html[data-lang="ar"] .form-select,
+html[data-lang="ar"] .form-label,
+html[data-lang="ar"] label,
+html[data-lang="ar"] .input-group-text,
+html[data-lang="ar"] .dropdown-menu,
+html[data-lang="ar"] .dropdown-item,
+html[data-lang="ar"] .navbar,
+html[data-lang="ar"] .nav-link,
+html[data-lang="ar"] .sidebar,
+html[data-lang="ar"] .card,
+html[data-lang="ar"] .table,
+html[data-lang="ar"] th,
+html[data-lang="ar"] td,
+html[data-lang="ar"] .badge,
+html[data-lang="ar"] .alert,
+html[data-lang="ar"] .modal-content,
+html[data-lang="ar"] .pagination,
+html[data-lang="ar"] h1,
+html[data-lang="ar"] h2,
+html[data-lang="ar"] h3,
+html[data-lang="ar"] h4,
+html[data-lang="ar"] h5,
+html[data-lang="ar"] h6 {
+  font-family: var(--font-arabic);
 }
 
 body {

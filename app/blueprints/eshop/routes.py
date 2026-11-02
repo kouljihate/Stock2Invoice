@@ -37,7 +37,7 @@ def index():
     if cid:
         filters['company_id'] = ObjectId(cid)
     
-    products, total = StockService.list(1, 100, filters, cid)
+    products, total = StockService.list(1, 100, filters, cid, allow_unscoped=True)
     
     user = _get_user()
     return render_template('eshop/index.html',
@@ -51,7 +51,7 @@ def product_item(product_id):
         # Try to get company ID, but don't require authentication for browsing
         cid = _company_id()
         
-        product = StockService.get_by_id(product_id, cid)
+        product = StockService.get_by_id(product_id, cid, allow_unscoped=True)
         if not product:
             flash('Product not found.', 'danger')
             return redirect(url_for('eshop.index'))

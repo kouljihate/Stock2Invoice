@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.7.0] — 2026-11-02
+### Added
+- Admin-only **RabbitMQ Monitor** on the Admin dashboard: broker version, cluster, queues, connections, channels, consumers, message totals (ready/unacked), alarms and the five busiest queues, read from the management HTTP API (`/api/overview`, `/api/queues`)
+- `app/core/services/rabbitmq_service.py` — read-only management-API client that derives its endpoint and credentials from `RABBITMQ_URL` (or `RABBITMQ_MGMT_URL`), with a 2s timeout and a graceful **Offline** state instead of raising
+- Login page rebuilt: fixed header bar, **Login** / **Reset Password** tabs on a single page, and a fixed three-column footer (copyright / tagline / version badge)
+- `RABBITMQ_URL` added to the `bff` service environment so the dashboard can reach the broker
+
+### Changed
+- Auth page layout is now an exact **5% header / 90% content / 5% footer** viewport split
+- `web_auth.forgot_password` POST answers re-render the tabbed login page with the Reset tab active instead of a separate page
+- Login footer version is displayed inside a neon badge
+
+### Fixed
+- Login rejected valid addresses whose domain has no DNS record: `email_validator` deliverability checking is now disabled (`check_deliverability=False`), so DNS resolution can never block sign-in
+- Login page footer stretched to the full content height because a blanket `.auth-body .row` rule also matched the footer's own row
+
 ## [2.6.0] — 2026-09-09
 ### Added
 - Full session activity logging from login to logout:

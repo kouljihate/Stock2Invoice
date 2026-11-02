@@ -1,3 +1,4 @@
+from app.core.utils.helpers import tenant_filter
 from app.core.models.event_model import EventModel
 
 
@@ -20,8 +21,6 @@ class EventService:
     @staticmethod
     def list(page, per_page, filters=None, company_id=None):
         query = filters or {}
-        if company_id:
-            from bson.objectid import ObjectId
-            query['company_id'] = ObjectId(company_id)
+        query.update(tenant_filter(company_id))
         items, total = EventModel.find_all(page, per_page, query)
         return [EventModel.to_dict(item) for item in items], total

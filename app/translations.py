@@ -521,6 +521,12 @@ _fr['Search by name or SKU...'] = 'Rechercher par nom ou SKU...'
 _ar['Filter by category...'] = 'تصفية حسب الفئة...'
 _fr['Filter by category...'] = 'Filtrer par catégorie...'
 
+_ar['Search by brand...'] = 'البحث حسب الماركة...'
+_fr['Search by brand...'] = 'Rechercher par marque...'
+
+_ar['Total Amount of Purchase'] = 'إجمالي قيمة الشراء'
+_fr['Total Amount of Purchase'] = 'Montant total de l'"'"'achat'
+
 _ar['Qty'] = 'الكمية'
 _fr['Qty'] = 'Qté'
 

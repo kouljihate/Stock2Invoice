@@ -5,7 +5,7 @@ from app.core.models.user_model import UserModel
 from app.core.models.delivery_note_model import DeliveryNoteModel
 from app.core.models.order_model import CustomerOrderModel
 from app.core.services.event_service import EventService
-from app.core.utils.helpers import paginate, oid
+from app.core.utils.helpers import paginate, oid, tenant_filter
 
 logger = logging.getLogger(__name__)
 web_delivery_notes_bp = Blueprint('web_delivery_notes', __name__, template_folder='../../../templates')
@@ -27,7 +27,7 @@ def create_delivery_note():
     user = _get_user()
     cid = _company_id()
     if request.method == 'GET':
-        raw_orders = OrderModel.find_all(1, 99999, {'company_id': oid(cid)})[0] if cid else []
+        raw_orders = CustomerOrderModel.find_all(1, 99999, {'company_id': oid(cid)})[0] if cid else []
         orders = [{'id': str(o['_id']), 'order_number': o.get('order_number', ''), 'customer_name': o.get('customer_name', '')} for o in raw_orders]
         return render_template('delivery_notes/form.html', mode='web',
                                user=UserModel.to_dict(user) if user else None,
@@ -97,7 +97,7 @@ def list_delivery_notes():
         page, per_page = paginate(request.args.get('page', 1), request.args.get('per_page', 20))
         cid = _company_id()
         from bson.objectid import ObjectId
-        filters = {'company_id': ObjectId(cid)} if cid else {}
+        filters = tenant_filter(cid)
         items, total = DeliveryNoteModel.find_all(page, per_page, filters)
         user = _get_user()
         return render_template('delivery_notes/list.html', mode='web',

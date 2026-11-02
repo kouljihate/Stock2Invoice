@@ -1,1 +1,1 @@
-﻿console.log('Maure STC Web loaded');
+﻿console.log('Maure S2C Web loaded');

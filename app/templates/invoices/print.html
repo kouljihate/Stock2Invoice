@@ -1,4 +1,4 @@
-﻿{% extends 'base/layout.html' %}
+{% extends 'base/layout.html' %}
 {% block title %}{{ _('Print') }} — {{ invoice.invoice_number }}{% endblock %}
 {% block extra_head %}
 {% set tpl = current_company.invoice_template if current_company else {} %}
@@ -36,7 +36,7 @@
                 {% if current_company and current_company.logo and tpl.get('show_logo', true) %}
                 <img src="{{ url_for('static', filename='uploads/logos/'+current_company.logo) }}" alt="Logo" style="max-height:100px;object-fit:contain;">
                 {% else %}
-                <h2 class="inv-header">{{ current_company.name if current_company else 'Maure STC' }}</h2>
+                <h2 class="inv-header">{{ current_company.name if current_company else 'Maure S2C' }}</h2>
                 {% endif %}
                 {% if tpl.get('header_text') %}
                 <p class="mb-0 mt-1" style="font-size:11px;color:#666;white-space:nowrap;">{{ tpl.get('header_text') }}</p>
@@ -130,7 +130,7 @@
         <hr class="mt-4">
         <div class="row small text-muted">
             <div class="col-6">
-                <strong>{{ current_company.name if current_company else 'Maure STC' }}</strong><br>
+                <strong>{{ current_company.name if current_company else 'Maure S2C' }}</strong><br>
                 {% if current_company.address %}{{ current_company.address }}{% if current_company.city %}, {{ current_company.city }}{% endif %}<br>{% endif %}
                 {% if current_company.phone %}{{ _('Tel:') }} {{ current_company.phone }}<br>{% endif %}
                 {% if current_company.email %}{{ _('Email:') }} {{ current_company.email }}{% endif %}

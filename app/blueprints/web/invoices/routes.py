@@ -10,7 +10,7 @@ from app.core.models.customer_model import CustomerModel
 from app.core.models.user_model import UserModel
 from app.core.models.company_model import CompanyModel
 from app.core.services.event_service import EventService
-from app.core.utils.helpers import paginate, oid
+from app.core.utils.helpers import paginate, oid, tenant_filter
 
 logger = logging.getLogger(__name__)
 web_invoices_bp = Blueprint('web_invoices', __name__, template_folder='../../../templates')
@@ -56,7 +56,7 @@ def create_invoice():
     cid = _company_id()
     if request.method == 'GET':
         customers = CustomerModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else []
-        products = ProductModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else ProductModel.find_all_unpaginated()
+        products = ProductModel.find_all_unpaginated(tenant_filter(cid))
         return render_template('invoices/edit.html', mode='web',
                                user=UserModel.to_dict(user) if user else None,
                                invoice=None, products=products,
@@ -111,7 +111,7 @@ def create_invoice():
             for e in errors:
                 flash(e, 'danger')
             customers = CustomerModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else []
-            products = ProductModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else ProductModel.find_all_unpaginated()
+            products = ProductModel.find_all_unpaginated(tenant_filter(cid))
             return render_template('invoices/edit.html', mode='web',
                                    user=UserModel.to_dict(user) if user else None,
                                    invoice=payload, products=products,
@@ -127,7 +127,7 @@ def create_invoice():
         logger.exception('Invoice create error')
         flash('Could not create invoice.', 'danger')
         customers = CustomerModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else []
-        products = ProductModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else ProductModel.find_all_unpaginated()
+        products = ProductModel.find_all_unpaginated(tenant_filter(cid))
         return render_template('invoices/edit.html', mode='web',
                                user=UserModel.to_dict(user) if user else None,
                                invoice=request.form, products=products,

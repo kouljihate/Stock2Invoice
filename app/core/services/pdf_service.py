@@ -1,9 +1,20 @@
 import logging
+import os
 from io import BytesIO
 from fpdf import FPDF
 from app.core.utils.number_to_french import number_to_french
 
 logger = logging.getLogger(__name__)
+
+# Absolute path to app/static, resolved from this module so PDF generation
+# works no matter what the process working directory is.
+STATIC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'static'))
+
+
+def static_path(*parts):
+    """Absolute path under app/static. Leaf names are stripped of directories."""
+    safe = [os.path.basename(p) for p in parts]
+    return os.path.join(STATIC_DIR, *safe)
 
 A4_W = 210
 A4_H = 297
@@ -35,9 +46,10 @@ class InvoicePDF(FPDF):
         self.sig_name = tpl.get('signature_name', '')
         self.sig_title = tpl.get('signature_title', '')
         self.set_auto_page_break(auto=True, margin=MARGIN + FOOTER_PCT * USABLE_H)
-        self.add_font('Comfortaa', '', 'app/static/fonts/Comfortaa-Variable.ttf')
-        self.add_font('Comfortaa', 'B', 'app/static/fonts/Comfortaa-Variable.ttf')
-        self.add_font('Comfortaa', 'I', 'app/static/fonts/Comfortaa-Variable.ttf')
+        font = static_path('fonts', 'Comfortaa-Variable.ttf')
+        self.add_font('Comfortaa', '', font)
+        self.add_font('Comfortaa', 'B', font)
+        self.add_font('Comfortaa', 'I', font)
 
     def hex_to_rgb(self, hex_color):
         hex_color = hex_color.lstrip('#')
@@ -50,12 +62,12 @@ class InvoicePDF(FPDF):
         logo_path = company.get('logo', '') if company else ''
         logo_y = y0 + 2
         if logo_path and self.show_logo:
-            full_path = f'app/static/uploads/logos/{logo_path}'
+            full_path = static_path('uploads', 'logos', logo_path)
             try:
                 self.image(full_path, x=MARGIN, y=logo_y, w=70)
                 logo_y += 25
             except Exception:
-                pass
+                logger.warning('Invoice logo could not be embedded: %s', logo_path)
 
         # Subtitle below logo
         self.set_xy(MARGIN, logo_y)

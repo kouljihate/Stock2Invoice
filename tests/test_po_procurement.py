@@ -7,7 +7,7 @@ import tempfile
 import zlib
 from datetime import datetime
 
-from playwright.sync.api import expect, sync_playwright
+from playwright.sync_api import expect, sync_playwright
 
 BASE_URL = "http://127.0.0.1:5000"
 

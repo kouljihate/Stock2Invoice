@@ -1,5 +1,5 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('Products') }} — Maure STC{% endblock %}
+{% block title %}{{ _('Products') }} — Maure S2C{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="mb-0"><i class="bi bi-box me-2"></i>{{ _('Products') }}</h4>
@@ -16,10 +16,13 @@
 </div>
 
 <form method="GET" class="row g-2 mb-3">
-    <div class="col-md-3">
+    <div class="col-md-2">
         <input type="text" name="search" class="form-control" placeholder="{{ _('Search by name or SKU...') }}" value="{{ request.args.get('search', '') }}">
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
+        <input type="text" name="brand" class="form-control" placeholder="{{ _('Search by brand...') }}" value="{{ request.args.get('brand', '') }}">
+    </div>
+    <div class="col-md-2">
         <input type="text" name="category" class="form-control" placeholder="{{ _('Filter by category...') }}" value="{{ request.args.get('category', '') }}">
     </div>
     <div class="col-md-2">
@@ -91,7 +94,7 @@
 
 {% if pages > 1 %}
 {% set window = 2 %}
-{% set qs = '&per_page=' ~ per_page ~ '&search=' ~ request.args.get('search', '') ~ '&category=' ~ request.args.get('category', '') ~ '&status=' ~ request.args.get('status', '') %}
+{% set qs = '&per_page=' ~ per_page ~ '&search=' ~ request.args.get('search', '') ~ '&brand=' ~ request.args.get('brand', '') ~ '&category=' ~ request.args.get('category', '') ~ '&status=' ~ request.args.get('status', '') %}
 {% if request.args.get('low_stock') %}{% set qs = qs ~ '&low_stock=1' %}{% endif %}
 <nav>
     <ul class="pagination pagination-sm justify-content-center flex-wrap">

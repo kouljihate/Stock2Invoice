@@ -4,7 +4,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.models.user_model import UserModel
 from app.core.models.purchase_order_model import PurchaseOrderModel
 from app.core.models.supplier_model import SupplierModel
-from app.core.utils.helpers import paginate, oid
+from app.core.utils.helpers import paginate, oid, tenant_filter
 from app.core.services.event_service import EventService
 
 logger = logging.getLogger(__name__)
@@ -29,7 +29,7 @@ def list_orders():
         page, per_page = paginate(request.args.get('page', 1), request.args.get('per_page', 20))
         cid = _company_id()
         from bson.objectid import ObjectId
-        filters = {'company_id': ObjectId(cid)} if cid else {}
+        filters = tenant_filter(cid)
         if request.args.get('status'):
             filters['status'] = request.args['status']
         items, total = PurchaseOrderModel.find_all(page, per_page, filters)
@@ -50,7 +50,8 @@ def create_order():
     user = _get_user()
     cid = _company_id()
     if request.method == 'GET':
-        suppliers = SupplierModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else []
+        suppliers = [SupplierModel.to_dict(s)
+                     for s in SupplierModel.find_all_unpaginated({'company_id': oid(cid)})] if cid else []
         return render_template('purchase_orders/form.html', mode='web',
                                user=UserModel.to_dict(user) if user else None,
                                order=None, suppliers=suppliers)

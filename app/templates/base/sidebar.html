@@ -1,4 +1,4 @@
-﻿<div class="d-flex flex-column flex-shrink-0 pt-3 sidebar">
+<div class="d-flex flex-column flex-shrink-0 pt-3 sidebar">
     <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
             <a href="{% if user and 'Admin' in user.role_names %}{{ url_for('admin.index') }}{% else %}{{ url_for('web_dashboard.index') }}{% endif %}" class="nav-link link-dark {% if request.endpoint and ('dashboard' in request.endpoint or request.endpoint == 'admin.index') %}active{% endif %}">
@@ -179,7 +179,7 @@
         </li>
     </ul>
     <footer class="mt-auto pt-2 pb-2 border-top text-muted small text-center sidebar-footer">
-        v{{ version }}
+        <span class="version">v{{ version }}</span>
         <br><small>{{ build_date }}</small>
     </footer>
 </div>

@@ -8,7 +8,7 @@ from app.core.models.customer_model import CustomerModel
 from app.core.models.customer_quote_model import CustomerQuoteModel
 from app.core.services.order_service import OrderService
 from app.core.services.event_service import EventService
-from app.core.utils.helpers import paginate, oid
+from app.core.utils.helpers import paginate, oid, tenant_filter
 
 logger = logging.getLogger(__name__)
 web_customer_quotes_bp = Blueprint('web_customer_quotes', __name__, template_folder='../../../templates')
@@ -32,7 +32,7 @@ def list_quotes():
         page, per_page = paginate(request.args.get('page', 1), request.args.get('per_page', 20))
         cid = _company_id()
         from bson.objectid import ObjectId
-        filters = {'company_id': ObjectId(cid)} if cid else {}
+        filters = tenant_filter(cid)
         if request.args.get('status'):
             filters['status'] = request.args['status']
         items, total = CustomerQuoteModel.find_all(page, per_page, filters)

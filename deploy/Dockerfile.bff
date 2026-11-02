@@ -1,0 +1,20 @@
+# The Flask Jinja BFF: templates, static assets, cookies/CSRF, JWT minting.
+FROM python:3.12-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+WORKDIR /srv
+
+COPY shared /srv/shared
+RUN pip install /srv/shared
+
+COPY requirements.txt /srv/requirements.txt
+RUN pip install -r /srv/requirements.txt
+
+COPY app /srv/app
+COPY run.py gunicorn.conf.py /srv/
+
+EXPOSE 5002
+CMD ["gunicorn", "-c", "gunicorn.conf.py", "app:app"]

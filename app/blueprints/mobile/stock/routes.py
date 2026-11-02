@@ -1,4 +1,5 @@
 import logging
+import re
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.services.stock_service import StockService
@@ -29,9 +30,10 @@ def list_products():
         page, per_page = paginate(request.args.get('page', 1), 20)
         filters = {}
         if request.args.get('search'):
-            import re
             regex = {'$regex': re.escape(request.args['search']), '$options': 'i'}
             filters['$or'] = [{'name': regex}, {'sku': regex}]
+        if request.args.get('brand'):
+            filters['brand'] = {'$regex': re.escape(request.args['brand']), '$options': 'i'}
         cid = _company_id()
         items, total = StockService.list(page, per_page, filters, cid)
         user = _get_user()
@@ -85,7 +87,7 @@ def create_product():
 def edit_product(product_id):
     user = _get_user()
     cid = _company_id()
-    product = StockService.get_by_id(product_id)
+    product = StockService.get_by_id(product_id, cid)
     if not product:
         flash('Product not found.', 'danger')
         return redirect(url_for('mobile_stock.list_products'))
@@ -137,7 +139,7 @@ def delete_product(product_id):
 def view_product(product_id):
     user = _get_user()
     cid = _company_id()
-    product = StockService.get_by_id(product_id)
+    product = StockService.get_by_id(product_id, cid)
     if not product:
         flash('Product not found.', 'danger')
         return redirect(url_for('mobile_stock.list_products'))

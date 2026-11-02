@@ -4,7 +4,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.models.user_model import UserModel
 from app.core.models.goods_receipt_model import GoodsReceiptModel
 from app.core.models.purchase_order_model import PurchaseOrderModel
-from app.core.utils.helpers import paginate, oid
+from app.core.utils.helpers import paginate, oid, tenant_filter
 from app.core.services.event_service import EventService
 
 logger = logging.getLogger(__name__)
@@ -78,7 +78,7 @@ def list_receipts():
         page, per_page = paginate(request.args.get('page', 1), request.args.get('per_page', 20))
         cid = _company_id()
         from bson.objectid import ObjectId
-        filters = {'company_id': ObjectId(cid)} if cid else {}
+        filters = tenant_filter(cid)
         items, total = GoodsReceiptModel.find_all(page, per_page, filters)
         user = _get_user()
         receipts = []

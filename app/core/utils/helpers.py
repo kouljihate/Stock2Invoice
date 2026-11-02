@@ -8,6 +8,19 @@ def oid(val):
         return None
 
 
+def tenant_filter(cid, field='company_id'):
+    """Build a query filter that only ever matches one tenant's documents.
+
+    When ``cid`` is missing or is not a usable ObjectId the result matches
+    *nothing* rather than everything: a caller with no company must never see
+    another tenant's rows.
+    """
+    value = oid(cid)
+    if value is None:
+        return {field: {'$in': []}}
+    return {field: value}
+
+
 def error_context(e=None):
     import inspect
     import os

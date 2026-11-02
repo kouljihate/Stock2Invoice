@@ -7,7 +7,7 @@ from app.core.models.product_model import ProductModel
 from app.core.models.customer_model import CustomerModel
 from app.core.models.user_model import UserModel
 from app.core.services.event_service import EventService
-from app.core.utils.helpers import paginate, oid
+from app.core.utils.helpers import paginate, oid, tenant_filter
 
 logger = logging.getLogger(__name__)
 web_orders_bp = Blueprint('web_orders', __name__, template_folder='../../../templates')
@@ -53,7 +53,7 @@ def create_order():
     cid = _company_id()
     if request.method == 'GET':
         customers = CustomerModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else []
-        products = ProductModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else ProductModel.find_all_unpaginated()
+        products = ProductModel.find_all_unpaginated(tenant_filter(cid))
         return render_template('orders/edit.html', mode='web',
                                user=UserModel.to_dict(user) if user else None,
                                order=None, products=products,
@@ -106,7 +106,7 @@ def create_order():
             for e in errors:
                 flash(e, 'danger')
             customers = CustomerModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else []
-            products = ProductModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else ProductModel.find_all_unpaginated()
+            products = ProductModel.find_all_unpaginated(tenant_filter(cid))
             return render_template('orders/edit.html', mode='web',
                                    user=UserModel.to_dict(user) if user else None,
                                    order=payload, products=products,
@@ -122,7 +122,7 @@ def create_order():
         logger.exception('Order create error')
         flash('Could not create order.', 'danger')
         customers = CustomerModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else []
-        products = ProductModel.find_all_unpaginated({'company_id': oid(cid)}) if cid else ProductModel.find_all_unpaginated()
+        products = ProductModel.find_all_unpaginated(tenant_filter(cid))
         return render_template('orders/edit.html', mode='web',
                                user=UserModel.to_dict(user) if user else None,
                                order=request.form, products=products,
@@ -170,7 +170,7 @@ def update_status(order_id):
 @web_orders_bp.route('/<order_id>/delete', methods=['POST'])
 @jwt_required()
 def delete_order(order_id):
-    order = OrderModel.find_by_id(order_id)
+    order = CustomerOrderModel.find_by_id(order_id)
     if not order:
         flash('Order not found.', 'danger')
     else:
@@ -181,7 +181,7 @@ def delete_order(order_id):
         user_id = get_jwt_identity()
         user_obj = UserModel.find_by_id(user_id)
         order_number = order.get('order_number', '')
-        OrderModel.delete(order_id)
+        CustomerOrderModel.delete(order_id)
         EventService.record(cid, 'order', order_id, order_number, 'deleted', user_id=user_id, user_name=user_obj.get('name','') if user_obj else '')
         flash('Order deleted.', 'success')
     return redirect(url_for('web_orders.list_orders'))

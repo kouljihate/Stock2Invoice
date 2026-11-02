@@ -5,7 +5,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from app.core.models.user_model import UserModel
 from app.core.models.supplier_model import SupplierModel
 from app.core.services.event_service import EventService
-from app.core.utils.helpers import paginate
+from app.core.utils.helpers import paginate, tenant_filter
 
 logger = logging.getLogger(__name__)
 web_suppliers_bp = Blueprint('web_suppliers', __name__, template_folder='../../../templates')
@@ -29,7 +29,7 @@ def list_suppliers():
         page, per_page = paginate(request.args.get('page', 1), request.args.get('per_page', 20))
         cid = _company_id()
         from bson.objectid import ObjectId
-        filters = {'company_id': ObjectId(cid)} if cid else {}
+        filters = tenant_filter(cid)
         items, total = SupplierModel.find_all(page, per_page, filters)
         user = _get_user()
         return render_template('suppliers/list.html', mode='web',

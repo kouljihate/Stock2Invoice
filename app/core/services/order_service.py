@@ -1,3 +1,4 @@
+from app.core.utils.helpers import tenant_filter
 import logging
 from datetime import datetime, timezone
 from bson.objectid import ObjectId
@@ -182,7 +183,7 @@ class OrderService:
             }
             invoice_id = InvoiceModel.create(doc)
 
-            OrderModel.update(order_id, {
+            CustomerOrderModel.update(order_id, {
                 'generated_invoice_id': ObjectId(invoice_id),
                 'generated_invoice_number': invoice_number,
             })
@@ -198,40 +199,37 @@ class OrderService:
 
     @staticmethod
     def get_by_id(order_id, company_id=None):
-        order = OrderModel.find_by_id(order_id)
-        if order and company_id and str(order.get('company_id', '')) != str(company_id):
+        order = CustomerOrderModel.find_by_id(order_id)
+        if not order:
             return None
-        return OrderModel.to_dict(order) if order else None
+        if not company_id or str(order.get('company_id', '')) != str(company_id):
+            return None
+        return CustomerOrderModel.to_dict(order)
 
     @staticmethod
     def list(page, per_page, filters=None, company_id=None):
         query = filters or {}
-        if company_id:
-            query['company_id'] = ObjectId(company_id)
+        query.update(tenant_filter(company_id))
         items, total = CustomerOrderModel.find_all(page, per_page, query)
         return [CustomerOrderModel.to_dict(item) for item in items], total
 
     @staticmethod
     def get_recent(limit=5, company_id=None):
-        filters = {}
-        if company_id:
-            filters['company_id'] = ObjectId(company_id)
-        items = OrderModel.recent(limit, filters)
-        return [OrderModel.to_dict(item) for item in items]
+        filters = tenant_filter(company_id)
+        items = CustomerOrderModel.recent(limit, filters)
+        return [CustomerOrderModel.to_dict(item) for item in items]
 
     @staticmethod
     def get_counts(company_id=None):
-        filters = {}
-        if company_id:
-            filters['company_id'] = ObjectId(company_id)
-        total = OrderModel.count(filters)
+        filters = tenant_filter(company_id)
+        total = CustomerOrderModel.count(filters)
         return {
             'total': total,
-            'pending': OrderModel.count({**filters, 'status': 'pending'}),
-            'confirmed': OrderModel.count({**filters, 'status': 'confirmed'}),
-            'shipped': OrderModel.count({**filters, 'status': 'shipped'}),
-            'delivered': OrderModel.count({**filters, 'status': 'delivered'}),
-            'cancelled': OrderModel.count({**filters, 'status': 'cancelled'}),
+            'pending': CustomerOrderModel.count({**filters, 'status': 'pending'}),
+            'confirmed': CustomerOrderModel.count({**filters, 'status': 'confirmed'}),
+            'shipped': CustomerOrderModel.count({**filters, 'status': 'shipped'}),
+            'delivered': CustomerOrderModel.count({**filters, 'status': 'delivered'}),
+            'cancelled': CustomerOrderModel.count({**filters, 'status': 'cancelled'}),
         }
 
 

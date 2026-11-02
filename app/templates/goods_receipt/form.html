@@ -1,5 +1,5 @@
 {% extends 'base/layout.html' %}
-{% block title %}{% if receipt and receipt.id %}{{ _('Edit') }}{% else %}{{ _('New') }}{% endif %} {{ _('Goods Receipt') }} — Maure STC{% endblock %}
+{% block title %}{% if receipt and receipt.id %}{{ _('Edit') }}{% else %}{{ _('New') }}{% endif %} {{ _('Goods Receipt') }} — Maure S2C{% endblock %}
 {% block content %}
 <h4 class="mb-4"><i class="bi bi-{% if receipt and receipt.id %}pencil{% else %}plus-circle{% endif %} me-2"></i>{% if receipt and receipt.id %}{{ _('Edit') }}{% else %}{{ _('New') }}{% endif %} {{ _('Goods Receipt') }}</h4>
 <form method="POST" action="" class="card shadow-sm">

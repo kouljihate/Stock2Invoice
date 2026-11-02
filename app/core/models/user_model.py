@@ -44,6 +44,15 @@ class UserModel:
         return mongo.db[UserModel.collection].count_documents(filters or {})
 
     @staticmethod
+    def count_admins(exclude_id=None):
+        """Number of accounts holding the single platform 'Admin' profile."""
+        query = {'roles': 'Admin'}
+        if exclude_id:
+            from bson.objectid import ObjectId
+            query['_id'] = {'$ne': ObjectId(exclude_id)}
+        return mongo.db[UserModel.collection].count_documents(query)
+
+    @staticmethod
     def find_by_company(company_id):
         from bson.objectid import ObjectId
         return list(mongo.db[UserModel.collection].find({'company_id': ObjectId(company_id)}))
@@ -59,18 +68,42 @@ class UserModel:
         return list(mongo.db[UserModel.collection].find(query).sort('created_at', -1))
 
     @staticmethod
+    def _role_permissions(role_names):
+        """Effective permissions for a set of role names.
+
+        Cached on the request when there is one: list views call ``to_dict``
+        once per row, which would otherwise repeat the same roles query N
+        times per render.
+        """
+        if not role_names:
+            return []
+        cache_key = tuple(sorted(role_names))
+        from flask import has_request_context, g
+        if has_request_context():
+            cache = getattr(g, '_role_perm_cache', None)
+            if cache is None:
+                cache = {}
+                g._role_perm_cache = cache
+            if cache_key in cache:
+                return cache[cache_key]
+        roles = list(mongo.db['roles'].find(
+            {'_id': {'$in': [n.lower() for n in role_names]}}))
+        permissions = []
+        for role in roles:
+            perms = role.get('permissions', [])
+            if perms:
+                permissions.extend(perms)
+        if has_request_context():
+            cache[cache_key] = permissions
+        return permissions
+
+    @staticmethod
     def to_dict(user):
         # Get roles and permissions
         role_names = user.get('roles', [])
-        user_role_permissions = []
-        if role_names:
-            roles = list(mongo.db['roles'].find({'_id': {'$in': [n.lower() for n in role_names]}}))
-            for role in roles:
-                perms = role.get('permissions', [])
-                if perms:
-                    user_role_permissions.extend(perms)
-        effective_permissions = get_effective_permissions(user_role_permissions)
-        
+        effective_permissions = get_effective_permissions(
+            UserModel._role_permissions(role_names))
+
         return {
             'id': str(user['_id']),
             'name': user.get('name'),
@@ -92,8 +125,4 @@ class UserModel:
             role_names = getattr(user, 'roles', [])
         if not role_names:
             return False
-        roles = list(mongo.db['roles'].find({'_id': {'$in': [n.lower() for n in role_names]}}))
-        role_perms = []
-        for role in roles:
-            role_perms.extend(role.get('permissions', []))
-        return has_permission(role_perms, permission)
+        return has_permission(UserModel._role_permissions(role_names), permission)

@@ -1,7 +1,17 @@
-﻿{% extends 'base/layout.html' %}
-{% block title %}Login — Maure STC{% endblock %}
+{% extends 'base/layout.html' %}
+{% block title %}Login — Maure S2C{% endblock %}
 {% block body_class %}auth-body{% endblock %}
 {% block content %}
+{% set tab = active_tab|default('login') %}
+
+<header class="auth-header">
+    <a class="auth-brand" href="{{ url_for('web_auth.login') }}">
+        <span class="brand-mini"><i class="bi bi-box-seam"></i></span>
+        Maure S2C
+    </a>
+    <span class="auth-header-meta">{{ _('Stock-To-Cash Management System') }}</span>
+</header>
+
 <div class="row justify-content-center">
     <div class="col-12">
         <div class="auth-card">
@@ -9,47 +19,102 @@
                 <div class="brand-icon">
                     <i class="bi bi-box-seam"></i>
                 </div>
-                <h2>Maure STC</h2>
+                <h2>Maure S2C</h2>
                 <p class="tagline">Stock-To-Cash</p>
                 <p class="tagline">Management System</p>
-                <small class="mb:5rem"></small>
             </div>
 
-            <form method="POST" action="">
-                <div class="mb-3">
-                    <label class="form-label">{{ _('Email') }}</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                        <input type="email" name="email" class="form-control" placeholder="you@example.com" required autofocus>
-                    </div>
+            <ul class="nav auth-tabs nav-fill mb-4" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {% if tab != 'reset' %}active{% endif %}"
+                            id="tab-login" type="button" role="tab"
+                            data-bs-toggle="tab" data-bs-target="#pane-login"
+                            aria-controls="pane-login"
+                            aria-selected="{{ 'true' if tab != 'reset' else 'false' }}">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>{{ _('Login') }}
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {% if tab == 'reset' %}active{% endif %}"
+                            id="tab-reset" type="button" role="tab"
+                            data-bs-toggle="tab" data-bs-target="#pane-reset"
+                            aria-controls="pane-reset"
+                            aria-selected="{{ 'true' if tab == 'reset' else 'false' }}">
+                        <i class="bi bi-key me-1"></i>{{ _('Reset Password') }}
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane fade {% if tab != 'reset' %}show active{% endif %}"
+                     id="pane-login" role="tabpanel" aria-labelledby="tab-login">
+                    <form method="POST" action="">
+                        <div class="mb-3">
+                            <label class="form-label">{{ _('Email') }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <input type="email" name="email" class="form-control" placeholder="you@example.com" required autofocus>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">{{ _('Password') }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                <input type="password" name="password" class="form-control" placeholder="Enter password">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mb-3">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>{{ _('Sign In') }}
+                        </button>
+                        {% if registration_enabled %}
+                        <p class="text-center auth-link mb-0">
+                            {{ _("Don't have an account?") }}
+                            <a href="{% if mode == 'mobile' %}{{ url_for('mobile_auth.register') }}{% else %}{{ url_for('web_auth.register') }}{% endif %}">{{ _('Register') }}</a>
+                        </p>
+                        {% endif %}
+                        <p class="text-center auth-link mb-0">
+                            <a href="#pane-reset" data-bs-toggle="tab" data-bs-target="#pane-reset">{{ _('Forgot Password?') }}</a>
+                        </p>
+                    </form>
                 </div>
-                <div class="mb-4">
-                    <label class="form-label">{{ _('Password') }}</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                        <input type="password" name="password" class="form-control" placeholder="Enter password">
-                    </div>
+
+                <div class="tab-pane fade {% if tab == 'reset' %}show active{% endif %}"
+                     id="pane-reset" role="tabpanel" aria-labelledby="tab-reset">
+                    <form method="POST" action="{% if mode == 'mobile' %}{{ url_for('mobile_auth.forgot_password') }}{% else %}{{ url_for('web_auth.forgot_password') }}{% endif %}">
+                        <div class="mb-3">
+                            <label class="form-label">{{ _('Email') }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <input type="email" name="email" class="form-control" placeholder="you@example.com" required>
+                            </div>
+                        </div>
+                        <p class="auth-hint">{{ _('Enter the address registered to your account and we will send you a password reset link.') }}</p>
+                        <button type="submit" class="btn btn-primary w-100 mb-3">
+                            <i class="bi bi-send me-1"></i>{{ _('Send Reset Link') }}
+                        </button>
+                        <p class="text-center auth-link mb-0">
+                            <a href="#pane-login" data-bs-toggle="tab" data-bs-target="#pane-login">{{ _('Back to Login') }}</a>
+                        </p>
+                    </form>
                 </div>
-                 <button type="submit" class="btn btn-primary w-100 mb-3">
-                     <i class="bi bi-box-arrow-in-right me-1"></i>{{ _('Sign In') }}
-                 </button>
-                 <p class="text-center auth-link mb-0">
-                     {{ _("Don't have an account?") }}
-                     <a href="{% if mode == 'mobile' %}{{ url_for('mobile_auth.register') }}{% else %}{{ url_for('web_auth.register') }}{% endif %}">{{ _('Register') }}</a>
-                 </p>
-                 <p class="text-center auth-link mb-0">
-                     <a href="{% if mode == 'mobile' %}{{ url_for('mobile_auth.forgot_password') }}{% else %}{{ url_for('web_auth.forgot_password') }}{% endif %}">{{ _('Forgot Password?') }}</a>
-                 </p>
-                 <p class="text-center auth-link mb-0 mt-2">
-                     <button type="submit" name="reset_admin_password" value="1" class="btn btn-outline-warning btn-sm w-100">
-                         <i class="bi bi-key me-1"></i>{{ _('Reset Password') }}
-                     </button>
-                 </p>
-            </form>
+            </div>
         </div>
     </div>
 </div>
-<div class="auth-footer">
-    &copy; 2010 - {{ build_date[:4] }} Maure STC &middot; v{{ version }} &middot; koul
-</div>
+
+<footer class="auth-footer">
+    <div class="container-fluid">
+        <div class="row align-items-center g-2">
+            <div class="col-md-4 text-md-start text-center">
+                <span class="footer-copy">&copy; 2010 - {{ build_date[:4] }} Maure S2C</span>
+            </div>
+            <div class="col-md-4 text-center">
+                <span class="footer-tagline">{{ _('Stock-To-Cash Management System') }}</span>
+            </div>
+            <div class="col-md-4 text-md-end text-center">
+                <span class="version-badge">v{{ version }}</span>
+            </div>
+        </div>
+    </div>
+</footer>
 {% endblock %}

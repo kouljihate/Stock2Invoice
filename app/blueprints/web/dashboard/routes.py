@@ -16,7 +16,7 @@ from app.core.models.order_model import CustomerOrderModel
 from app.core.models.customer_model import CustomerModel
 from app.core.services.stock_service import StockService
 from app.core.services.invoice_service import InvoiceService
-from app.core.utils.helpers import oid
+from app.core.utils.helpers import oid, tenant_filter
 from app.extensions.db import mongo
 
 logger = logging.getLogger(__name__)
@@ -40,7 +40,7 @@ def index():
 
         cid = _company_id()
         cid_oid = oid(cid) if cid else None
-        scope = {'company_id': cid_oid} if cid_oid else {}
+        scope = tenant_filter(cid)
         now = datetime.now(timezone.utc)
 
         low_stock = StockService.get_low_stock(cid)

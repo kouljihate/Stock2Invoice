@@ -1,5 +1,5 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('New Purchase Order') }} — Maure STC{% endblock %}
+{% block title %}{{ _('New Purchase Order') }} — Maure S2C{% endblock %}
 {% block content %}
 <h4 class="mb-4"><i class="bi bi-plus-circle me-2"></i>{{ _('New Purchase Order') }}</h4>
 <form method="POST" action="" class="card shadow-sm">
@@ -44,6 +44,10 @@
                 </div>
             </div>
         </div>
+        <div class="d-flex justify-content-between align-items-center border-top mt-3 pt-3 mb-3 po-total-row" id="po-total-row">
+            <span class="fw-semibold">{{ _('Total Amount of Purchase') }}</span>
+            <strong class="fs-5" id="po-total" aria-live="polite">0.00 MAD</strong>
+        </div>
         <button type="button" class="btn btn-sm btn-outline-success mb-3" id="add-item">
             <i class="bi bi-plus-lg me-1"></i>{{ _('Add Item') }}
         </button>
@@ -60,23 +64,104 @@
 {% endblock %}
 {% block extra_scripts %}
 <script>
+var PO_LOOKUP_URL = "{{ url_for('web_stock.api_lookup') }}";
+
 document.addEventListener('DOMContentLoaded', function () {
+    var lineItems = document.getElementById('line-items');
+    var poTotalEl = document.getElementById('po-total');
+
     document.getElementById('supplier-select').addEventListener('change', function () {
         var opt = this.options[this.selectedIndex];
         document.getElementById('supplier-name').value = opt.dataset.name || '';
     });
-    document.getElementById('add-item').addEventListener('click', function () {
-        var template = document.querySelector('.line-item');
-        var clone = template.cloneNode(true);
-        clone.querySelectorAll('input').forEach(function (inp) { inp.value = ''; });
-        document.getElementById('line-items').appendChild(clone);
+
+    function num(v) { var n = parseFloat(v); return isNaN(n) ? 0 : n; }
+
+    /* Mirrors create_order(): subtotal -> discount -> tax, so what is shown
+       here is exactly the total the server stores on the order. */
+    function recalcTotal() {
+        var subtotal = 0;
+        document.querySelectorAll('.line-item').forEach(function (row) {
+            var q = row.querySelector('[name="quantity"]');
+            var p = row.querySelector('[name="unit_price"]');
+            if (q && p) subtotal += num(q.value) * num(p.value);
+        });
+        var dEl = document.querySelector('[name="discount_percent"]');
+        var tEl = document.querySelector('[name="tax_percent"]');
+        var discount = subtotal * num(dEl && dEl.value) / 100;
+        var taxable = subtotal - discount;
+        var total = taxable + taxable * num(tEl && tEl.value) / 100;
+        if (poTotalEl) poTotalEl.textContent = total.toFixed(2) + ' MAD';
+    }
+
+    /* Never overwrite something the user typed by hand. */
+    function setIfBlank(inp, value) {
+        if (!inp || value === undefined || value === null || value === '') return;
+        if (inp.value.trim() === '' || inp.dataset.autofill === '1') {
+            inp.value = value;
+            inp.dataset.autofill = '1';
+        }
+    }
+
+    var lookupTimer = null;
+    function lookupSku(sku, row) {
+        fetch(PO_LOOKUP_URL + '?q=' + encodeURIComponent(sku), {credentials: 'same-origin'})
+            .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+            .then(function (list) {
+                var hit = null;
+                for (var i = 0; i < list.length; i++) {
+                    if ((list[i].sku || '').toUpperCase() === sku.toUpperCase()) { hit = list[i]; break; }
+                }
+                if (!hit || !row) return;
+                setIfBlank(row.querySelector('[name="name"]'), hit.name);
+                setIfBlank(row.querySelector('[name="unit_price"]'), hit.purchase_price);
+                recalcTotal();
+            })
+            .catch(function () { /* leave the row exactly as typed */ });
+    }
+
+    lineItems.addEventListener('input', function (e) {
+        var inp = e.target;
+        if (inp.name === 'name' || inp.name === 'unit_price') {
+            delete inp.dataset.autofill;
+        }
+        if (inp.name === 'sku') {
+            clearTimeout(lookupTimer);
+            var row = inp.closest('.line-item');
+            var sku = inp.value.trim();
+            if (!sku) return;
+            lookupTimer = setTimeout(function () { lookupSku(sku, row); }, 250);
+            return;
+        }
+        if (inp.name === 'quantity' || inp.name === 'unit_price') recalcTotal();
     });
-    document.getElementById('line-items').addEventListener('click', function (e) {
+
+    document.getElementById('add-item').addEventListener('click', function () {
+        var clone = lineItems.querySelector('.line-item').cloneNode(true);
+        clone.querySelectorAll('input').forEach(function (inp) {
+            inp.value = '';
+            delete inp.dataset.autofill;
+        });
+        lineItems.appendChild(clone);
+        recalcTotal();
+    });
+
+    lineItems.addEventListener('click', function (e) {
         if (e.target.closest('.remove-item')) {
             var items = document.querySelectorAll('.line-item');
-            if (items.length > 1) e.target.closest('.line-item').remove();
+            if (items.length > 1) {
+                e.target.closest('.line-item').remove();
+                recalcTotal();
+            }
         }
     });
+
+    ['discount_percent', 'tax_percent'].forEach(function (n) {
+        var el = document.querySelector('[name="' + n + '"]');
+        if (el) el.addEventListener('input', recalcTotal);
+    });
+
+    recalcTotal();
 });
 </script>
 {% endblock %}

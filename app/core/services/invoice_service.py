@@ -1,3 +1,4 @@
+from app.core.utils.helpers import tenant_filter
 import logging
 from datetime import datetime, timezone, timedelta
 from bson.objectid import ObjectId
@@ -171,31 +172,28 @@ class InvoiceService:
     @staticmethod
     def get_by_id(invoice_id, company_id=None):
         inv = InvoiceModel.find_by_id(invoice_id)
-        if inv and company_id and str(inv.get('company_id', '')) != str(company_id):
+        if not inv:
             return None
-        return InvoiceModel.to_dict(inv) if inv else None
+        if not company_id or str(inv.get('company_id', '')) != str(company_id):
+            return None
+        return InvoiceModel.to_dict(inv)
 
     @staticmethod
     def list(page, per_page, filters=None, company_id=None):
         query = filters or {}
-        if company_id:
-            query['company_id'] = ObjectId(company_id)
+        query.update(tenant_filter(company_id))
         items, total = InvoiceModel.find_all(page, per_page, query)
         return [InvoiceModel.to_dict(item) for item in items], total
 
     @staticmethod
     def get_recent(limit=5, company_id=None):
-        filters = {}
-        if company_id:
-            filters['company_id'] = ObjectId(company_id)
+        filters = tenant_filter(company_id)
         items = InvoiceModel.recent(limit, filters)
         return [InvoiceModel.to_dict(item) for item in items]
 
     @staticmethod
     def get_counts(company_id=None):
-        filters = {}
-        if company_id:
-            filters['company_id'] = ObjectId(company_id)
+        filters = tenant_filter(company_id)
         total = InvoiceModel.count(filters)
         draft = InvoiceModel.count({**filters, 'status': 'draft'})
         sent = InvoiceModel.count({**filters, 'status': 'sent'})
@@ -214,8 +212,7 @@ class InvoiceService:
         now = datetime.now(timezone.utc)
         start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
         match = {'status': 'paid', 'created_at': {'$gte': start}}
-        if company_id:
-            match['company_id'] = ObjectId(company_id)
+        match.update(tenant_filter(company_id))
         result = list(mongo.db[InvoiceModel.collection].aggregate([
             {'$match': match},
             {'$group': {'_id': None, 'total': {'$sum': '$total'}}},
@@ -227,8 +224,7 @@ class InvoiceService:
         now = datetime.now(timezone.utc)
         start = now.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)
         match = {'status': 'paid', 'created_at': {'$gte': start}}
-        if company_id:
-            match['company_id'] = ObjectId(company_id)
+        match.update(tenant_filter(company_id))
         result = list(mongo.db[InvoiceModel.collection].aggregate([
             {'$match': match},
             {'$group': {'_id': None, 'total': {'$sum': '$total'}}},
