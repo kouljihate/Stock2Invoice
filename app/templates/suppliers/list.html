@@ -1,14 +1,14 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('Suppliers') }} — Maure S2C{% endblock %}
+{% block title %}{{ dual('Suppliers') }} — Maure S2C{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-truck me-2"></i>{{ _('Suppliers') }}</h4>
+    <h4 class="mb-0"><i class="bi bi-truck me-2"></i>{{ dual('Suppliers') }}</h4>
     <div class="d-flex gap-2">
         <a href="{{ url_for('web_suppliers.create_supplier') }}" class="btn btn-primary btn-sm">
-            <i class="bi bi-plus-lg me-1"></i>{{ _('Add Supplier') }}
+            <i class="bi bi-plus-lg me-1"></i>{{ dual('Add Supplier') }}
         </a>
         <a href="{{ url_for('web_suppliers.bulk_upload') }}" class="btn btn-outline-primary btn-sm">
-            <i class="bi bi-upload me-1"></i>{{ _('Add Bulk Suppliers') }}
+            <i class="bi bi-upload me-1"></i>{{ dual('Add Bulk Suppliers') }}
         </a>
     </div>
 </div>
@@ -16,7 +16,7 @@
     <div class="card-body p-0">
         <table class="table table-hover mb-0">
             <thead class="table-light">
-                <tr><th>{{ _('Name') }}</th><th>{{ _('Contact') }}</th><th>{{ _('Email') }}</th><th>{{ _('Phone') }}</th><th>{{ _('City') }}</th><th>{{ _('ICE') }}</th><th class="text-end">{{ _('Actions') }}</th></tr>
+                <tr><th>{{ dual('Name') }}</th><th>{{ dual('Contact') }}</th><th>{{ dual('Email') }}</th><th>{{ dual('Phone') }}</th><th>{{ dual('City') }}</th><th>{{ dual('ICE') }}</th><th class="text-end">{{ dual('Actions') }}</th></tr>
             </thead>
             <tbody>
                 {% for s in suppliers %}
@@ -30,14 +30,14 @@
                     <td class="text-end" style="white-space: nowrap;">
                         <div class="d-flex gap-1 justify-content-end align-items-center">
                             <a href="{{ url_for('web_suppliers.edit_supplier', supplier_id=s.id) }}" class="btn btn-sm btn-outline-primary btn-icon-circle" title="{{ _('Edit') }}"><i class="bi bi-pencil"></i></a>
-                            <form method="POST" action="{{ url_for('web_suppliers.delete_supplier', supplier_id=s.id) }}" class="d-inline-flex" onsubmit="return confirm('{{ _('Delete') }} {{ s.name }}?')">
+                            <form method="POST" action="{{ url_for('web_suppliers.delete_supplier', supplier_id=s.id) }}" class="d-inline-flex" onsubmit="return confirm('{{ dual('Delete') }} {{ s.name }}?')">
                                 <button type="submit" class="btn btn-sm btn-outline-danger btn-icon-circle" title="{{ _('Delete') }}"><i class="bi bi-trash"></i></button>
                             </form>
                         </div>
                     </td>
                 </tr>
                 {% else %}
-                <tr><td colspan="7" class="text-center text-muted py-4">{{ _('No suppliers yet.') }}</td></tr>
+                <tr><td colspan="7" class="text-center text-muted py-4">{{ dual('No suppliers yet.') }}</td></tr>
                 {% endfor %}
             </tbody>
         </table>

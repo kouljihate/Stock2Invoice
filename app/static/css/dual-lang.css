@@ -1,0 +1,266 @@
+/* ==========================================================================
+   Dual language presentation — Arabic accompanied by English or French.
+
+   Every interface text is rendered by the `dual()` helper as:
+
+     <span class="dual">
+       <span class="d-p" lang="en">Orders</span>   primary  (en or fr)
+       <span class="d-s" lang="ar">الطلبات</span>   secondary (Arabic)
+     </span>
+
+   This file decides the arrangement from the surrounding element, so the
+   templates never need layout markup of their own.
+   ========================================================================== */
+
+/* --- Default: primary language, then Arabic on the same line ------------- */
+.dual {
+  display: inline;
+}
+
+.dual .d-s {
+  color: inherit;
+}
+
+.dual .d-s::before {
+  content: " · ";
+  opacity: .5;
+}
+
+/* --- Buttons: Arabic on top, English/French underneath ------------------- */
+.btn .dual,
+button .dual,
+.page-link .dual {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .1rem;
+  line-height: 1.15;
+  vertical-align: middle;
+}
+
+.btn .dual .d-s,
+button .dual .d-s,
+.page-link .dual .d-s {
+  order: -1;                 /* first in the column: the top line */
+  font-size: .82em;
+  opacity: .92;
+}
+
+.btn .dual .d-s::before,
+button .dual .d-s::before,
+.page-link .dual .d-s::before {
+  content: none;
+}
+
+/* --- Table headers: Arabic on top, English/French underneath ------------- */
+th .dual {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .1rem;
+  line-height: 1.15;
+  text-align: start;
+}
+
+th .dual .d-s {
+  order: -1;
+  font-size: .82em;
+  opacity: .92;
+}
+
+th .dual .d-s::before {
+  content: none;
+}
+
+/* --- Labels: two columns — English right, Arabic left -------------------- */
+label .dual,
+.form-label .dual,
+.form-check-label .dual {
+  display: flex;
+  flex-direction: row-reverse;   /* the first child (English) lands on the right */
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .75rem;
+  width: 100%;
+}
+
+label .dual .d-p,
+.form-label .dual .d-p,
+.form-check-label .dual .d-p {
+  text-align: right;
+}
+
+label .dual .d-s,
+.form-label .dual .d-s,
+.form-check-label .dual .d-s {
+  text-align: left;
+  font-size: .92em;
+  opacity: .85;
+}
+
+label .dual .d-s::before,
+.form-label .dual .d-s::before,
+.form-check-label .dual .d-s::before {
+  content: none;
+}
+
+/* --- Card headers: English | LOGO | Arabic ------------------------------- */
+.card-header strong,
+.card-header h1,
+.card-header h2,
+.card-header h3,
+.card-header h4,
+.card-header h5,
+.card-header h6 {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: .75rem;
+  /* Share the header with sibling buttons instead of claiming the full row. */
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.card-header .dual {
+  display: contents;             /* its two spans become grid items */
+}
+
+.card-header .dual .d-p {
+  grid-column: 1;
+  text-align: left;
+}
+
+.card-header .dual .d-s {
+  grid-column: 3;
+  text-align: right;
+}
+
+.card-header .dual .d-s::before {
+  content: none;
+}
+
+/* The middle column carries the company logo. It reuses the decorative icon
+   already present in card headers as its container. */
+.card-header > strong > .bi,
+.card-header > h1 > .bi,
+.card-header > h2 > .bi,
+.card-header > h3 > .bi,
+.card-header > h4 > .bi,
+.card-header > h5 > .bi {
+  grid-column: 2;
+  justify-self: center;
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--company-logo, none) center / contain no-repeat;
+}
+
+/* With a logo present the glyph steps aside and the image shows through. */
+body.has-company-logo .card-header > strong > .bi,
+body.has-company-logo .card-header > h1 > .bi,
+body.has-company-logo .card-header > h2 > .bi,
+body.has-company-logo .card-header > h3 > .bi,
+body.has-company-logo .card-header > h4 > .bi,
+body.has-company-logo .card-header > h5 > .bi {
+  color: transparent;
+  text-shadow: none;
+}
+
+/* --- Page header: fixed navbar split into three columns ------------------ */
+.navbar-dual {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.navbar-dual .navbar-col-en {
+  justify-self: start;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.12;
+  min-width: 0;
+}
+
+.navbar-dual .navbar-col-ar {
+  justify-self: end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  line-height: 1.12;
+  min-width: 0;
+}
+
+.navbar-dual .navbar-col-center {
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.navbar-dual .brand-en {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.navbar-dual .brand-sub {
+  font-size: .64rem;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .5);
+  white-space: nowrap;
+}
+
+.navbar-dual .brand-ar {
+  font-family: 'VIP Rawy', 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.navbar-dual .brand-sub-ar {
+  font-size: .68rem;
+  color: rgba(255, 255, 255, .5);
+  white-space: nowrap;
+}
+
+/* The user menu loses its inline stacking so the column stays compact. */
+.navbar-dual .navbar-nav .nav-link .dual {
+  display: inline-flex;
+  flex-direction: row;
+  gap: .3rem;
+}
+
+.navbar-dual .navbar-nav .nav-link .dual .d-s {
+  order: 0;
+  font-size: .9em;
+  opacity: .9;
+}
+
+.navbar-dual .navbar-nav .nav-link .dual .d-s::before {
+  content: none;
+}
+
+@media (max-width: 991.98px) {
+  .navbar-dual {
+    grid-template-columns: 1fr auto;
+  }
+
+  .navbar-dual .navbar-col-ar {
+    display: none;
+  }
+
+  .navbar-dual .navbar-col-center {
+    justify-self: end;
+  }
+}

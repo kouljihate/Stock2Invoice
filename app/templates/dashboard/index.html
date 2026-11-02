@@ -1,5 +1,5 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('Dashboard') }} — Maure S2C{% endblock %}
+{% block title %}{{ dual('Dashboard') }} — Maure S2C{% endblock %}
 {% block extra_head %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 <style>
@@ -16,15 +16,15 @@
 {% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="mb-0"><i class="bi bi-speedometer2 me-2"></i>{{ _('Dashboard') }}</h4>
-    <span class="text-muted small">{{ _('Welcome') }}, {{ user.name }}</span>
+    <h4 class="mb-0"><i class="bi bi-speedometer2 me-2"></i>{{ dual('Dashboard') }}</h4>
+    <span class="text-muted small">{{ dual('Welcome') }}, {{ user.name }}</span>
 </div>
 
 <div class="row g-3 mb-4">
     <div class="col-md-2">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
-                <h6 class="text-muted mb-1"><i class="bi bi-cash-stack me-1"></i>{{ _('Cash Flow') }}</h6>
+                <h6 class="text-muted mb-1"><i class="bi bi-cash-stack me-1"></i>{{ dual('Cash Flow') }}</h6>
                 <div style="height:60px;"><canvas id="cashflowChart"></canvas></div>
             </div>
         </div>
@@ -32,13 +32,13 @@
     <div class="col-md-4">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
-                <h6 class="text-muted mb-1"><i class="bi bi-funnel me-1"></i>{{ _('Pipeline Conversion') }}</h6>
+                <h6 class="text-muted mb-1"><i class="bi bi-funnel me-1"></i>{{ dual('Pipeline Conversion') }}</h6>
                 <div class="mt-2">
                     {% set max_pipe = [quote_count, order_count, dn_count, invoice_counts.total]|max if [quote_count, order_count, dn_count, invoice_counts.total]|max > 0 else 1 %}
-                    <div class="d-flex align-items-center mb-1"><small class="text-muted" style="width:100px;">{{ _('Quotes') }}</small><div class="flex-grow-1 bg-light rounded" style="height:16px;"><div class="conversion-bar bg-info" style="width:{{ (quote_count/max_pipe*100)|round }}%;height:16px;"></div></div><small class="ms-1 fw-bold">{{ quote_count }}</small></div>
-                    <div class="d-flex align-items-center mb-1"><small class="text-muted" style="width:100px;">{{ _('Orders') }}</small><div class="flex-grow-1 bg-light rounded" style="height:16px;"><div class="conversion-bar bg-primary" style="width:{{ (order_count/max_pipe*100)|round }}%;height:16px;"></div></div><small class="ms-1 fw-bold">{{ order_count }}</small></div>
-                    <div class="d-flex align-items-center mb-1"><small class="text-muted" style="width:100px;">{{ _('Delivered') }}</small><div class="flex-grow-1 bg-light rounded" style="height:16px;"><div class="conversion-bar bg-success" style="width:{{ (dn_count/max_pipe*100)|round }}%;height:16px;"></div></div><small class="ms-1 fw-bold">{{ dn_count }}</small></div>
-                    <div class="d-flex align-items-center"><small class="text-muted" style="width:100px;">{{ _('Invoiced') }}</small><div class="flex-grow-1 bg-light rounded" style="height:16px;"><div class="conversion-bar bg-warning" style="width:{{ (invoice_counts.total/max_pipe*100)|round }}%;height:16px;"></div></div><small class="ms-1 fw-bold">{{ invoice_counts.total }}</small></div>
+                    <div class="d-flex align-items-center mb-1"><small class="text-muted" style="width:100px;">{{ dual('Quotes') }}</small><div class="flex-grow-1 bg-light rounded" style="height:16px;"><div class="conversion-bar bg-info" style="width:{{ (quote_count/max_pipe*100)|round }}%;height:16px;"></div></div><small class="ms-1 fw-bold">{{ quote_count }}</small></div>
+                    <div class="d-flex align-items-center mb-1"><small class="text-muted" style="width:100px;">{{ dual('Orders') }}</small><div class="flex-grow-1 bg-light rounded" style="height:16px;"><div class="conversion-bar bg-primary" style="width:{{ (order_count/max_pipe*100)|round }}%;height:16px;"></div></div><small class="ms-1 fw-bold">{{ order_count }}</small></div>
+                    <div class="d-flex align-items-center mb-1"><small class="text-muted" style="width:100px;">{{ dual('Delivered') }}</small><div class="flex-grow-1 bg-light rounded" style="height:16px;"><div class="conversion-bar bg-success" style="width:{{ (dn_count/max_pipe*100)|round }}%;height:16px;"></div></div><small class="ms-1 fw-bold">{{ dn_count }}</small></div>
+                    <div class="d-flex align-items-center"><small class="text-muted" style="width:100px;">{{ dual('Invoiced') }}</small><div class="flex-grow-1 bg-light rounded" style="height:16px;"><div class="conversion-bar bg-warning" style="width:{{ (invoice_counts.total/max_pipe*100)|round }}%;height:16px;"></div></div><small class="ms-1 fw-bold">{{ invoice_counts.total }}</small></div>
                 </div>
             </div>
         </div>
@@ -46,7 +46,7 @@
     <div class="col-md-3">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
-                <h6 class="text-muted mb-1"><i class="bi bi-box-seam me-1"></i>{{ _('Pending Deliveries') }}</h6>
+                <h6 class="text-muted mb-1"><i class="bi bi-box-seam me-1"></i>{{ dual('Pending Deliveries') }}</h6>
                 <div class="d-flex align-items-center gap-3 mt-1">
                     <div class="progress-ring">
                         <svg width="72" height="72" class="ring-svg">
@@ -61,9 +61,9 @@
                     </div>
                     <div>
                         <strong class="d-block text-success">{{ received_gr_count }}</strong>
-                        <small class="text-muted">{{ _('Received') }}</small>
+                        <small class="text-muted">{{ dual('Received') }}</small>
                         <strong class="d-block text-warning mt-1">{{ pending_po_count }}</strong>
-                        <small class="text-muted">{{ _('Pending') }}</small>
+                        <small class="text-muted">{{ dual('Pending') }}</small>
                     </div>
                 </div>
             </div>
@@ -72,14 +72,14 @@
     <div class="col-md-3">
         <div class="card border-0 shadow-sm h-100">
             <div class="card-body">
-                <h6 class="text-muted mb-1"><i class="bi bi-credit-card me-1"></i>{{ _('Outstanding Receivables') }}</h6>
+                <h6 class="text-muted mb-1"><i class="bi bi-credit-card me-1"></i>{{ dual('Outstanding Receivables') }}</h6>
                 <div class="d-flex align-items-center gap-2 mt-1">
                     <h3 class="mb-0 text-{{ 'danger' if overdue_count > 0 else 'success' }}">{{ "{:,.0f}".format(overdue_total) }} MAD</h3>
                     {% if overdue_count > 0 %}
-                    <span class="badge bg-danger rounded-pill ms-auto">{{ overdue_count }} {{ _('overdue') }}</span>
+                    <span class="badge bg-danger rounded-pill ms-auto">{{ overdue_count }} {{ dual('overdue') }}</span>
                     {% endif %}
                 </div>
-                <small class="text-muted">{{ invoice_counts.sent }} {{ _('sent invoices awaiting payment') }}</small>
+                <small class="text-muted">{{ invoice_counts.sent }} {{ dual('sent invoices awaiting payment') }}</small>
             </div>
         </div>
     </div>
@@ -89,20 +89,20 @@
 {% if has_alerts %}
 <div class="alert-inbox card shadow-sm mb-4 border-{{ 'danger' if overdue_count > 0 else 'warning' }}">
     <div class="card-header bg-{{ 'danger' if overdue_count > 0 else 'warning' }} text-white py-2">
-        <strong><i class="bi bi-bell-fill me-1"></i>{{ _('Critical Operational Alerts') }}</strong>
+        <strong><i class="bi bi-bell-fill me-1"></i>{{ dual('Critical Operational Alerts') }}</strong>
     </div>
     <div class="card-body py-2">
         {% if overdue_count > 0 %}
-        <div class="d-flex align-items-center py-1 border-bottom"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i><span><strong>{{ overdue_count }}</strong> {{ _('Customer Invoices are overdue by > 15 days') }} ({{ "{:,.0f}".format(overdue_total) }} MAD)</span></div>
+        <div class="d-flex align-items-center py-1 border-bottom"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i><span><strong>{{ overdue_count }}</strong> {{ dual('Customer Invoices are overdue by > 15 days') }} ({{ "{:,.0f}".format(overdue_total) }} MAD)</span></div>
         {% endif %}
         {% for item in low_stock[:3] %}
-        <div class="d-flex align-items-center py-1 border-bottom"><i class="bi bi-box-seam text-warning me-2"></i><span>{{ _('Stock for') }} <strong>{{ item.name }}</strong> {{ _('is below safety threshold') }} ({{ item.quantity }}/{{ item.quantity_min }})</span></div>
+        <div class="d-flex align-items-center py-1 border-bottom"><i class="bi bi-box-seam text-warning me-2"></i><span>{{ dual('Stock for') }} <strong>{{ item.name }}</strong> {{ dual('is below safety threshold') }} ({{ item.quantity }}/{{ item.quantity_min }})</span></div>
         {% endfor %}
         {% for si in overdue_supplier[:2] %}
-        <div class="d-flex align-items-center py-1 border-bottom"><i class="bi bi-bell text-warning me-2"></i><span>{{ _('Supplier Invoice') }} <strong>{{ si.invoice_number }}</strong> {{ _('requires payment approval') }} ({{ "{:,.0f}".format(si.total) }} MAD)</span></div>
+        <div class="d-flex align-items-center py-1 border-bottom"><i class="bi bi-bell text-warning me-2"></i><span>{{ dual('Supplier Invoice') }} <strong>{{ si.invoice_number }}</strong> {{ dual('requires payment approval') }} ({{ "{:,.0f}".format(si.total) }} MAD)</span></div>
         {% endfor %}
         {% if not overdue_count and not low_stock and not overdue_supplier %}
-        <div class="text-muted py-1"><i class="bi bi-check-circle text-success me-2"></i>{{ _('No critical alerts') }}</div>
+        <div class="text-muted py-1"><i class="bi bi-check-circle text-success me-2"></i>{{ dual('No critical alerts') }}</div>
         {% endif %}
     </div>
 </div>
@@ -112,7 +112,7 @@
     <div class="col-lg-7">
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <strong><i class="bi bi-truck me-1"></i>{{ _('Supply Chain & Procurement') }}</strong>
+                <strong><i class="bi bi-truck me-1"></i>{{ dual('Supply Chain & Procurement') }}</strong>
                 <div>
                     <input type="text" id="supplierSearch" class="form-control form-control-sm d-inline-block" style="width:180px;" placeholder="{{ _('Search suppliers...') }}">
                     <a href="{{ url_for('web_suppliers.create_supplier') }}" class="btn btn-sm btn-outline-primary ms-1"><i class="bi bi-plus-lg"></i></a>
@@ -121,7 +121,7 @@
             <div class="card-body p-0">
                 <div class="table-responsive" style="max-height:220px;">
                     <table class="table table-hover mb-0" id="supplierTable">
-                        <thead class="table-light"><tr><th>{{ _('Supplier') }}</th><th>{{ _('Contact') }}</th><th>{{ _('Phone') }}</th><th>{{ _('City') }}</th><th></th></tr></thead>
+                        <thead class="table-light"><tr><th>{{ dual('Supplier') }}</th><th>{{ dual('Contact') }}</th><th>{{ dual('Phone') }}</th><th>{{ dual('City') }}</th><th></th></tr></thead>
                         <tbody>
                             {% for s in suppliers %}
                             <tr>
@@ -132,7 +132,7 @@
                                 <td><a href="{{ url_for('web_suppliers.edit_supplier', supplier_id=s.id) }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a></td>
                             </tr>
                             {% else %}
-                            <tr><td colspan="5" class="text-center text-muted py-3"><small>{{ _('No suppliers yet.') }}</small></td></tr>
+                            <tr><td colspan="5" class="text-center text-muted py-3"><small>{{ dual('No suppliers yet.') }}</small></td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -140,10 +140,10 @@
             </div>
             <div class="card-footer bg-transparent p-2">
                 <div class="row g-2 text-center small">
-                    <div class="col"><span class="badge bg-secondary">{{ po_status_map.get('draft', 0) }}</span> {{ _('Draft') }}</div>
-                    <div class="col"><span class="badge bg-primary">{{ po_status_map.get('sent', 0) + po_status_map.get('confirmed', 0) }}</span> {{ _('Open') }}</div>
-                    <div class="col"><span class="badge bg-success">{{ po_status_map.get('received', 0) }}</span> {{ _('Received') }}</div>
-                    <div class="col"><span class="badge bg-warning text-dark">{{ pending_po_count }}</span> {{ _('Awaiting GR') }}</div>
+                    <div class="col"><span class="badge bg-secondary">{{ po_status_map.get('draft', 0) }}</span> {{ dual('Draft') }}</div>
+                    <div class="col"><span class="badge bg-primary">{{ po_status_map.get('sent', 0) + po_status_map.get('confirmed', 0) }}</span> {{ dual('Open') }}</div>
+                    <div class="col"><span class="badge bg-success">{{ po_status_map.get('received', 0) }}</span> {{ dual('Received') }}</div>
+                    <div class="col"><span class="badge bg-warning text-dark">{{ pending_po_count }}</span> {{ dual('Awaiting GR') }}</div>
                 </div>
             </div>
         </div>
@@ -151,8 +151,8 @@
     <div class="col-lg-5">
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <strong><i class="bi bi-calendar-event me-1"></i>{{ _('Accounts Payable') }}</strong>
-                <a href="{{ url_for('web_payments.create_payment') }}" class="btn btn-sm btn-success"><i class="bi bi-credit-card me-1"></i>{{ _('Pay') }}</a>
+                <strong><i class="bi bi-calendar-event me-1"></i>{{ dual('Accounts Payable') }}</strong>
+                <a href="{{ url_for('web_payments.create_payment') }}" class="btn btn-sm btn-success"><i class="bi bi-credit-card me-1"></i>{{ dual('Pay') }}</a>
             </div>
             <div class="card-body p-0">
                 <div class="list-group list-group-flush" style="max-height:260px;overflow-y:auto;">
@@ -161,15 +161,15 @@
                         <div>
                             <strong class="small">{{ si.invoice_number }}</strong>
                             <small class="text-muted ms-1">{{ si.supplier_name }}</small>
-                            {% if si.due_date %}<br><small class="text-{{ 'danger' if si.due_date[:10] < now.strftime('%Y-%m-%d') else 'muted' }}">{{ _('Due') }}: {{ si.due_date[:10] }}</small>{% endif %}
+                            {% if si.due_date %}<br><small class="text-{{ 'danger' if si.due_date[:10] < now.strftime('%Y-%m-%d') else 'muted' }}">{{ dual('Due') }}: {{ si.due_date[:10] }}</small>{% endif %}
                         </div>
                         <div class="text-end">
-                            <span class="badge bg-{{ 'success' if si.status == 'paid' else 'danger' if si.status == 'overdue' else 'warning' }}">{{ _(si.status) }}</span>
+                            <span class="badge bg-{{ 'success' if si.status == 'paid' else 'danger' if si.status == 'overdue' else 'warning' }}">{{ dual(si.status) }}</span>
                             <br><small class="fw-bold">{{ "{:,.0f}".format(si.total) }}</small>
                         </div>
                     </div>
                     {% else %}
-                    <div class="list-group-item text-center text-muted py-3"><small>{{ _('No supplier invoices yet.') }}</small></div>
+                    <div class="list-group-item text-center text-muted py-3"><small>{{ dual('No supplier invoices yet.') }}</small></div>
                     {% endfor %}
                 </div>
             </div>
@@ -181,7 +181,7 @@
     <div class="col-lg-4">
         <div class="card shadow-sm h-100">
             <div class="card-header">
-                <strong><i class="bi bi-file-earmark-text me-1"></i>{{ _('Quote-to-Order Pipeline') }}</strong>
+                <strong><i class="bi bi-file-earmark-text me-1"></i>{{ dual('Quote-to-Order Pipeline') }}</strong>
             </div>
             <div class="card-body p-0">
                 <div class="list-group list-group-flush" style="max-height:280px;overflow-y:auto;">
@@ -191,10 +191,10 @@
                             <div>
                                 <strong class="small">{{ q.quote_number }}</strong>
                                 <small class="text-muted ms-1">{{ q.customer_name }}</small>
-                                {% if q.valid_until %}<br><small class="text-{{ 'danger' if q.valid_until[:10] < now.strftime('%Y-%m-%d') else 'muted' }}">{{ _('Expires') }}: {{ q.valid_until[:10] }}</small>{% endif %}
+                                {% if q.valid_until %}<br><small class="text-{{ 'danger' if q.valid_until[:10] < now.strftime('%Y-%m-%d') else 'muted' }}">{{ dual('Expires') }}: {{ q.valid_until[:10] }}</small>{% endif %}
                             </div>
                             <div class="text-end">
-                                <span class="badge bg-{{ 'info' if q.status == 'sent' else 'secondary' }}">{{ _(q.status) }}</span>
+                                <span class="badge bg-{{ 'info' if q.status == 'sent' else 'secondary' }}">{{ dual(q.status) }}</span>
                                 {% if not q.generated_order_id %}
                                 <a href="{{ url_for('web_customer_quotes.edit_quote', quote_id=q.id) }}" class="btn btn-sm btn-outline-success mt-1" title="{{ _('Convert to Order') }}"><i class="bi bi-arrow-right"></i></a>
                                 {% endif %}
@@ -202,7 +202,7 @@
                         </div>
                     </div>
                     {% else %}
-                    <div class="list-group-item text-center text-muted py-4"><small>{{ _('No active quotes.') }}</small></div>
+                    <div class="list-group-item text-center text-muted py-4"><small>{{ dual('No active quotes.') }}</small></div>
                     {% endfor %}
                 </div>
             </div>
@@ -211,8 +211,8 @@
     <div class="col-lg-4">
         <div class="card shadow-sm h-100">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <strong><i class="bi bi-box me-1"></i>{{ _('Fulfillment & Delivery') }}</strong>
-                <a href="{{ url_for('web_delivery_notes.create_delivery_note') }}" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg"></i> {{ _('DN') }}</a>
+                <strong><i class="bi bi-box me-1"></i>{{ dual('Fulfillment & Delivery') }}</strong>
+                <a href="{{ url_for('web_delivery_notes.create_delivery_note') }}" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg"></i> {{ dual('DN') }}</a>
             </div>
             <div class="card-body p-0">
                 <div class="list-group list-group-flush" style="max-height:280px;overflow-y:auto;">
@@ -223,10 +223,10 @@
                             <small class="text-muted ms-1">{{ o.customer_name }}</small>
                             <br><small class="fw-bold text-primary">{{ "{:,.0f}".format(o.total) }} MAD</small>
                         </div>
-                        <a href="{{ url_for('web_delivery_notes.create_delivery_note') }}?order_id={{ o.id }}" class="btn btn-sm btn-outline-success"><i class="bi bi-truck"></i> {{ _('Dispatch') }}</a>
+                        <a href="{{ url_for('web_delivery_notes.create_delivery_note') }}?order_id={{ o.id }}" class="btn btn-sm btn-outline-success"><i class="bi bi-truck"></i> {{ dual('Dispatch') }}</a>
                     </div>
                     {% else %}
-                    <div class="list-group-item text-center text-muted py-4"><small>{{ _('No orders ready for dispatch.') }}</small></div>
+                    <div class="list-group-item text-center text-muted py-4"><small>{{ dual('No orders ready for dispatch.') }}</small></div>
                     {% endfor %}
                 </div>
             </div>
@@ -235,7 +235,7 @@
     <div class="col-lg-4">
         <div class="card shadow-sm h-100">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <strong><i class="bi bi-file-text me-1"></i>{{ _('Billing & Invoicing') }}</strong>
+                <strong><i class="bi bi-file-text me-1"></i>{{ dual('Billing & Invoicing') }}</strong>
                 <a href="{{ url_for('web_invoices.create_invoice') }}" class="btn btn-sm btn-primary"><i class="bi bi-plus-lg"></i></a>
             </div>
             <div class="card-body p-0">
@@ -248,13 +248,13 @@
                                 <small class="text-muted ms-1">{{ inv.customer_name }}</small>
                             </div>
                             <div class="text-end">
-                                <span class="badge bg-{{ 'success' if inv.status == 'paid' else 'danger' if inv.status == 'cancelled' else 'warning' if inv.status == 'draft' else 'info' }}">{{ _(inv.status) }}</span>
+                                <span class="badge bg-{{ 'success' if inv.status == 'paid' else 'danger' if inv.status == 'cancelled' else 'warning' if inv.status == 'draft' else 'info' }}">{{ dual(inv.status) }}</span>
                                 <br><small>{{ "{:,.0f}".format(inv.total) }} MAD</small>
                             </div>
                         </div>
                     </a>
                     {% else %}
-                    <div class="list-group-item text-center text-muted py-4"><small>{{ _('No invoices yet.') }}</small></div>
+                    <div class="list-group-item text-center text-muted py-4"><small>{{ dual('No invoices yet.') }}</small></div>
                     {% endfor %}
                 </div>
             </div>
@@ -266,7 +266,7 @@
     <div class="col-md-6">
         <div class="card shadow-sm">
             <div class="card-header">
-                <strong><i class="bi bi-arrow-left-right me-1"></i>{{ _('Recent Stock Movements') }}</strong>
+                <strong><i class="bi bi-arrow-left-right me-1"></i>{{ dual('Recent Stock Movements') }}</strong>
             </div>
             <div class="card-body p-0">
                 <div class="list-group list-group-flush" style="max-height:250px;overflow-y:auto;">
@@ -275,7 +275,7 @@
                         <div><strong class="small">{{ mv.product_name }}</strong><br><small class="text-muted">{{ mv.reason }}</small></div>
                         <span class="badge bg-{{ 'success' if mv.type == 'in' else 'danger' }}">{{ mv.type|upper }} {{ mv.quantity }}</span>
                     </div>
-                    {% else %}<div class="list-group-item text-center text-muted py-3">{{ _('No movements yet.') }}</div>{% endfor %}
+                    {% else %}<div class="list-group-item text-center text-muted py-3">{{ dual('No movements yet.') }}</div>{% endfor %}
                 </div>
             </div>
         </div>
@@ -283,7 +283,7 @@
     <div class="col-md-6">
         <div class="card shadow-sm">
             <div class="card-header">
-                <strong><i class="bi bi-truck me-1"></i>{{ _('Recent Delivery Notes') }}</strong>
+                <strong><i class="bi bi-truck me-1"></i>{{ dual('Recent Delivery Notes') }}</strong>
             </div>
             <div class="card-body p-0">
                 <div class="list-group list-group-flush" style="max-height:250px;overflow-y:auto;">
@@ -292,7 +292,7 @@
                         <div><strong class="small">{{ dn.dn_number }}</strong><br><small class="text-muted">{{ dn.customer_name }}</small></div>
                         <small class="text-muted">{{ dn.created_at[:10] if dn.created_at else '' }}</small>
                     </div>
-                    {% else %}<div class="list-group-item text-center text-muted py-3">{{ _('No delivery notes yet.') }}</div>{% endfor %}
+                    {% else %}<div class="list-group-item text-center text-muted py-3">{{ dual('No delivery notes yet.') }}</div>{% endfor %}
                 </div>
             </div>
         </div>
@@ -301,11 +301,11 @@
 
 {% if category_summary %}
 <div class="card shadow-sm mt-3">
-    <div class="card-header"><strong><i class="bi bi-pie-chart me-1"></i>{{ _('Stock by Category') }}</strong></div>
+    <div class="card-header"><strong><i class="bi bi-pie-chart me-1"></i>{{ dual('Stock by Category') }}</strong></div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-sm">
-                <thead><tr><th>{{ _('Category') }}</th><th class="text-end">{{ _('Products') }}</th><th class="text-end">{{ _('Total Qty') }}</th><th class="text-end">{{ _('Value') }}</th></tr></thead>
+                <thead><tr><th>{{ dual('Category') }}</th><th class="text-end">{{ dual('Products') }}</th><th class="text-end">{{ dual('Total Qty') }}</th><th class="text-end">{{ dual('Value') }}</th></tr></thead>
                 <tbody>{% for cat in category_summary %}<tr><td>{{ cat._id or _('Uncategorized') }}</td><td class="text-end">{{ cat.count }}</td><td class="text-end">{{ cat.total_qty }}</td><td class="text-end">{{ cat.total_value|round(2) }}</td></tr>{% endfor %}</tbody>
             </table>
         </div>
@@ -317,10 +317,10 @@
     <i class="bi bi-plus-lg"></i>
 </button>
 <div class="fab-menu" id="fabMenu">
-    <a href="{{ url_for('web_suppliers.create_supplier') }}" class="fab-item btn btn-light btn-sm shadow-sm"><span>{{ _('New Supplier') }}</span> <i class="bi bi-truck fs-5"></i></a>
-    <a href="{{ url_for('web_customer_quotes.create_quote') }}" class="fab-item btn btn-light btn-sm shadow-sm"><span>{{ _('New Quote') }}</span> <i class="bi bi-file-earmark-text fs-5"></i></a>
-    <a href="{{ url_for('web_purchase_orders.create_order') }}" class="fab-item btn btn-light btn-sm shadow-sm"><span>{{ _('New Purchase') }}</span> <i class="bi bi-cart-check fs-5"></i></a>
-    <a href="{{ url_for('web_goods_receipt.create_receipt') }}" class="fab-item btn btn-light btn-sm shadow-sm"><span>{{ _('New Goods Receipt') }}</span> <i class="bi bi-box-seam fs-5"></i></a>
+    <a href="{{ url_for('web_suppliers.create_supplier') }}" class="fab-item btn btn-light btn-sm shadow-sm"><span>{{ dual('New Supplier') }}</span> <i class="bi bi-truck fs-5"></i></a>
+    <a href="{{ url_for('web_customer_quotes.create_quote') }}" class="fab-item btn btn-light btn-sm shadow-sm"><span>{{ dual('New Quote') }}</span> <i class="bi bi-file-earmark-text fs-5"></i></a>
+    <a href="{{ url_for('web_purchase_orders.create_order') }}" class="fab-item btn btn-light btn-sm shadow-sm"><span>{{ dual('New Purchase') }}</span> <i class="bi bi-cart-check fs-5"></i></a>
+    <a href="{{ url_for('web_goods_receipt.create_receipt') }}" class="fab-item btn btn-light btn-sm shadow-sm"><span>{{ dual('New Goods Receipt') }}</span> <i class="bi bi-box-seam fs-5"></i></a>
 </div>
 {% endblock %}
 

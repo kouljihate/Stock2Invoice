@@ -1,13 +1,13 @@
 {% extends 'base/layout.html' %}
-{% block title %}{% if quote and quote.id %}{{ _('Edit Quote') }}{% else %}{{ _('New Customer Quote') }}{% endif %} — Maure S2C{% endblock %}
+{% block title %}{% if quote and quote.id %}{{ dual('Edit Quote') }}{% else %}{{ dual('New Customer Quote') }}{% endif %} — Maure S2C{% endblock %}
 {% block content %}
-<h4 class="mb-4"><i class="bi bi-{% if quote and quote.id %}pencil{% else %}plus-circle{% endif %} me-2"></i>{% if quote and quote.id %}{{ _('Edit Quote') }}{% else %}{{ _('New Customer Quote') }}{% endif %}</h4>
+<h4 class="mb-4"><i class="bi bi-{% if quote and quote.id %}pencil{% else %}plus-circle{% endif %} me-2"></i>{% if quote and quote.id %}{{ dual('Edit Quote') }}{% else %}{{ dual('New Customer Quote') }}{% endif %}</h4>
 <form method="POST" action="" class="card shadow-sm" id="quoteForm">
     <div class="card-body">
         <div id="quoteFormError" class="alert alert-danger d-none"></div>
         <div class="row mb-3">
             <div class="col-md-4">
-                <label class="form-label">{{ _('Customer') }} *</label>
+                <label class="form-label">{{ dual('Customer') }} *</label>
                 <div class="input-group">
                     <select name="customer_name" id="customerSelect" class="form-select" required>
                         <option value="">{{ _('-- Select Customer --') }}</option>
@@ -21,39 +21,39 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <label class="form-label">{{ _('Contact Name') }}</label>
+                <label class="form-label">{{ dual('Contact Name') }}</label>
                 <input type="text" name="contact_name" id="contactName" class="form-control" value="{{ quote.contact_name if quote else '' }}">
             </div>
             <div class="col-md-3">
-                <label class="form-label">{{ _('Contact Email') }}</label>
+                <label class="form-label">{{ dual('Contact Email') }}</label>
                 <input type="email" name="contact_email" id="contactEmail" class="form-control" value="{{ quote.contact_email if quote else '' }}">
             </div>
             <div class="col-md-2">
-                <label class="form-label">{{ _('Valid Until') }}</label>
+                <label class="form-label">{{ dual('Valid Until') }}</label>
                 <input type="date" name="valid_until" class="form-control" value="{{ quote.valid_until[:10] if quote and quote.valid_until else '' }}">
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-md-8">
-                <label class="form-label">{{ _('Customer Address') }}</label>
+                <label class="form-label">{{ dual('Customer Address') }}</label>
                 <textarea name="customer_address" id="customerAddress" class="form-control" rows="2" readonly>{{ quote.customer_address if quote else '' }}</textarea>
             </div>
             <div class="col-md-4">
-                <label class="form-label">{{ _('City') }}</label>
+                <label class="form-label">{{ dual('City') }}</label>
                 <input type="text" name="customer_city" id="customerCity" class="form-control" value="{{ quote.get('customer_city', '') if quote else '' }}" readonly>
             </div>
         </div>
         <div class="row mb-3">
             <div class="col-md-3">
-                <label class="form-label">{{ _('Discount') }} (%)</label>
+                <label class="form-label">{{ dual('Discount') }} (%)</label>
                 <input type="number" step="0.01" name="discount_percent" class="form-control" value="{{ '%.2f'|format(quote.discount_percent) if quote and quote.discount_percent else '0' }}" min="0" max="100">
             </div>
             <div class="col-md-3">
-                <label class="form-label">{{ _('Tax') }} (%)</label>
+                <label class="form-label">{{ dual('Tax') }} (%)</label>
                 <input type="number" step="0.01" name="tax_percent" class="form-control" value="{{ '%.2f'|format(quote.tax_percent) if quote and quote.tax_percent else '0' }}" min="0" max="100">
             </div>
             <div class="col-md-3">
-                <label class="form-label">{{ _('Status') }}</label>
+                <label class="form-label">{{ dual('Status') }}</label>
                 <select name="status" class="form-select">
                     <option value="draft" {% if quote and quote.status == 'draft' %}selected{% endif %}>{{ _('Draft') }}</option>
                     <option value="sent" {% if quote and quote.status == 'sent' %}selected{% endif %}>{{ _('Sent') }}</option>
@@ -62,16 +62,16 @@
                 </select>
             </div>
         </div>
-        <h5 class="mt-4 mb-3">{{ _('Line Items') }}</h5>
+        <h5 class="mt-4 mb-3">{{ dual('Line Items') }}</h5>
         <div id="line-items">
             <div class="row g-2 mb-1 small fw-bold text-muted">
-                <div class="col-md-2">{{ _('SKU') }}</div>
-                <div class="col-md-3">{{ _('Name') }}</div>
-                <div class="col-md-1 text-end">{{ _('QTY') }}</div>
-                <div class="col-md-1 text-end">{{ _('Price') }}</div>
-                <div class="col-md-2">{{ _('Pack Type') }}</div>
-                <div class="col-md-2">{{ _('Pack Size / Unit') }}</div>
-                <div class="col-md-1 text-end">{{ _('Stock') }}</div>
+                <div class="col-md-2">{{ dual('SKU') }}</div>
+                <div class="col-md-3">{{ dual('Name') }}</div>
+                <div class="col-md-1 text-end">{{ dual('QTY') }}</div>
+                <div class="col-md-1 text-end">{{ dual('Price') }}</div>
+                <div class="col-md-2">{{ dual('Pack Type') }}</div>
+                <div class="col-md-2">{{ dual('Pack Size / Unit') }}</div>
+                <div class="col-md-1 text-end">{{ dual('Stock') }}</div>
             </div>
             {% if quote and quote.get('items') %}
             {% for item in quote.get('items', []) %}
@@ -142,15 +142,15 @@
             {% endif %}
         </div>
         <button type="button" class="btn btn-sm btn-outline-success mb-3" id="add-item">
-            <i class="bi bi-plus-lg me-1"></i>{{ _('Add Item') }}
+            <i class="bi bi-plus-lg me-1"></i>{{ dual('Add Item') }}
         </button>
         <div class="mb-3">
-            <label class="form-label">{{ _('Notes') }}</label>
+            <label class="form-label">{{ dual('Notes') }}</label>
             <textarea name="notes" class="form-control" rows="2">{{ quote.notes if quote else '' }}</textarea>
         </div>
         <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>{% if quote and quote.id %}{{ _('Save Changes') }}{% else %}{{ _('Create Quote') }}{% endif %}</button>
-            <a href="{{ url_for('web_customer_quotes.list_quotes') }}" class="btn btn-outline-secondary">{{ _('Cancel') }}</a>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>{% if quote and quote.id %}{{ dual('Save Changes') }}{% else %}{{ dual('Create Quote') }}{% endif %}</button>
+            <a href="{{ url_for('web_customer_quotes.list_quotes') }}" class="btn btn-outline-secondary">{{ dual('Cancel') }}</a>
         </div>
     </div>
 </form>
@@ -160,38 +160,38 @@
 <form id="addCustomerForm">
     <div class="row g-3">
         <div class="col-md-3">
-            <label class="form-label">{{ _('Type') }} <span class="text-danger">*</span></label>
+            <label class="form-label">{{ dual('Type') }} <span class="text-danger">*</span></label>
             <select name="type" class="form-select">
                 <option value="prive">{{ _('Private') }}</option>
                 <option value="company">{{ _('Company') }}</option>
             </select>
         </div>
         <div class="col-md-9">
-            <label class="form-label">{{ _('Name') }} <span class="text-danger">*</span></label>
+            <label class="form-label">{{ dual('Name') }} <span class="text-danger">*</span></label>
             <input type="text" name="name" class="form-control" required>
         </div>
         <div class="col-md-6">
-            <label class="form-label">{{ _('Contact') }}</label>
+            <label class="form-label">{{ dual('Contact') }}</label>
             <input type="text" name="contact" class="form-control">
         </div>
         <div class="col-md-6">
-            <label class="form-label">{{ _('Email') }}</label>
+            <label class="form-label">{{ dual('Email') }}</label>
             <input type="email" name="email" class="form-control">
         </div>
         <div class="col-md-6">
-            <label class="form-label">{{ _('Phone') }}</label>
+            <label class="form-label">{{ dual('Phone') }}</label>
             <input type="text" name="phone" class="form-control">
         </div>
         <div class="col-md-6">
-            <label class="form-label">{{ _('Address') }}</label>
+            <label class="form-label">{{ dual('Address') }}</label>
             <input type="text" name="address" class="form-control">
         </div>
         <div class="col-md-6">
-            <label class="form-label">{{ _('City') }}</label>
+            <label class="form-label">{{ dual('City') }}</label>
             <input type="text" name="city" class="form-control">
         </div>
         <div class="col-md-6">
-            <label class="form-label">{{ _('Payment Terms') }}</label>
+            <label class="form-label">{{ dual('Payment Terms') }}</label>
             <input type="text" name="paiement_terms" class="form-control" placeholder="{{ _('e.g. Net 30') }}">
         </div>
         <div class="col-md-3">
@@ -206,8 +206,8 @@
     <div id="addCustomerError" class="alert alert-danger d-none mt-3"></div>
 </form>
 {% set modal_footer %}
-<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Cancel') }}</button>
-<button type="button" class="btn btn-primary" id="saveCustomerBtn">{{ _('Save') }}</button>
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ dual('Cancel') }}</button>
+<button type="button" class="btn btn-primary" id="saveCustomerBtn">{{ dual('Save') }}</button>
 {% endset %}
 {{ components.modal_end(modal_footer) }}
 {% endblock %}

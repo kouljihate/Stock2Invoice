@@ -1,0 +1,109 @@
+/* ------------------------------------------------------------------
+   Page identity badge
+   A small pill that shows the current screen's registry ID (e.g. 0.0)
+   and opens the page information dialog.
+   ------------------------------------------------------------------ */
+
+/* Floating dock used on every page that has no footer of its own. */
+.page-id-dock {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 1040;
+  pointer-events: none;
+}
+
+.page-id-dock .page-id-badge {
+  pointer-events: auto;
+}
+
+.page-id-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .22rem .55rem;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: .72rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: .04em;
+  color: #9ff7ff;
+  background: rgba(10, 12, 20, .82);
+  border: 1px solid rgba(0, 240, 255, .45);
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: border-color .18s ease, box-shadow .18s ease, color .18s ease;
+}
+
+.page-id-badge i {
+  font-size: .8rem;
+  line-height: 1;
+}
+
+.page-id-badge:hover,
+.page-id-badge:focus-visible {
+  color: #ffffff;
+  border-color: #00f0ff;
+  box-shadow: 0 0 0 1px rgba(0, 240, 255, .35), 0 0 14px rgba(0, 240, 255, .45);
+  outline: none;
+}
+
+/* Inline placement: sits directly beside the version badge in the
+   auth footer's third column. */
+.auth-footer .page-id-badge {
+  margin-left: .5rem;
+  vertical-align: middle;
+}
+
+/* ---------------------------------------------------------------- dialog */
+
+.page-info-modal {
+  background: rgba(10, 12, 20, .97);
+  border: 1px solid rgba(0, 240, 255, .35);
+  box-shadow: 0 0 40px rgba(0, 240, 255, .18);
+}
+
+.page-info-modal .modal-header,
+.page-info-modal .modal-footer {
+  border-color: rgba(0, 240, 255, .18);
+}
+
+.page-info-desc {
+  color: #b6bdcf;
+  font-size: .92rem;
+}
+
+.page-info-grid dt {
+  color: #8b93a7;
+  font-weight: 500;
+  font-size: .84rem;
+}
+
+.page-info-grid dd {
+  color: #e6e9f2;
+  font-size: .88rem;
+  word-break: break-word;
+}
+
+.page-info-grid code,
+.page-info-modal .modal-title code {
+  color: #9ff7ff;
+  background: rgba(0, 240, 255, .08);
+  padding: .05rem .3rem;
+  border-radius: .25rem;
+  font-size: .84em;
+}
+
+@media (max-width: 575.98px) {
+  .page-id-dock {
+    right: 8px;
+    bottom: 8px;
+  }
+
+  .page-id-badge {
+    font-size: .68rem;
+    padding: .2rem .5rem;
+  }
+}

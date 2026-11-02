@@ -6,7 +6,9 @@
 }
 
 main {
-  min-height: calc(100vh - 56px);
+  /* 56px navbar + the 1.25rem gap above the content (see neon.css), so the
+     extra gap does not push the page into a scrollbar. */
+  min-height: calc(100vh - 56px - 1.25rem);
 }
 
 .card {

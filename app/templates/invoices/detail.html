@@ -1,14 +1,14 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('Invoice') }} {{ invoice.invoice_number }} — Maure S2C{% endblock %}
+{% block title %}{{ dual('Invoice') }} {{ invoice.invoice_number }} — Maure S2C{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-file-text me-2"></i>{{ _('Invoice') }} {{ invoice.invoice_number }}</h4>
+    <h4 class="mb-0"><i class="bi bi-file-text me-2"></i>{{ dual('Invoice') }} {{ invoice.invoice_number }}</h4>
     <div>
         <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.download_pdf', invoice_id=invoice.id) }}{% else %}{{ url_for('web_invoices.download_pdf', invoice_id=invoice.id) }}{% endif %}" class="btn btn-outline-primary btn-sm" target="_blank">
-            <i class="bi bi-file-earmark-pdf me-1"></i>{{ _('PDF') }}
+            <i class="bi bi-file-earmark-pdf me-1"></i>{{ dual('PDF') }}
         </a>
         <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.list_invoices') }}{% else %}{{ url_for('web_invoices.list_invoices') }}{% endif %}" class="btn btn-outline-secondary btn-sm">
-            <i class="bi bi-arrow-left me-1"></i>{{ _('Back') }}
+            <i class="bi bi-arrow-left me-1"></i>{{ dual('Back') }}
         </a>
     </div>
 </div>
@@ -17,7 +17,7 @@
     <div class="col-md-8">
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <strong>{{ _('Invoice Details') }}</strong>
+                <strong>{{ dual('Invoice Details') }}</strong>
                 <span class="badge bg-{% if invoice.status == 'paid' %}success{% elif invoice.status == 'draft' %}secondary{% elif invoice.status == 'sent' %}info{% else %}danger{% endif %} fs-6">
                     {{ _(invoice.status)|upper }}
                 </span>
@@ -25,15 +25,15 @@
             <div class="card-body">
                 <div class="row mb-3">
                     <div class="col-sm-6">
-                        <small class="text-muted">{{ _('Customer') }}</small>
+                        <small class="text-muted">{{ dual('Customer') }}</small>
                         <p class="mb-0"><strong>{{ invoice.customer_name }}</strong></p>
                         {% if invoice.contact_email %}<p class="mb-0"><small>{{ invoice.contact_email }}</small></p>{% elif invoice.customer_email %}<p class="mb-0"><small>{{ invoice.customer_email }}</small></p>{% endif %}
                         {% if invoice.customer_address %}<p class="mb-0"><small>{{ invoice.customer_address }}</small></p>{% endif %}
-                        {% if invoice.attention_to %}<p class="mb-0 mt-1"><small class="text-muted">{{ _('Attn:') }}</small> {{ invoice.attention_to }}</p>{% endif %}
-                        {% if invoice.delivery_time %}<p class="mb-0 mt-1"><small class="text-muted">{{ _('Delivery:') }}</small> {{ invoice.delivery_time }}</p>{% endif %}
+                        {% if invoice.attention_to %}<p class="mb-0 mt-1"><small class="text-muted">{{ dual('Attn:') }}</small> {{ invoice.attention_to }}</p>{% endif %}
+                        {% if invoice.delivery_time %}<p class="mb-0 mt-1"><small class="text-muted">{{ dual('Delivery:') }}</small> {{ invoice.delivery_time }}</p>{% endif %}
                     </div>
                     <div class="col-sm-6 text-sm-end">
-                        <small class="text-muted">{{ _('Invoice Date') }}</small>
+                        <small class="text-muted">{{ dual('Invoice Date') }}</small>
                         <p class="mb-0"><strong>{{ invoice.created_at[:10] if invoice.created_at else '-' }}</strong></p>
                     </div>
                 </div>
@@ -42,11 +42,11 @@
                     <table class="table table-sm">
                         <thead class="table-light">
                             <tr>
-                                <th>{{ _('SKU') }}</th>
-                                <th>{{ _('Item') }}</th>
-                                <th class="text-end">{{ _('Qty') }}</th>
-                                <th class="text-end">{{ _('Price') }}</th>
-                                <th class="text-end">{{ _('Total') }}</th>
+                                <th>{{ dual('SKU') }}</th>
+                                <th>{{ dual('Item') }}</th>
+                                <th class="text-end">{{ dual('Qty') }}</th>
+                                <th class="text-end">{{ dual('Price') }}</th>
+                                <th class="text-end">{{ dual('Total') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -67,21 +67,21 @@
                     <div class="col-md-6 offset-md-6">
                         <table class="table table-sm table-borderless mb-0">
                             <tr>
-                                <td>{{ _('Subtotal') }}</td>
+                                <td>{{ dual('Subtotal') }}</td>
                                 <td class="text-end">{{ invoice.subtotal }} MAD</td>
                             </tr>
                             {% if invoice.discount_percent > 0 %}
                             <tr>
-                                <td>{{ _('Discount') }} ({{ invoice.discount_percent }}%)</td>
+                                <td>{{ dual('Discount') }} ({{ invoice.discount_percent }}%)</td>
                                 <td class="text-end text-danger">-{{ invoice.discount_amount }} MAD</td>
                             </tr>
                             {% endif %}
                             <tr>
-                                <td>{{ _('Tax') }} ({{ invoice.tax_percent }}%)</td>
+                                <td>{{ dual('Tax') }} ({{ invoice.tax_percent }}%)</td>
                                 <td class="text-end">{{ invoice.tax_amount }} MAD</td>
                             </tr>
                             <tr class="fw-bold">
-                                <td>{{ _('Total') }}</td>
+                                <td>{{ dual('Total') }}</td>
                                 <td class="text-end fs-5">{{ invoice.total }} MAD</td>
                             </tr>
                         </table>
@@ -90,7 +90,7 @@
 
                 {% if invoice.notes %}
                 <div class="mt-3 p-3 bg-light rounded">
-                    <small class="text-muted">{{ _('Notes:') }}</small>
+                    <small class="text-muted">{{ dual('Notes:') }}</small>
                     <p class="mb-0">{{ invoice.notes }}</p>
                 </div>
                 {% endif %}
@@ -100,11 +100,11 @@
 
     <div class="col-md-4">
         <div class="card shadow-sm">
-            <div class="card-header"><strong>{{ _('Actions') }}</strong></div>
+            <div class="card-header"><strong>{{ dual('Actions') }}</strong></div>
             <div class="card-body">
                 <form method="POST" action="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.update_status', invoice_id=invoice.id) }}{% else %}{{ url_for('web_invoices.update_status', invoice_id=invoice.id) }}{% endif %}">
                     <div class="mb-2">
-                        <label class="form-label small">{{ _('Change Status') }}</label>
+                        <label class="form-label small">{{ dual('Change Status') }}</label>
                         <select name="status" class="form-select form-select-sm">
                             <option value="draft" {{ 'selected' if invoice.status == 'draft' }}>{{ _('Draft') }}</option>
                             <option value="sent" {{ 'selected' if invoice.status == 'sent' }}>{{ _('Sent') }}</option>
@@ -113,17 +113,17 @@
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary w-100 btn-sm">
-                        <i class="bi bi-check-lg me-1"></i>{{ _('Update Status') }}
+                        <i class="bi bi-check-lg me-1"></i>{{ dual('Update Status') }}
                     </button>
                 </form>
                 <hr>
                 <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.download_pdf', invoice_id=invoice.id) }}{% else %}{{ url_for('web_invoices.download_pdf', invoice_id=invoice.id) }}{% endif %}" class="btn btn-outline-primary w-100 btn-sm" target="_blank">
-                    <i class="bi bi-file-earmark-pdf me-1"></i>{{ _('Download PDF') }}
+                    <i class="bi bi-file-earmark-pdf me-1"></i>{{ dual('Download PDF') }}
                 </a>
                 <hr>
-                <form method="POST" action="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.delete_invoice', invoice_id=invoice.id) }}{% else %}{{ url_for('web_invoices.delete_invoice', invoice_id=invoice.id) }}{% endif %}" onsubmit="return confirm('{{ _('Delete') }} {{ invoice.invoice_number or invoice.id[:8] }}?')">
+                <form method="POST" action="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.delete_invoice', invoice_id=invoice.id) }}{% else %}{{ url_for('web_invoices.delete_invoice', invoice_id=invoice.id) }}{% endif %}" onsubmit="return confirm('{{ dual('Delete') }} {{ invoice.invoice_number or invoice.id[:8] }}?')">
                     <button type="submit" class="btn btn-outline-danger w-100 btn-sm">
-                        <i class="bi bi-trash me-1"></i>{{ _('Delete') }}
+                        <i class="bi bi-trash me-1"></i>{{ dual('Delete') }}
                     </button>
                 </form>
             </div>

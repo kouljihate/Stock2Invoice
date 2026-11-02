@@ -1,30 +1,30 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('Create User') }} — {{ _('Admin') }}{% endblock %}
+{% block title %}{{ dual('Create User') }} — {{ dual('Admin') }}{% endblock %}
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="mb-0"><i class="bi bi-plus-circle me-2"></i>{{ _('Create User') }}</h4>
+            <h4 class="mb-0"><i class="bi bi-plus-circle me-2"></i>{{ dual('Create User') }}</h4>
             <a href="{{ url_for('admin.list_users') }}" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-arrow-left me-1"></i>{{ _('Back') }}
+                <i class="bi bi-arrow-left me-1"></i>{{ dual('Back') }}
             </a>
         </div>
 
         <div class="card shadow-sm mb-4">
-            <div class="card-header"><strong>{{ _('User Details') }}</strong></div>
+            <div class="card-header"><strong>{{ dual('User Details') }}</strong></div>
             <div class="card-body">
                 <form method="POST">
                     <div class="mb-3">
-                        <label class="form-label">{{ _('Full Name') }}</label>
+                        <label class="form-label">{{ dual('Full Name') }}</label>
                         <input type="text" name="name" class="form-control" placeholder="{{ _('Enter full name') }}" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">{{ _('Email') }}</label>
+                        <label class="form-label">{{ dual('Email') }}</label>
                         <input type="email" name="email" class="form-control" placeholder="{{ _('Enter email address') }}" required>
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label">{{ _('Roles') }}</label>
+                        <label class="form-label">{{ dual('Roles') }}</label>
                         <div>
                             {% for role in roles %}
                             <div class="form-check">
@@ -39,11 +39,11 @@
                     </div>
                     
                     <div class="mb-3">
-                        <small class="text-muted">{{ _('Note: Users must have at least one role selected.') }}</small>
+                        <small class="text-muted">{{ dual('Note: Users must have at least one role selected.') }}</small>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-check me-1"></i>{{ _('Create User') }}</button>
-                    <a href="{{ url_for('admin.list_users') }}" class="btn btn-outline-secondary">{{ _('Cancel') }}</a>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check me-1"></i>{{ dual('Create User') }}</button>
+                    <a href="{{ url_for('admin.list_users') }}" class="btn btn-outline-secondary">{{ dual('Cancel') }}</a>
                 </form>
             </div>
         </div>

@@ -1,6 +1,11 @@
 {% extends 'base/layout.html' %}
 {% block title %}Login — Maure S2C{% endblock %}
 {% block body_class %}auth-body{% endblock %}
+
+{# The page-ID badge lives inline in the footer beside the version badge,
+   so the floating dock is suppressed on this screen. #}
+{% block page_badge %}{% endblock %}
+
 {% block content %}
 {% set tab = active_tab|default('login') %}
 
@@ -9,7 +14,7 @@
         <span class="brand-mini"><i class="bi bi-box-seam"></i></span>
         Maure S2C
     </a>
-    <span class="auth-header-meta">{{ _('Stock-To-Cash Management System') }}</span>
+    <span class="auth-header-meta">{{ dual('Stock-To-Cash Management System') }}</span>
 </header>
 
 <div class="row justify-content-center">
@@ -31,7 +36,7 @@
                             data-bs-toggle="tab" data-bs-target="#pane-login"
                             aria-controls="pane-login"
                             aria-selected="{{ 'true' if tab != 'reset' else 'false' }}">
-                        <i class="bi bi-box-arrow-in-right me-1"></i>{{ _('Login') }}
+                        <i class="bi bi-box-arrow-in-right me-1"></i>{{ dual('Login') }}
                     </button>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -40,7 +45,7 @@
                             data-bs-toggle="tab" data-bs-target="#pane-reset"
                             aria-controls="pane-reset"
                             aria-selected="{{ 'true' if tab == 'reset' else 'false' }}">
-                        <i class="bi bi-key me-1"></i>{{ _('Reset Password') }}
+                        <i class="bi bi-key me-1"></i>{{ dual('Reset Password') }}
                     </button>
                 </li>
             </ul>
@@ -50,30 +55,30 @@
                      id="pane-login" role="tabpanel" aria-labelledby="tab-login">
                     <form method="POST" action="">
                         <div class="mb-3">
-                            <label class="form-label">{{ _('Email') }}</label>
+                            <label class="form-label">{{ dual('Email') }}</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                                 <input type="email" name="email" class="form-control" placeholder="you@example.com" required autofocus>
                             </div>
                         </div>
                         <div class="mb-4">
-                            <label class="form-label">{{ _('Password') }}</label>
+                            <label class="form-label">{{ dual('Password') }}</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-lock"></i></span>
                                 <input type="password" name="password" class="form-control" placeholder="Enter password">
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary w-100 mb-3">
-                            <i class="bi bi-box-arrow-in-right me-1"></i>{{ _('Sign In') }}
+                            <i class="bi bi-box-arrow-in-right me-1"></i>{{ dual('Sign In') }}
                         </button>
                         {% if registration_enabled %}
                         <p class="text-center auth-link mb-0">
-                            {{ _("Don't have an account?") }}
-                            <a href="{% if mode == 'mobile' %}{{ url_for('mobile_auth.register') }}{% else %}{{ url_for('web_auth.register') }}{% endif %}">{{ _('Register') }}</a>
+                            {{ dual("Don't have an account?") }}
+                            <a href="{% if mode == 'mobile' %}{{ url_for('mobile_auth.register') }}{% else %}{{ url_for('web_auth.register') }}{% endif %}">{{ dual('Register') }}</a>
                         </p>
                         {% endif %}
                         <p class="text-center auth-link mb-0">
-                            <a href="#pane-reset" data-bs-toggle="tab" data-bs-target="#pane-reset">{{ _('Forgot Password?') }}</a>
+                            <a href="#pane-reset" data-bs-toggle="tab" data-bs-target="#pane-reset">{{ dual('Forgot Password?') }}</a>
                         </p>
                     </form>
                 </div>
@@ -82,18 +87,18 @@
                      id="pane-reset" role="tabpanel" aria-labelledby="tab-reset">
                     <form method="POST" action="{% if mode == 'mobile' %}{{ url_for('mobile_auth.forgot_password') }}{% else %}{{ url_for('web_auth.forgot_password') }}{% endif %}">
                         <div class="mb-3">
-                            <label class="form-label">{{ _('Email') }}</label>
+                            <label class="form-label">{{ dual('Email') }}</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                                 <input type="email" name="email" class="form-control" placeholder="you@example.com" required>
                             </div>
                         </div>
-                        <p class="auth-hint">{{ _('Enter the address registered to your account and we will send you a password reset link.') }}</p>
+                        <p class="auth-hint">{{ dual('Enter the address registered to your account and we will send you a password reset link.') }}</p>
                         <button type="submit" class="btn btn-primary w-100 mb-3">
-                            <i class="bi bi-send me-1"></i>{{ _('Send Reset Link') }}
+                            <i class="bi bi-send me-1"></i>{{ dual('Send Reset Link') }}
                         </button>
                         <p class="text-center auth-link mb-0">
-                            <a href="#pane-login" data-bs-toggle="tab" data-bs-target="#pane-login">{{ _('Back to Login') }}</a>
+                            <a href="#pane-login" data-bs-toggle="tab" data-bs-target="#pane-login">{{ dual('Back to Login') }}</a>
                         </p>
                     </form>
                 </div>
@@ -109,10 +114,11 @@
                 <span class="footer-copy">&copy; 2010 - {{ build_date[:4] }} Maure S2C</span>
             </div>
             <div class="col-md-4 text-center">
-                <span class="footer-tagline">{{ _('Stock-To-Cash Management System') }}</span>
+                <span class="footer-tagline">{{ dual('Stock-To-Cash Management System') }}</span>
             </div>
             <div class="col-md-4 text-md-end text-center">
                 <span class="version-badge">v{{ version }}</span>
+                {% include 'base/page_badge.html' %}
             </div>
         </div>
     </div>

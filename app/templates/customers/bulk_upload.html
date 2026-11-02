@@ -1,24 +1,24 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('Bulk Upload') }} {{ _('Customers') }} — Maure S2C{% endblock %}
+{% block title %}{{ dual('Bulk Upload') }} {{ dual('Customers') }} — Maure S2C{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-upload me-2"></i>{{ _('Add Bulk Customers') }}</h4>
+    <h4 class="mb-0"><i class="bi bi-upload me-2"></i>{{ dual('Add Bulk Customers') }}</h4>
     <a href="{{ url_for('web_customers.list_customers') }}" class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-arrow-left me-1"></i>{{ _('Back to Customers') }}
+        <i class="bi bi-arrow-left me-1"></i>{{ dual('Back to Customers') }}
     </a>
 </div>
 
 {% if results %}
 <div class="card shadow-sm">
-    <div class="card-header"><strong>{{ _('Import Results') }}</strong></div>
+    <div class="card-header"><strong>{{ dual('Import Results') }}</strong></div>
     <div class="card-body p-0">
         <table class="table table-hover mb-0 small">
             <thead class="table-light">
                 <tr>
                     <th>#</th>
-                    <th>{{ _('Name') }}</th>
-                    <th>{{ _('Status') }}</th>
-                    <th>{{ _('Details') }}</th>
+                    <th>{{ dual('Name') }}</th>
+                    <th>{{ dual('Status') }}</th>
+                    <th>{{ dual('Details') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,9 +28,9 @@
                     <td>{{ r.name }}</td>
                     <td>
                         {% if r.status == 'success' %}
-                        <span class="badge bg-success">{{ _('Imported') }}</span>
+                        <span class="badge bg-success">{{ dual('Imported') }}</span>
                         {% else %}
-                        <span class="badge bg-danger">{{ _('Error') }}</span>
+                        <span class="badge bg-danger">{{ dual('Error') }}</span>
                         {% endif %}
                     </td>
                     <td>
@@ -41,7 +41,7 @@
                             {% endfor %}
                         </ul>
                         {% else %}
-                        <span class="text-muted">{{ _('OK') }}</span>
+                        <span class="text-muted">{{ dual('OK') }}</span>
                         {% endif %}
                     </td>
                 </tr>
@@ -51,7 +51,7 @@
     </div>
     <div class="card-footer">
         <a href="{{ url_for('web_customers.bulk_upload') }}" class="btn btn-primary btn-sm">
-            <i class="bi bi-upload me-1"></i>{{ _('Upload Another File') }}
+            <i class="bi bi-upload me-1"></i>{{ dual('Upload Another File') }}
         </a>
     </div>
 </div>
@@ -59,7 +59,7 @@
 {% elif preview %}
 <div class="card shadow-sm">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <strong><i class="bi bi-eye me-1"></i>{{ _('Preview') }} — {{ preview|length }} {{ _('customer(s)') }} {{ _('loaded') }}</strong>
+        <strong><i class="bi bi-eye me-1"></i>{{ dual('Preview') }} — {{ preview|length }} {{ dual('customer(s)') }} {{ dual('loaded') }}</strong>
     </div>
     <div class="card-body p-0">
         <form method="POST" id="saveForm">
@@ -68,14 +68,14 @@
                 <thead class="table-light">
                     <tr>
                         <th>#</th>
-                        <th>{{ _('Type') }}</th>
-                        <th>{{ _('Name') }}</th>
-                        <th>{{ _('Contact') }}</th>
-                        <th>{{ _('Email') }}</th>
-                        <th>{{ _('Phone') }}</th>
-                        <th>{{ _('City') }}</th>
-                        <th>{{ _('Payment Terms') }}</th>
-                        <th>{{ _('Address') }}</th>
+                        <th>{{ dual('Type') }}</th>
+                        <th>{{ dual('Name') }}</th>
+                        <th>{{ dual('Contact') }}</th>
+                        <th>{{ dual('Email') }}</th>
+                        <th>{{ dual('Phone') }}</th>
+                        <th>{{ dual('City') }}</th>
+                        <th>{{ dual('Payment Terms') }}</th>
+                        <th>{{ dual('Address') }}</th>
                         <th>ICE</th>
                         <th>RC</th>
                     </tr>
@@ -86,9 +86,9 @@
                         <td>{{ loop.index }}</td>
                         <td>
                             {% if s.type == 'company' %}
-                            <span class="badge bg-info">{{ _('Company') }}</span>
+                            <span class="badge bg-info">{{ dual('Company') }}</span>
                             {% else %}
-                            <span class="badge bg-secondary">{{ _('Private') }}</span>
+                            <span class="badge bg-secondary">{{ dual('Private') }}</span>
                             {% endif %}
                         </td>
                         <td><strong>{{ s.name }}</strong></td>
@@ -108,10 +108,10 @@
     </div>
     <div class="card-footer d-flex justify-content-between">
         <a href="{{ url_for('web_customers.bulk_upload') }}" class="btn btn-outline-secondary btn-sm">
-            <i class="bi bi-x me-1"></i>{{ _('Cancel') }}
+            <i class="bi bi-x me-1"></i>{{ dual('Cancel') }}
         </a>
         <button type="button" class="btn btn-success" onclick="saveAll()">
-            <i class="bi bi-check-lg me-1"></i>{{ _('Validate & Save All') }}
+            <i class="bi bi-check-lg me-1"></i>{{ dual('Validate & Save All') }}
         </button>
     </div>
 </div>
@@ -128,15 +128,15 @@ function saveAll() {
 <div class="row g-3">
     <div class="col-md-6">
         <div class="card shadow-sm">
-            <div class="card-header"><strong>{{ _('Upload File') }}</strong></div>
+            <div class="card-header"><strong>{{ dual('Upload File') }}</strong></div>
             <div class="card-body">
                 <form method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
-                        <label class="form-label">{{ _('Select JSON or CSV file') }}</label>
+                        <label class="form-label">{{ dual('Select JSON or CSV file') }}</label>
                         <input type="file" name="file" class="form-control" accept=".json,.csv" required>
                     </div>
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-upload me-1"></i>{{ _('Load File') }}
+                        <i class="bi bi-upload me-1"></i>{{ dual('Load File') }}
                     </button>
                 </form>
             </div>
@@ -144,19 +144,19 @@ function saveAll() {
     </div>
     <div class="col-md-6">
         <div class="card shadow-sm">
-            <div class="card-header"><strong>{{ _('File Format') }}</strong></div>
+            <div class="card-header"><strong>{{ dual('File Format') }}</strong></div>
             <div class="card-body small">
-                <p class="mb-2"><strong>{{ _('CSV') }}</strong> — {{ _('Include headers row:') }}</p>
+                <p class="mb-2"><strong>{{ dual('CSV') }}</strong> — {{ dual('Include headers row:') }}</p>
                 <pre class="bg-light p-2 rounded"><code>"Type","Name","Contact","Email","Phone","City","Payment Terms","Address","ICE","RC"
 "prive","Customer A","Jane Doe","jane@example.com","0612345678","Casablanca","Net 30","123 Street","ICE12345","RC67890"</code></pre>
-                <p class="text-muted mt-1 mb-0">{{ _('Headers:') }} Type, Name, Contact, Email, Phone, City, Payment Terms, Address, ICE, RC</p>
-                <p class="mb-0 mt-2"><strong>{{ _('JSON') }}</strong> — {{ _('Array of objects:') }}</p>
+                <p class="text-muted mt-1 mb-0">{{ dual('Headers:') }} Type, Name, Contact, Email, Phone, City, Payment Terms, Address, ICE, RC</p>
+                <p class="mb-0 mt-2"><strong>{{ dual('JSON') }}</strong> — {{ dual('Array of objects:') }}</p>
                 <pre class="bg-light p-2 rounded"><code>[{
   "name": "Customer A",
   "contact": "Jane Doe",
   "email": "jane@example.com"
 }]</code></pre>
-                <p class="text-muted mt-2 mb-0">{{ _('Only name is required.') }}</p>
+                <p class="text-muted mt-2 mb-0">{{ dual('Only name is required.') }}</p>
             </div>
         </div>
     </div>

@@ -1,37 +1,37 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('Invoice') }} {{ invoice.invoice_number or invoice.id[:8] }} — Maure S2C{% endblock %}
+{% block title %}{{ dual('Invoice') }} {{ invoice.invoice_number or invoice.id[:8] }} — Maure S2C{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-receipt me-2"></i>{{ _('Invoice') }} {{ invoice.invoice_number or invoice.id[:8] }}</h4>
+    <h4 class="mb-0"><i class="bi bi-receipt me-2"></i>{{ dual('Invoice') }} {{ invoice.invoice_number or invoice.id[:8] }}</h4>
 <div>
     {% if invoice.status == 'draft' %}
-    <a href="{{ url_for('web_supplier_invoices.list_invoices') }}" class="btn btn-outline-secondary btn-sm me-1"><i class="bi bi-arrow-left me-1"></i>{{ _('Back') }}</a>
+    <a href="{{ url_for('web_supplier_invoices.list_invoices') }}" class="btn btn-outline-secondary btn-sm me-1"><i class="bi bi-arrow-left me-1"></i>{{ dual('Back') }}</a>
     <form method="POST" action="{{ url_for('web_supplier_invoices.validate_invoice', inv_id=invoice.id) }}" class="d-inline">
-        <button type="submit" class="btn btn-success btn-sm">{{ _('Validate') }}</button>
+        <button type="submit" class="btn btn-success btn-sm">{{ dual('Validate') }}</button>
     </form>
-    <form method="POST" action="{{ url_for('web_supplier_invoices.invalidate_invoice, inv_id=invoice.id) }}" class="d-inline" onsubmit="return confirm('{{ _('Invalidate') }} {{ invoice.invoice_number or invoice.id[:8] }}?')">
-        <button type="submit" class="btn btn-warning btn-sm">{{ _('Invalidate') }}</button>
+    <form method="POST" action="{{ url_for('web_supplier_invoices.invalidate_invoice, inv_id=invoice.id) }}" class="d-inline" onsubmit="return confirm('{{ dual('Invalidate') }} {{ invoice.invoice_number or invoice.id[:8] }}?')">
+        <button type="submit" class="btn btn-warning btn-sm">{{ dual('Invalidate') }}</button>
     </form>
-    <form method="POST" action="{{ url_for('web_supplier_invoices.delete_invoice', inv_id=invoice.id) }}" class="d-inline" onsubmit="return confirm('{{ _('Delete') }} {{ invoice.invoice_number or invoice.id[:8] }}?')">
-        <button type="submit" class="btn btn-outline-danger btn-sm">{{ _('Delete') }}</button>
+    <form method="POST" action="{{ url_for('web_supplier_invoices.delete_invoice', inv_id=invoice.id) }}" class="d-inline" onsubmit="return confirm('{{ dual('Delete') }} {{ invoice.invoice_number or invoice.id[:8] }}?')">
+        <button type="submit" class="btn btn-outline-danger btn-sm">{{ dual('Delete') }}</button>
     </form>
     {% elif invoice.status == 'approved' %}
-    <a href="{{ url_for('web_supplier_invoices.list_invoices') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>{{ _('Back') }}</a>
+    <a href="{{ url_for('web_supplier_invoices.list_invoices') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>{{ dual('Back') }}</a>
     {% endif %}
 </div>
 </div>
 <div class="card shadow-sm">
     <div class="card-body">
         <dl class="row small mb-0">
-            <dt class="col-sm-2">{{ _('Supplier') }}</dt>
+            <dt class="col-sm-2">{{ dual('Supplier') }}</dt>
             <dd class="col-sm-10">{{ invoice.supplier_name or '-' }}</dd>
-            <dt class="col-sm-2">{{ _('PO #') }}</dt>
+            <dt class="col-sm-2">{{ dual('PO #') }}</dt>
             <dd class="col-sm-10">{{ invoice.po_number or '-' }}</dd>
-            <dt class="col-sm-2">{{ _('Status') }}</dt>
-            <dd class="col-sm-10"><span class="badge bg-{{ 'success' if invoice.status == 'paid' else 'warning' if invoice.status == 'approved' else 'secondary' }}">{{ _(invoice.status) }}</span></dd>
-            <dt class="col-sm-2">{{ _('Total') }}</dt>
+            <dt class="col-sm-2">{{ dual('Status') }}</dt>
+            <dd class="col-sm-10"><span class="badge bg-{{ 'success' if invoice.status == 'paid' else 'warning' if invoice.status == 'approved' else 'secondary' }}">{{ dual(invoice.status) }}</span></dd>
+            <dt class="col-sm-2">{{ dual('Total') }}</dt>
             <dd class="col-sm-10">{{ "%.2f"|format(invoice.total) }}</dd>
-            <dt class="col-sm-2">{{ _('Due Date') }}</dt>
+            <dt class="col-sm-2">{{ dual('Due Date') }}</dt>
             <dd class="col-sm-10">{{ invoice.due_date[:10] if invoice.due_date else '-' }}</dd>
         </dl>
     </div>

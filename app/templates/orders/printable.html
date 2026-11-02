@@ -2,7 +2,7 @@
 <html lang="{{ current_lang }}">
 <head>
     <meta charset="UTF-8">
-    <title>{{ _('Order') }} {{ order.order_number }}</title>
+    <title>{{ dual('Order') }} {{ order.order_number }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body { font-family: 'Comfortaa', sans-serif; padding: 40px; color: #333; }
@@ -24,7 +24,7 @@
 <body>
     <div class="header d-flex justify-content-between">
         <div>
-            <h1>{{ _('ORDER') }}</h1>
+            <h1>{{ dual('ORDER') }}</h1>
             <div class="order-number">{{ order.order_number }}</div>
         </div>
         <div class="text-end">
@@ -37,15 +37,15 @@
 
     <div class="row mb-4">
         <div class="col-6">
-            <strong>{{ _('Customer') }}:</strong>
+            <strong>{{ dual('Customer') }}:</strong>
             <p class="mb-0">{{ order.customer_name }}</p>
             {% if order.contact_email %}<p class="mb-0"><small>{{ order.contact_email }}</small></p>{% elif order.customer_email %}<p class="mb-0"><small>{{ order.customer_email }}</small></p>{% endif %}
             {% if order.customer_address %}<p class="mb-0"><small>{{ order.customer_address }}</small></p>{% endif %}
         </div>
         <div class="col-6 text-end">
-            <strong>{{ _('Order Date') }}:</strong>
+            <strong>{{ dual('Order Date') }}:</strong>
             <p class="mb-0">{{ order.created_at[:10] if order.created_at else '-' }}</p>
-            <strong>{{ _('Status') }}:</strong>
+            <strong>{{ dual('Status') }}:</strong>
             <p class="mb-0"><span class="badge" style="background:#2563EB;color:#fff;">{{ _(order.status)|upper }}</span></p>
         </div>
     </div>
@@ -53,18 +53,18 @@
     {% if order.generated_invoice_number %}
     <div class="alert alert-info py-2">
         <i class="bi bi-file-text me-1"></i>
-        {{ _('Invoice generated:') }} {{ order.generated_invoice_number }}
+        {{ dual('Invoice generated:') }} {{ order.generated_invoice_number }}
     </div>
     {% endif %}
 
     <table class="items">
         <thead>
             <tr>
-                <th>{{ _('SKU') }}</th>
-                <th>{{ _('Item') }}</th>
-                <th class="text-end">{{ _('Qty') }}</th>
-                <th class="text-end">{{ _('Price') }}</th>
-                <th class="text-end">{{ _('Total') }}</th>
+                <th>{{ dual('SKU') }}</th>
+                <th>{{ dual('Item') }}</th>
+                <th class="text-end">{{ dual('Qty') }}</th>
+                <th class="text-end">{{ dual('Price') }}</th>
+                <th class="text-end">{{ dual('Total') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -81,24 +81,24 @@
     </table>
 
     <table class="totals">
-        <tr><td>{{ _('Subtotal') }}</td><td class="text-end">{{ "%.2f"|format(order.subtotal) }} MAD</td></tr>
+        <tr><td>{{ dual('Subtotal') }}</td><td class="text-end">{{ "%.2f"|format(order.subtotal) }} MAD</td></tr>
         {% if order.discount_percent > 0 %}
-        <tr><td>{{ _('Discount') }} ({{ "%.0f"|format(order.discount_percent) }}%)</td><td class="text-end" style="color:#dc3545;">-{{ "%.2f"|format(order.discount_amount) }} MAD</td></tr>
+        <tr><td>{{ dual('Discount') }} ({{ "%.0f"|format(order.discount_percent) }}%)</td><td class="text-end" style="color:#dc3545;">-{{ "%.2f"|format(order.discount_amount) }} MAD</td></tr>
         {% endif %}
-        <tr><td>{{ _('Tax') }} ({{ "%.0f"|format(order.tax_percent) }}%)</td><td class="text-end">{{ "%.2f"|format(order.tax_amount) }} MAD</td></tr>
-        <tr class="grand-total"><td>{{ _('Total') }}</td><td class="text-end">{{ "%.2f"|format(order.total) }} MAD</td></tr>
+        <tr><td>{{ dual('Tax') }} ({{ "%.0f"|format(order.tax_percent) }}%)</td><td class="text-end">{{ "%.2f"|format(order.tax_amount) }} MAD</td></tr>
+        <tr class="grand-total"><td>{{ dual('Total') }}</td><td class="text-end">{{ "%.2f"|format(order.total) }} MAD</td></tr>
     </table>
 
     {% if order.notes %}
     <div style="margin-top:30px;padding:15px;background:#f9fafb;border-radius:8px;">
-        <strong>{{ _('Notes:') }}</strong>
+        <strong>{{ dual('Notes:') }}</strong>
         <p class="mb-0">{{ order.notes }}</p>
     </div>
     {% endif %}
 
     <div class="footer">
-        <p>{{ _('Thank you for your business!') }}</p>
-        <p>{{ _('Generated on') }} {{ now().strftime('%Y-%m-%d %H:%M') if now else '' }}</p>
+        <p>{{ dual('Thank you for your business!') }}</p>
+        <p>{{ dual('Generated on') }} {{ now().strftime('%Y-%m-%d %H:%M') if now else '' }}</p>
     </div>
 </body>
 </html>

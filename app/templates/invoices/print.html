@@ -1,5 +1,5 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('Print') }} — {{ invoice.invoice_number }}{% endblock %}
+{% block title %}{{ dual('Print') }} — {{ invoice.invoice_number }}{% endblock %}
 {% block extra_head %}
 {% set tpl = current_company.invoice_template if current_company else {} %}
 {% set pri = tpl.get('primary_color', '#1a73e8') %}
@@ -24,8 +24,8 @@
 {% endblock %}
 {% block content %}
 <div class="no-print mb-3">
-    <button onclick="window.print()" class="btn btn-primary"><i class="bi bi-printer me-1"></i>{{ _('Print') }}</button>
-    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.view_invoice', invoice_id=invoice.id) }}{% else %}{{ url_for('web_invoices.view_invoice', invoice_id=invoice.id) }}{% endif %}" class="btn btn-outline-secondary">{{ _('Back') }}</a>
+    <button onclick="window.print()" class="btn btn-primary"><i class="bi bi-printer me-1"></i>{{ dual('Print') }}</button>
+    <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.view_invoice', invoice_id=invoice.id) }}{% else %}{{ url_for('web_invoices.view_invoice', invoice_id=invoice.id) }}{% endif %}" class="btn btn-outline-secondary">{{ dual('Back') }}</a>
 </div>
 
 <div class="card border-0">
@@ -47,7 +47,7 @@
                 {% endif %}
             </div>
             <div class="col-6 text-end">
-                <strong>{{ _('Bill To:') }}</strong>
+                <strong>{{ dual('Bill To:') }}</strong>
                 <p class="mb-0">{{ invoice.customer_name }}</p>
                 {% if invoice.contact_email %}<p class="mb-0"><small>{{ invoice.contact_email }}</small></p>{% elif invoice.customer_email %}<p class="mb-0"><small>{{ invoice.customer_email }}</small></p>{% endif %}
                 {% if invoice.customer_address %}<p><small>{{ invoice.customer_address }}</small></p>{% endif %}
@@ -66,24 +66,24 @@
 
         <div class="row mb-4">
             <div class="col-12">
-                <h3 class="mb-0 d-inline inv-header">{{ _('INVOICE') }}</h3>
+                <h3 class="mb-0 d-inline inv-header">{{ dual('INVOICE') }}</h3>
                 <span class="h4 inv-label ms-2">{{ invoice.invoice_number }}</span>
-                {% if invoice.attention_to %}&nbsp;&nbsp;<small class="text-muted">| {{ _('Attention to:') }} {{ invoice.attention_to }}</small>{% endif %}
+                {% if invoice.attention_to %}&nbsp;&nbsp;<small class="text-muted">| {{ dual('Attention to:') }} {{ invoice.attention_to }}</small>{% endif %}
                 <br>
-                <small class="text-muted">{{ _('Date:') }} {{ invoice.created_at[:10] if invoice.created_at else '-' }}</small>
-                {% if invoice.delivery_time %}&nbsp;&nbsp;|&nbsp;&nbsp;<small>{{ _('Delivery:') }} {{ invoice.delivery_time }}</small>{% endif %}
+                <small class="text-muted">{{ dual('Date:') }} {{ invoice.created_at[:10] if invoice.created_at else '-' }}</small>
+                {% if invoice.delivery_time %}&nbsp;&nbsp;|&nbsp;&nbsp;<small>{{ dual('Delivery:') }} {{ invoice.delivery_time }}</small>{% endif %}
             </div>
         </div>
 
         <table class="table table-bordered inv-table">
             <thead>
                 <tr>
-                    <th>{{ _('SKU') }}</th>
-                    <th>{{ _('Item') }}</th>
-                    <th class="text-end">{{ _('Qty') }}</th>
-                    <th class="text-end">{{ _('Unit Price') }}</th>
-                    <th class="text-end">{{ _('Pack Size') }}</th>
-                    <th class="text-end">{{ _('Total') }}</th>
+                    <th>{{ dual('SKU') }}</th>
+                    <th>{{ dual('Item') }}</th>
+                    <th class="text-end">{{ dual('Qty') }}</th>
+                    <th class="text-end">{{ dual('Unit Price') }}</th>
+                    <th class="text-end">{{ dual('Pack Size') }}</th>
+                    <th class="text-end">{{ dual('Total') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -103,12 +103,12 @@
         <div class="row">
             <div class="col-6 offset-6">
                 <table class="table table-sm table-borderless">
-                    <tr><td>{{ _('Subtotal') }}</td><td class="text-end">{{ invoice.subtotal }} MAD</td></tr>
+                    <tr><td>{{ dual('Subtotal') }}</td><td class="text-end">{{ invoice.subtotal }} MAD</td></tr>
                     {% if invoice.discount_percent > 0 %}
-                    <tr><td>{{ _('Discount') }} ({{ invoice.discount_percent }}%)</td><td class="text-end text-danger">-{{ invoice.discount_amount }} MAD</td></tr>
+                    <tr><td>{{ dual('Discount') }} ({{ invoice.discount_percent }}%)</td><td class="text-end text-danger">-{{ invoice.discount_amount }} MAD</td></tr>
                     {% endif %}
-                    <tr><td>{{ _('Tax') }} ({{ invoice.tax_percent }}%)</td><td class="text-end">{{ invoice.tax_amount }} MAD</td></tr>
-                    <tr class="fw-bold"><td>{{ _('Total') }}</td><td class="text-end fs-4 inv-total">{{ invoice.total }} MAD</td></tr>
+                    <tr><td>{{ dual('Tax') }} ({{ invoice.tax_percent }}%)</td><td class="text-end">{{ invoice.tax_amount }} MAD</td></tr>
+                    <tr class="fw-bold"><td>{{ dual('Total') }}</td><td class="text-end fs-4 inv-total">{{ invoice.total }} MAD</td></tr>
                 </table>
             </div>
         </div>
@@ -116,14 +116,14 @@
         {% if tpl.get('payment_terms') %}
         <div class="row mt-2">
             <div class="col-12">
-                <small class="inv-label"><strong>{{ _('Payment Terms:') }}</strong> {{ tpl.get('payment_terms') }}</small>
+                <small class="inv-label"><strong>{{ dual('Payment Terms:') }}</strong> {{ tpl.get('payment_terms') }}</small>
             </div>
         </div>
         {% endif %}
 
         {% if invoice.notes %}
         <div class="text-center mt-3">
-            <small class="text-muted"><strong>{{ _('Notes:') }}</strong><br>{{ invoice.notes }}</small>
+            <small class="text-muted"><strong>{{ dual('Notes:') }}</strong><br>{{ invoice.notes }}</small>
         </div>
         {% endif %}
 
@@ -132,16 +132,16 @@
             <div class="col-6">
                 <strong>{{ current_company.name if current_company else 'Maure S2C' }}</strong><br>
                 {% if current_company.address %}{{ current_company.address }}{% if current_company.city %}, {{ current_company.city }}{% endif %}<br>{% endif %}
-                {% if current_company.phone %}{{ _('Tel:') }} {{ current_company.phone }}<br>{% endif %}
-                {% if current_company.email %}{{ _('Email:') }} {{ current_company.email }}{% endif %}
+                {% if current_company.phone %}{{ dual('Tel:') }} {{ current_company.phone }}<br>{% endif %}
+                {% if current_company.email %}{{ dual('Email:') }} {{ current_company.email }}{% endif %}
             </div>
             <div class="col-6 text-end">
-                {% if current_company.rib and tpl.get('show_rib', true) %}{{ _('RIB:') }} {{ current_company.rib }}<br>{% endif %}
+                {% if current_company.rib and tpl.get('show_rib', true) %}{{ dual('RIB:') }} {{ current_company.rib }}<br>{% endif %}
                 {% if tpl.get('show_legal_ids', true) %}
-                {% if current_company.if_tax %}{{ _('IF:') }} {{ current_company.if_tax }}<br>{% endif %}
-                {% if current_company.tp %}{{ _('TP:') }} {{ current_company.tp }}<br>{% endif %}
-                {% if current_company.rc %}{{ _('RC:') }} {{ current_company.rc }}<br>{% endif %}
-                {% if current_company.ice %}{{ _('ICE:') }} {{ current_company.ice }}{% endif %}
+                {% if current_company.if_tax %}{{ dual('IF:') }} {{ current_company.if_tax }}<br>{% endif %}
+                {% if current_company.tp %}{{ dual('TP:') }} {{ current_company.tp }}<br>{% endif %}
+                {% if current_company.rc %}{{ dual('RC:') }} {{ current_company.rc }}<br>{% endif %}
+                {% if current_company.ice %}{{ dual('ICE:') }} {{ current_company.ice }}{% endif %}
                 {% endif %}
             </div>
         </div>
@@ -156,7 +156,7 @@
             {% endif %}
             {% if tpl.get('signature_name') and tpl.get('signature_title') %}
             <div class="col-6 text-end">
-                {{ _('Authorized by') }}<br>
+                {{ dual('Authorized by') }}<br>
                 <strong>{{ tpl.get('signature_name') }}</strong><br>
                 <small>{{ tpl.get('signature_title') }}</small>
             </div>

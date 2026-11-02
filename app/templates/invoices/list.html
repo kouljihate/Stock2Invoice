@@ -1,10 +1,10 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('Invoices') }} — Maure S2C{% endblock %}
+{% block title %}{{ dual('Invoices') }} — Maure S2C{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-file-text me-2"></i>{{ _('Invoices') }}</h4>
+    <h4 class="mb-0"><i class="bi bi-file-text me-2"></i>{{ dual('Invoices') }}</h4>
     <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.create_invoice') }}{% else %}{{ url_for('web_invoices.create_invoice') }}{% endif %}" class="btn btn-primary">
-        <i class="bi bi-plus-lg me-1"></i>{{ _('New Invoice') }}
+        <i class="bi bi-plus-lg me-1"></i>{{ dual('New Invoice') }}
     </a>
 </div>
 
@@ -25,11 +25,11 @@
         <thead class="table-light">
             <tr>
                 <th>#</th>
-                <th>{{ _('Customer') }}</th>
-                <th>{{ _('Date') }}</th>
-                <th>{{ _('Status') }}</th>
-                <th class="text-end">{{ _('Total') }}</th>
-                <th class="text-end">{{ _('Actions') }}</th>
+                <th>{{ dual('Customer') }}</th>
+                <th>{{ dual('Date') }}</th>
+                <th>{{ dual('Status') }}</th>
+                <th class="text-end">{{ dual('Total') }}</th>
+                <th class="text-end">{{ dual('Actions') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -40,7 +40,7 @@
                 <td>{{ inv.created_at[:10] if inv.created_at else '-' }}</td>
                 <td>
                     <span class="badge bg-{% if inv.status == 'paid' %}success{% elif inv.status == 'draft' %}secondary{% elif inv.status == 'sent' %}info{% else %}danger{% endif %}">
-                        {{ _(inv.status) }}
+                        {{ dual(inv.status) }}
                     </span>
                 </td>
                 <td class="text-end">{{ inv.total }} MAD</td>
@@ -48,14 +48,14 @@
                     <div class="d-flex gap-1 justify-content-end">
                         <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.view_invoice', invoice_id=inv.id) }}{% else %}{{ url_for('web_invoices.view_invoice', invoice_id=inv.id) }}{% endif %}" class="btn btn-sm btn-outline-primary btn-icon-circle" title="{{ _('View') }}"><i class="bi bi-eye"></i></a>
                         <a href="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.download_pdf', invoice_id=inv.id) }}{% else %}{{ url_for('web_invoices.download_pdf', invoice_id=inv.id) }}{% endif %}" target="_blank" class="btn btn-sm btn-outline-secondary btn-icon-circle" title="{{ _('PDF') }}"><i class="bi bi-file-earmark-pdf"></i></a>
-                        <form method="POST" action="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.delete_invoice', invoice_id=inv.id) }}{% else %}{{ url_for('web_invoices.delete_invoice', invoice_id=inv.id) }}{% endif %}" class="d-inline" onsubmit="return confirm('{{ _('Delete') }} {{ inv.invoice_number or inv.id[:8] }}?')">
+                        <form method="POST" action="{% if mode == 'mobile' %}{{ url_for('mobile_invoices.delete_invoice', invoice_id=inv.id) }}{% else %}{{ url_for('web_invoices.delete_invoice', invoice_id=inv.id) }}{% endif %}" class="d-inline" onsubmit="return confirm('{{ dual('Delete') }} {{ inv.invoice_number or inv.id[:8] }}?')">
                             <button type="submit" class="btn btn-sm btn-outline-danger btn-icon-circle" title="{{ _('Delete') }}"><i class="bi bi-trash"></i></button>
                         </form>
                     </div>
                 </td>
             </tr>
             {% else %}
-            <tr><td colspan="6" class="text-center text-muted py-4">{{ _('No invoices found.') }}</td></tr>
+            <tr><td colspan="6" class="text-center text-muted py-4">{{ dual('No invoices found.') }}</td></tr>
             {% endfor %}
         </tbody>
     </table>

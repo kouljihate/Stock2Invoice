@@ -5,10 +5,10 @@
     <h4 class="mb-0"><i class="bi bi-box me-2"></i>{{ product.name }}</h4>
     <div>
         <a href="{% if mode == 'mobile' %}{{ url_for('mobile_stock.edit_product', product_id=product.id) }}{% else %}{{ url_for('web_stock.edit_product', product_id=product.id) }}{% endif %}" class="btn btn-primary btn-sm">
-            <i class="bi bi-pencil me-1"></i>{{ _('Edit') }}
+            <i class="bi bi-pencil me-1"></i>{{ dual('Edit') }}
         </a>
         <a href="{% if mode == 'mobile' %}{{ url_for('mobile_stock.list_products') }}{% else %}{{ url_for('web_stock.list_products') }}{% endif %}" class="btn btn-outline-secondary btn-sm">
-            <i class="bi bi-arrow-left me-1"></i>{{ _('Back') }}
+            <i class="bi bi-arrow-left me-1"></i>{{ dual('Back') }}
         </a>
     </div>
 </div>
@@ -16,22 +16,22 @@
 <div class="row g-3 mb-4">
     <div class="col-md-8">
         <div class="card shadow-sm">
-            <div class="card-header"><strong>{{ _('Details') }}</strong></div>
+            <div class="card-header"><strong>{{ dual('Details') }}</strong></div>
             <div class="card-body">
                 <table class="table table-sm">
-                    <tr><th style="width:150px">{{ _('SKU') }}</th><td><code>{{ product.sku }}</code></td></tr>
-                    <tr><th>{{ _('Brand') }}</th><td>{{ product.brand or '-' }}</td></tr>
-                    <tr><th>{{ _('Category') }}</th><td>{{ product.category or '-' }}</td></tr>
-                    <tr><th>{{ _('Subcategory') }}</th><td>{{ product.subcategory or '-' }}</td></tr>
-                    <tr><th>{{ _('Package Type') }}</th><td>{{ product.package_type or '-' }}</td></tr>
-                    <tr><th>{{ _('Pack Size') }}</th><td>{% if product.pack_size %}{{ product.pack_size }} {{ product.pack_size_unit or '' }}{% else %}-{% endif %}</td></tr>
-                    <tr><th>{{ _('Number of Pack') }}</th><td>{{ product.number_of_pack or '-' }}</td></tr>
-                    <tr><th>{{ _('Description') }}</th><td>{{ product.description or '-' }}</td></tr>
-                    <tr><th>{{ _('Quantity') }}</th><td><span class="badge bg-{{ 'success' if product.quantity > product.quantity_min else 'warning' }} fs-6">{{ product.quantity }}</span></td></tr>
-                    <tr><th>{{ _('Min Quantity') }}</th><td>{{ product.quantity_min }}</td></tr>
-                    <tr><th>{{ _('Price') }}</th><td>${{ product.price }}</td></tr>
-                    <tr><th>{{ _('Total Value') }}</th><td>${{ (product.quantity * product.price)|round(2) }}</td></tr>
-                    <tr><th>{{ _('Status') }}</th><td><span class="badge bg-{{ 'success' if product.status == 'active' else 'secondary' }}">{{ product.status or 'active' }}</span></td></tr>
+                    <tr><th style="width:150px">{{ dual('SKU') }}</th><td><code>{{ product.sku }}</code></td></tr>
+                    <tr><th>{{ dual('Brand') }}</th><td>{{ product.brand or '-' }}</td></tr>
+                    <tr><th>{{ dual('Category') }}</th><td>{{ product.category or '-' }}</td></tr>
+                    <tr><th>{{ dual('Subcategory') }}</th><td>{{ product.subcategory or '-' }}</td></tr>
+                    <tr><th>{{ dual('Package Type') }}</th><td>{{ product.package_type or '-' }}</td></tr>
+                    <tr><th>{{ dual('Pack Size') }}</th><td>{% if product.pack_size %}{{ product.pack_size }} {{ product.pack_size_unit or '' }}{% else %}-{% endif %}</td></tr>
+                    <tr><th>{{ dual('Number of Pack') }}</th><td>{{ product.number_of_pack or '-' }}</td></tr>
+                    <tr><th>{{ dual('Description') }}</th><td>{{ product.description or '-' }}</td></tr>
+                    <tr><th>{{ dual('Quantity') }}</th><td><span class="badge bg-{{ 'success' if product.quantity > product.quantity_min else 'warning' }} fs-6">{{ product.quantity }}</span></td></tr>
+                    <tr><th>{{ dual('Min Quantity') }}</th><td>{{ product.quantity_min }}</td></tr>
+                    <tr><th>{{ dual('Price') }}</th><td>${{ product.price }}</td></tr>
+                    <tr><th>{{ dual('Total Value') }}</th><td>${{ (product.quantity * product.price)|round(2) }}</td></tr>
+                    <tr><th>{{ dual('Status') }}</th><td><span class="badge bg-{{ 'success' if product.status == 'active' else 'secondary' }}">{{ product.status or 'active' }}</span></td></tr>
                 </table>
             </div>
         </div>
@@ -39,32 +39,32 @@
 </div>
 
 <div class="card shadow-sm">
-    <div class="card-header"><strong><i class="bi bi-arrow-left-right me-1"></i>{{ _('Stock Movements') }}</strong></div>
+    <div class="card-header"><strong><i class="bi bi-arrow-left-right me-1"></i>{{ dual('Stock Movements') }}</strong></div>
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-sm mb-0">
                 <thead>
                     <tr>
-                        <th>{{ _('Date') }}</th>
-                        <th>{{ _('Type') }}</th>
-                        <th class="text-end">{{ _('Qty') }}</th>
-                        <th class="text-end">{{ _('Before') }}</th>
-                        <th class="text-end">{{ _('After') }}</th>
-                        <th>{{ _('Reason') }}</th>
+                        <th>{{ dual('Date') }}</th>
+                        <th>{{ dual('Type') }}</th>
+                        <th class="text-end">{{ dual('Qty') }}</th>
+                        <th class="text-end">{{ dual('Before') }}</th>
+                        <th class="text-end">{{ dual('After') }}</th>
+                        <th>{{ dual('Reason') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for mv in movements %}
                     <tr>
                         <td><small>{{ mv.created_at[:10] }}</small></td>
-                        <td><span class="badge bg-{{ 'success' if mv.type == 'in' else 'danger' }}">{{ _(mv.type) }}</span></td>
+                        <td><span class="badge bg-{{ 'success' if mv.type == 'in' else 'danger' }}">{{ dual(mv.type) }}</span></td>
                         <td class="text-end">{{ mv.quantity }}</td>
                         <td class="text-end">{{ mv.quantity_before }}</td>
                         <td class="text-end">{{ mv.quantity_after }}</td>
                         <td><small>{{ mv.reason }}</small></td>
                     </tr>
                     {% else %}
-                    <tr><td colspan="6" class="text-center text-muted py-3">{{ _('No movements recorded.') }}</td></tr>
+                    <tr><td colspan="6" class="text-center text-muted py-3">{{ dual('No movements recorded.') }}</td></tr>
                     {% endfor %}
                 </tbody>
             </table>

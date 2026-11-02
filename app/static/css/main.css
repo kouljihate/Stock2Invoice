@@ -1,20 +1,56 @@
 :root {
-  --font-default: 'Comfortaa', sans-serif;
-  --font-arabic: 'VIP Rawy Thin', 'Comfortaa', 'Alkalami', serif;
-  --font-french: 'Comfortaa', sans-serif;
+  /* Comfortaa carries the Latin UI; VIP Rawy is the default for Arabic.
+     Listing both means untagged Arabic text still lands on VIP Rawy,
+     because font fallback is resolved per glyph. */
+  --font-default: 'Comfortaa', 'VIP Rawy', sans-serif;
+  --font-arabic: 'VIP Rawy', 'Comfortaa', serif;
+  --font-french: 'Comfortaa', 'VIP Rawy', sans-serif;
 }
 
+/* VIP Rawy — the project's Arabic typeface (app/static/fonts).
+   Arabic + Latin selectors EXCLUDING digits (U+0030-0039, U+0660-0669)
+   so all numbers fall back to the Comfortaa family. */
 @font-face {
-  font-family: 'VIP Rawy Thin';
-  src: url('../fonts/VIP-RAWY-THIN.ttf') format('truetype');
-  font-weight: normal;
+  font-family: 'VIP Rawy';
+  src: url('../fonts/VIP-Rawy-Regular.ttf') format('truetype');
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
-  /* Arabic + Latin selectors EXCLUDING digits (U+0030-0039, U+0660-0669)
-     so all numbers fall back to the Comfortaa family. */
   unicode-range: U+0020-002F, U+003A-007E, U+00A0, U+060C, U+061B, U+061F,
     U+0621-063A, U+0640-0652, U+066A, U+066D,
     U+FB56-FB59, U+FB6A-FB6D, U+FB7A-FB7D, U+FB8A-FB8B, U+FDF2, U+FE80-FEFC;
+}
+
+@font-face {
+  font-family: 'VIP Rawy';
+  src: url('../fonts/VIP-Rawy-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-002F, U+003A-007E, U+00A0, U+060C, U+061B, U+061F,
+    U+0621-063A, U+0640-0652, U+066A, U+066D,
+    U+FB56-FB59, U+FB6A-FB6D, U+FB7A-FB7D, U+FB8A-FB8B, U+FDF2, U+FE80-FEFC;
+}
+
+/* Thin weight kept for headings that already ask for 300. */
+@font-face {
+  font-family: 'VIP Rawy';
+  src: url('../fonts/VIP-RAWY-THIN.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-002F, U+003A-007E, U+00A0, U+060C, U+061B, U+061F,
+    U+0621-063A, U+0640-0652, U+066A, U+066D,
+    U+FB56-FB59, U+FB6A-FB6D, U+FB7A-FB7D, U+FB8A-FB8B, U+FDF2, U+FE80-FEFC;
+}
+
+/* Arabic text uses VIP Rawy wherever it appears — the dual-language UI keeps
+   the primary language on <html data-lang="en|fr">, so the old
+   data-lang="ar" selectors below no longer match. */
+[lang="ar"],
+[dir="rtl"],
+.d-s {
+  font-family: var(--font-arabic);
 }
 
 html[data-lang="en"] body {
@@ -37,7 +73,7 @@ html[data-lang="fr"] body {
   font-weight: 500;
 }
 
-/* VIP Rawy Thin on every control and component when language is Arabic */
+/* VIP Rawy on every control and component when the page itself is Arabic */
 html[data-lang="ar"] body,
 html[data-lang="ar"] input,
 html[data-lang="ar"] select,

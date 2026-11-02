@@ -1,12 +1,12 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('Admin Panel') }} — Maure S2C{% endblock %}
+{% block title %}{{ dual('Admin Panel') }} — Maure S2C{% endblock %}
 {% block extra_head %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 {% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h4 class="mb-0"><i class="bi bi-shield-lock me-2"></i>{{ _('Admin Panel') }}</h4>
-    <span class="text-muted small">{{ _('Welcome') }}, {{ user.name }}</span>
+    <h4 class="mb-0"><i class="bi bi-shield-lock me-2"></i>{{ dual('Admin Panel') }}</h4>
+    <span class="text-muted small">{{ dual('Welcome') }}, {{ user.name }}</span>
 </div>
 
 <div class="row g-3 mb-4">
@@ -15,9 +15,9 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <h6 class="text-muted mb-1">{{ _('Active Companies') }}</h6>
+                        <h6 class="text-muted mb-1">{{ dual('Active Companies') }}</h6>
                         <h2 class="mb-0 text-primary">{{ total_companies }}</h2>
-                        <small class="text-muted">{{ _('Total Users') }}: {{ total_users }}</small>
+                        <small class="text-muted">{{ dual('Total Users') }}: {{ total_users }}</small>
                     </div>
                     <i class="bi bi-building fs-2 text-primary opacity-25"></i>
                 </div>
@@ -37,11 +37,11 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <h6 class="text-muted mb-1">{{ _('Platform Users') }}</h6>
+                        <h6 class="text-muted mb-1">{{ dual('Platform Users') }}</h6>
                         <h2 class="mb-0 text-success">{{ total_users }}</h2>
                         <small class="text-muted">
-                            <span class="text-success">{{ _('Active') }}: {{ active_users }}</span> &middot;
-                            <span class="text-secondary">{{ _('Inactive') }}: {{ total_users - active_users }}</span>
+                            <span class="text-success">{{ dual('Active') }}: {{ active_users }}</span> &middot;
+                            <span class="text-secondary">{{ dual('Inactive') }}: {{ total_users - active_users }}</span>
                         </small>
                     </div>
                     <i class="bi bi-people fs-2 text-success opacity-25"></i>
@@ -62,16 +62,16 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <h6 class="text-muted mb-1">{{ _('System Health') }}</h6>
+                        <h6 class="text-muted mb-1">{{ dual('System Health') }}</h6>
                         <h2 class="mb-0 text-info">99.98%</h2>
-                        <small class="text-muted">{{ _('Avg Response') }}: &lt;120ms</small>
+                        <small class="text-muted">{{ dual('Avg Response') }}: &lt;120ms</small>
                     </div>
                     <i class="bi bi-activity fs-2 text-info opacity-25"></i>
                 </div>
                 <div class="mt-2">
                     <div class="d-flex justify-content-between small text-muted">
-                        <span>{{ _('Databases') }}: {{ collection_stats|length }}</span>
-                        <span class="text-success"><i class="bi bi-check-circle-fill"></i> {{ _('All Online') }}</span>
+                        <span>{{ dual('Databases') }}: {{ collection_stats|length }}</span>
+                        <span class="text-success"><i class="bi bi-check-circle-fill"></i> {{ dual('All Online') }}</span>
                     </div>
                 </div>
             </div>
@@ -82,9 +82,9 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <h6 class="text-muted mb-1">{{ _('24h Activity') }}</h6>
+                        <h6 class="text-muted mb-1">{{ dual('24h Activity') }}</h6>
                         <h2 class="mb-0 text-warning">{{ today_ops }}</h2>
-                        <small class="text-muted">{{ _('Events') }}: {{ today_activities }} &middot; {{ _('Ops') }}: {{ today_movements if today_movements is defined else 0 }}</small>
+                        <small class="text-muted">{{ dual('Events') }}: {{ today_activities }} &middot; {{ dual('Ops') }}: {{ today_movements if today_movements is defined else 0 }}</small>
                     </div>
                     <i class="bi bi-arrow-up-short fs-2 text-warning opacity-25"></i>
                 </div>
@@ -94,7 +94,7 @@
                         {% set bar_pct = (pct / 500 * 100)|round if pct < 500 else 100 %}
                         <div class="progress-bar bg-warning" style="width:{{ bar_pct }}%"></div>
                     </div>
-                    <small class="text-muted">{{ total_activities }} {{ _('total platform events') }}</small>
+                    <small class="text-muted">{{ total_activities }} {{ dual('total platform events') }}</small>
                 </div>
             </div>
         </div>
@@ -106,40 +106,40 @@
     <div class="col-12">
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <strong><i class="bi bi-diagram-3 me-1"></i>{{ _('RabbitMQ Monitor') }}</strong>
+                <strong><i class="bi bi-diagram-3 me-1"></i>{{ dual('RabbitMQ Monitor') }}</strong>
                 {% if rabbitmq.ok %}
-                <span class="badge bg-success"><i class="bi bi-circle-fill me-1"></i>{{ _('Online') }}</span>
+                <span class="badge bg-success"><i class="bi bi-circle-fill me-1"></i>{{ dual('Online') }}</span>
                 {% else %}
-                <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>{{ _('Offline') }}</span>
+                <span class="badge bg-danger"><i class="bi bi-x-circle me-1"></i>{{ dual('Offline') }}</span>
                 {% endif %}
             </div>
             <div class="card-body">
                 {% if rabbitmq.ok %}
                 <div class="row g-3 text-center mb-3">
-                    <div class="col"><h4 class="mb-0 text-primary">{{ rabbitmq.queues }}</h4><small class="text-muted">{{ _('Queues') }}</small></div>
-                    <div class="col"><h4 class="mb-0 text-success">{{ rabbitmq.connections }}</h4><small class="text-muted">{{ _('Connections') }}</small></div>
-                    <div class="col"><h4 class="mb-0 text-info">{{ rabbitmq.channels }}</h4><small class="text-muted">{{ _('Channels') }}</small></div>
-                    <div class="col"><h4 class="mb-0 text-warning">{{ rabbitmq.consumers }}</h4><small class="text-muted">{{ _('Consumers') }}</small></div>
-                    <div class="col"><h4 class="mb-0 text-danger">{{ rabbitmq.messages }}</h4><small class="text-muted">{{ _('Messages') }}</small></div>
-                    <div class="col"><h4 class="mb-0 text-secondary">{{ rabbitmq.nodes }}</h4><small class="text-muted">{{ _('Nodes') }}</small></div>
+                    <div class="col"><h4 class="mb-0 text-primary">{{ rabbitmq.queues }}</h4><small class="text-muted">{{ dual('Queues') }}</small></div>
+                    <div class="col"><h4 class="mb-0 text-success">{{ rabbitmq.connections }}</h4><small class="text-muted">{{ dual('Connections') }}</small></div>
+                    <div class="col"><h4 class="mb-0 text-info">{{ rabbitmq.channels }}</h4><small class="text-muted">{{ dual('Channels') }}</small></div>
+                    <div class="col"><h4 class="mb-0 text-warning">{{ rabbitmq.consumers }}</h4><small class="text-muted">{{ dual('Consumers') }}</small></div>
+                    <div class="col"><h4 class="mb-0 text-danger">{{ rabbitmq.messages }}</h4><small class="text-muted">{{ dual('Messages') }}</small></div>
+                    <div class="col"><h4 class="mb-0 text-secondary">{{ rabbitmq.nodes }}</h4><small class="text-muted">{{ dual('Nodes') }}</small></div>
                 </div>
                 <div class="d-flex flex-wrap gap-2 mb-3">
                     <span class="badge bg-light text-dark">v{{ rabbitmq.version }}</span>
-                    <span class="badge bg-light text-dark">{{ _('Cluster') }}: {{ rabbitmq.cluster }}</span>
-                    <span class="badge bg-light text-dark">{{ _('Ready') }}: {{ rabbitmq.messages_ready }}</span>
-                    <span class="badge bg-light text-dark">{{ _('Unacked') }}: {{ rabbitmq.messages_unacked }}</span>
-                    <span class="badge {{ 'bg-danger' if rabbitmq.alarms else 'bg-success' }}">{{ _('Alarms') }}: {{ rabbitmq.alarms }}</span>
+                    <span class="badge bg-light text-dark">{{ dual('Cluster') }}: {{ rabbitmq.cluster }}</span>
+                    <span class="badge bg-light text-dark">{{ dual('Ready') }}: {{ rabbitmq.messages_ready }}</span>
+                    <span class="badge bg-light text-dark">{{ dual('Unacked') }}: {{ rabbitmq.messages_unacked }}</span>
+                    <span class="badge {{ 'bg-danger' if rabbitmq.alarms else 'bg-success' }}">{{ dual('Alarms') }}: {{ rabbitmq.alarms }}</span>
                 </div>
                 {% if rabbitmq_queues %}
                 <div class="table-responsive">
                     <table class="table table-sm table-hover mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>{{ _('Queue') }}</th>
-                                <th>{{ _('VHost') }}</th>
-                                <th class="text-end">{{ _('Messages') }}</th>
-                                <th class="text-end">{{ _('Consumers') }}</th>
-                                <th>{{ _('State') }}</th>
+                                <th>{{ dual('Queue') }}</th>
+                                <th>{{ dual('VHost') }}</th>
+                                <th class="text-end">{{ dual('Messages') }}</th>
+                                <th class="text-end">{{ dual('Consumers') }}</th>
+                                <th>{{ dual('State') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -159,7 +159,7 @@
                 {% else %}
                 <div class="text-center text-muted py-3">
                     <i class="bi bi-exclamation-triangle" style="font-size:1.5rem;"></i>
-                    <p class="mt-2 mb-1">{{ _('Could not reach the RabbitMQ management API.') }}</p>
+                    <p class="mt-2 mb-1">{{ dual('Could not reach the RabbitMQ management API.') }}</p>
                     <small>{{ rabbitmq.error }}</small>
                 </div>
                 {% endif %}
@@ -173,11 +173,11 @@
     <div class="col-lg-7">
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <strong><i class="bi bi-building me-1"></i>{{ _('Company Directory & Provisioning') }}</strong>
+                <strong><i class="bi bi-building me-1"></i>{{ dual('Company Directory & Provisioning') }}</strong>
                 <div>
                     <input type="text" id="companySearch" class="form-control form-control-sm d-inline-block" style="width:200px;" placeholder="{{ _('Search companies...') }}">
                     <a href="{{ url_for('admin.create_company') }}" class="btn btn-primary btn-sm ms-1">
-                        <i class="bi bi-plus-lg"></i> {{ _('New') }}
+                        <i class="bi bi-plus-lg"></i> {{ dual('New') }}
                     </a>
                 </div>
             </div>
@@ -186,12 +186,12 @@
                     <table class="table table-hover mb-0" id="companyTable">
                         <thead class="table-light">
                             <tr>
-                                <th>{{ _('Company') }}</th>
-                                <th>{{ _('Status') }}</th>
-                                <th class="text-center">{{ _('Users') }}</th>
-                                <th class="text-center">{{ _('Products') }}</th>
-                                <th class="text-center">{{ _('Orders') }}</th>
-                                <th class="text-end">{{ _('Actions') }}</th>
+                                <th>{{ dual('Company') }}</th>
+                                <th>{{ dual('Status') }}</th>
+                                <th class="text-center">{{ dual('Users') }}</th>
+                                <th class="text-center">{{ dual('Products') }}</th>
+                                <th class="text-center">{{ dual('Orders') }}</th>
+                                <th class="text-end">{{ dual('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -208,7 +208,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td><span class="badge bg-success">{{ _('Active') }}</span></td>
+                                <td><span class="badge bg-success">{{ dual('Active') }}</span></td>
                                 <td class="text-center"><span class="badge bg-secondary rounded-pill">{{ c.user_count }}</span></td>
                                 <td class="text-center"><span class="badge bg-info rounded-pill">{{ c.product_count }}</span></td>
                                 <td class="text-center"><span class="badge bg-warning text-dark rounded-pill">{{ c.order_count }}</span></td>
@@ -228,7 +228,7 @@
                             <tr>
                                 <td colspan="6" class="text-center py-5 text-muted">
                                     <i class="bi bi-building" style="font-size:2rem;"></i>
-                                    <p class="mt-2 mb-0">{{ _('No companies registered yet.') }}</p>
+                                    <p class="mt-2 mb-0">{{ dual('No companies registered yet.') }}</p>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -242,39 +242,39 @@
     <div class="col-lg-5">
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <strong><i class="bi bi-shield me-1"></i>{{ _('Global User Management') }}</strong>
-                <a href="{{ url_for('admin.list_users') }}" class="btn btn-sm btn-outline-primary">{{ _('Manage All') }}</a>
+                <strong><i class="bi bi-shield me-1"></i>{{ dual('Global User Management') }}</strong>
+                <a href="{{ url_for('admin.list_users') }}" class="btn btn-sm btn-outline-primary">{{ dual('Manage All') }}</a>
             </div>
             <div class="card-body p-0">
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>{{ _('Role') }}</th>
-                            <th class="text-center">{{ _('Count') }}</th>
-                            <th>{{ _('Permissions') }}</th>
+                            <th>{{ dual('Role') }}</th>
+                            <th class="text-center">{{ dual('Count') }}</th>
+                            <th>{{ dual('Permissions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td><span class="badge bg-danger">Admin</span></td>
                             <td class="text-center"><strong>{{ role_breakdown.get('Admin', 0) }}</strong></td>
-                            <td><small class="text-muted">{{ _('Full system access — the single platform administrator') }}</small></td>
+                            <td><small class="text-muted">{{ dual('Full system access — the single platform administrator') }}</small></td>
                         </tr>
                         <tr>
                             <td><span class="badge bg-warning text-dark">PME-Admin</span></td>
                             <td class="text-center"><strong>{{ role_breakdown.get('PME-Admin', 0) }}</strong></td>
-                            <td><small class="text-muted">{{ _('Own-company management (stock, customers, users)') }}</small></td>
+                            <td><small class="text-muted">{{ dual('Own-company management (stock, customers, users)') }}</small></td>
                         </tr>
                         <tr>
                             <td><span class="badge bg-primary">Customer</span></td>
                             <td class="text-center"><strong>{{ role_breakdown.get('Customer', 0) }}</strong></td>
-                            <td><small class="text-muted">{{ _('Standard operations') }}</small></td>
+                            <td><small class="text-muted">{{ dual('Standard operations') }}</small></td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="p-3 border-top">
                     <a href="{{ url_for('admin.list_users') }}" class="btn btn-outline-danger btn-sm w-100">
-                        <i class="bi bi-shield-lock me-1"></i>{{ _('Manage Platform Administrators') }}
+                        <i class="bi bi-shield-lock me-1"></i>{{ dual('Manage Platform Administrators') }}
                     </a>
                 </div>
             </div>
@@ -286,8 +286,8 @@
     <div class="col-lg-5">
         <div class="card shadow-sm h-100">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <strong><i class="bi bi-activity me-1"></i>{{ _('Global Audit Trail') }}</strong>
-                <a href="{{ url_for('web_events.list_events') }}" class="btn btn-sm btn-outline-secondary">{{ _('See All') }}</a>
+                <strong><i class="bi bi-activity me-1"></i>{{ dual('Global Audit Trail') }}</strong>
+                <a href="{{ url_for('web_events.list_events') }}" class="btn btn-sm btn-outline-secondary">{{ dual('See All') }}</a>
             </div>
             <div class="card-body p-0">
                 <div class="list-group list-group-flush" style="max-height:400px;overflow-y:auto;">
@@ -315,7 +315,7 @@
                     {% else %}
                     <div class="list-group-item text-center text-muted py-4">
                         <i class="bi bi-activity" style="font-size:1.5rem;"></i>
-                        <p class="mt-2 mb-0">{{ _('No activities yet.') }}</p>
+                        <p class="mt-2 mb-0">{{ dual('No activities yet.') }}</p>
                     </div>
                     {% endfor %}
                 </div>
@@ -326,7 +326,7 @@
     <div class="col-lg-7">
         <div class="card shadow-sm h-100">
             <div class="card-header">
-                <strong><i class="bi bi-graph-up me-1"></i>{{ _('System Load & Usage Trends (30 days)') }}</strong>
+                <strong><i class="bi bi-graph-up me-1"></i>{{ dual('System Load & Usage Trends (30 days)') }}</strong>
             </div>
             <div class="card-body d-flex flex-column">
                 <div style="flex:1;">
@@ -351,7 +351,7 @@
 <div class="alert alert-danger d-flex align-items-center">
     <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
     <div>
-        <strong>{{ critical_events|length }} {{ _('critical event(s)') }}</strong> —
+        <strong>{{ critical_events|length }} {{ dual('critical event(s)') }}</strong> —
         {% for ev in critical_events %}
         <span class="me-2">{{ ev.entity_type }} {{ ev.action }}{% if not loop.last %},{% endif %}</span>
         {% endfor %}

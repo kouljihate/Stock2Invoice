@@ -1,5 +1,52 @@
 # Changelog
 
+## [2.8.0] — 2026-11-02
+### Added
+- **Dual-language interface**: every screen renders Arabic alongside English or
+  French, chosen from the username menu (**العربية / English** = `ar-en`,
+  default; **العربية / Français** = `ar-fr`), stored in the `lang_pair` cookie
+  through `/lang/pair/<pair>`
+  - `app/core/utils/i18n.py` — `dual()` helper emitting
+    `<span class="dual"><span class="d-p" lang="en|fr">…</span><span class="d-s" lang="ar" dir="rtl">…</span></span>`;
+    `_()` still returns plain text so `placeholder`, `title`, `alt`,
+    `aria-label` and `<option>` stay valid, and it now follows the pair's
+    primary language
+  - `app/static/css/dual-lang.css` — arrangement decided per context: navbar
+    as 3 columns (English left / user menu centre / Arabic right), card
+    headers as English · logo · Arabic, buttons and table headers with Arabic
+    on top, labels as two columns with English right and Arabic left
+  - 1166 text elements converted to `dual()` across 61 templates; untranslated
+    keys render once instead of duplicating the primary language
+  - unknown pair values fall back to `ar-en`
+- Page identity registry (`app/core/utils/page_registry.py`): 112 entries
+  across 19 modules with `<module>.<sequence>` IDs (login = `0.0`), built at
+  start-up from `app.url_map` so no screen is missing or stale
+- Floating page badge on every screen, opening a dialog with the page ID, name,
+  module, description, route, endpoint, template file, handler file and
+  required access level
+- Company logo upload in the setup wizard (`app/core/utils/uploads.py`,
+  4 MB limit, png/jpg/jpeg/gif/webp); the logo fills the middle column of every
+  card header
+- `/web/profile/edit` — Edit Profile page, reachable from the username menu
+- Seed fixtures in `tests/seed_data/`: 10 PME-Admin tenants with 100 customers
+  and 50 suppliers each (CSV), plus a deterministic generator
+
+### Changed
+- Arabic typography: **VIP Rawy** is now a real font family (Regular 400, Bold
+  700, Thin 300) and the default Arabic face via `--font-arabic`; `Comfortaa`
+  keeps the Latin UI, with VIP Rawy listed as its fallback so untagged Arabic
+  still renders correctly
+- Navbar rebuilt as a 3-column grid; the globe language dropdown is replaced by
+  the two pairs inside the username menu
+- `body.has-navbar main` gains `1.25rem` top spacing
+
+### Fixed
+- `'VIP Rawy'` was requested by `.brand-ar` but never declared with
+  `@font-face`, so the Arabic brand column silently fell back to Rajdhani
+- Arabic font rules were keyed to `html[data-lang="ar"]`, which the
+  dual-language switch never sets (`data-lang` is now only `en` or `fr`), so
+  Arabic text received no Arabic font at all
+
 ## [2.7.0] — 2026-11-02
 ### Added
 - Admin-only **RabbitMQ Monitor** on the Admin dashboard: broker version, cluster, queues, connections, channels, consumers, message totals (ready/unacked), alarms and the five busiest queues, read from the management HTTP API (`/api/overview`, `/api/queues`)

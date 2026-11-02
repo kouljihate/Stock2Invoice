@@ -1,0 +1,10 @@
+{% if page_info %}
+<button type="button"
+        class="page-id-badge"
+        data-bs-toggle="modal"
+        data-bs-target="#pageInfoModal"
+        aria-controls="pageInfoModal"
+        title="{{ _('Page ID') }} {{ page_info.id }} — {{ page_info.name }}">
+    <i class="bi bi-upc-scan" aria-hidden="true"></i><span>{{ page_info.id }}</span>
+</button>
+{% endif %}

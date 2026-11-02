@@ -1,16 +1,16 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('Products') }} — Maure S2C{% endblock %}
+{% block title %}{{ dual('Products') }} — Maure S2C{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-box me-2"></i>{{ _('Products') }}</h4>
+    <h4 class="mb-0"><i class="bi bi-box me-2"></i>{{ dual('Products') }}</h4>
     <div class="d-flex gap-2">
         {% if mode != 'mobile' %}
         <a href="{{ url_for('web_stock.bulk_upload') }}" class="btn btn-outline-secondary">
-            <i class="bi bi-upload me-1"></i>{{ _('Add Bulk Products') }}
+            <i class="bi bi-upload me-1"></i>{{ dual('Add Bulk Products') }}
         </a>
         {% endif %}
         <a href="{% if mode == 'mobile' %}{{ url_for('mobile_stock.create_product') }}{% else %}{{ url_for('web_stock.create_product') }}{% endif %}" class="btn btn-primary">
-            <i class="bi bi-plus-lg me-1"></i>{{ _('Add Product') }}
+            <i class="bi bi-plus-lg me-1"></i>{{ dual('Add Product') }}
         </a>
     </div>
 </div>
@@ -35,11 +35,11 @@
     <div class="col-md-2">
         <div class="form-check mt-2">
             <input type="checkbox" class="form-check-input" name="low_stock" id="low_stock" value="1" {% if request.args.get('low_stock') %}checked{% endif %} onchange="this.form.submit()">
-            <label class="form-check-label" for="low_stock">{{ _('Low stock only') }}</label>
+            <label class="form-check-label" for="low_stock">{{ dual('Low stock only') }}</label>
         </div>
     </div>
     <div class="col-md-2">
-        <button type="submit" class="btn btn-outline-primary w-100"><i class="bi bi-search me-1"></i>{{ _('Search') }}</button>
+        <button type="submit" class="btn btn-outline-primary w-100"><i class="bi bi-search me-1"></i>{{ dual('Search') }}</button>
     </div>
 </form>
 
@@ -47,15 +47,15 @@
     <table class="table table-hover align-middle">
         <thead class="table-light">
             <tr>
-                <th>{{ _('SKU') }}</th>
-                <th>{{ _('Name') }}</th>
-                <th>{{ _('Brand') }}</th>
-                <th>{{ _('Category') }}</th>
-                <th>{{ _('Package') }}</th>
-                <th class="text-end">{{ _('Qty') }}</th>
-                <th class="text-end">{{ _('Price') }}</th>
-                <th>{{ _('Status') }}</th>
-                <th class="text-end">{{ _('Actions') }}</th>
+                <th>{{ dual('SKU') }}</th>
+                <th>{{ dual('Name') }}</th>
+                <th>{{ dual('Brand') }}</th>
+                <th>{{ dual('Category') }}</th>
+                <th>{{ dual('Package') }}</th>
+                <th class="text-end">{{ dual('Qty') }}</th>
+                <th class="text-end">{{ dual('Price') }}</th>
+                <th>{{ dual('Status') }}</th>
+                <th class="text-end">{{ dual('Actions') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -67,7 +67,7 @@
                         {{ p.name }}
                     </a>
                     {% if p.quantity <= p.quantity_min %}
-                        <span class="badge bg-warning text-dark">{{ _('Low') }}</span>
+                        <span class="badge bg-warning text-dark">{{ dual('Low') }}</span>
                     {% endif %}
                 </td>
                 <td>{{ p.brand or '-' }}</td>
@@ -80,13 +80,13 @@
                     <a href="{% if mode == 'mobile' %}{{ url_for('mobile_stock.edit_product', product_id=p.id) }}{% else %}{{ url_for('web_stock.edit_product', product_id=p.id) }}{% endif %}" class="btn btn-sm btn-outline-primary rounded-circle">
                         <i class="bi bi-pencil"></i>
                     </a>
-                    <form method="POST" action="{% if mode == 'mobile' %}{{ url_for('mobile_stock.delete_product', product_id=p.id) }}{% else %}{{ url_for('web_stock.delete_product', product_id=p.id) }}{% endif %}" class="d-inline" onsubmit="return confirm('{{ _('Delete') }} {{ p.name }}?')">
+                    <form method="POST" action="{% if mode == 'mobile' %}{{ url_for('mobile_stock.delete_product', product_id=p.id) }}{% else %}{{ url_for('web_stock.delete_product', product_id=p.id) }}{% endif %}" class="d-inline" onsubmit="return confirm('{{ dual('Delete') }} {{ p.name }}?')">
                         <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle"><i class="bi bi-trash"></i></button>
                     </form>
                 </td>
             </tr>
             {% else %}
-            <tr><td colspan="9" class="text-center text-muted py-4">{{ _('No products found.') }}</td></tr>
+            <tr><td colspan="9" class="text-center text-muted py-4">{{ dual('No products found.') }}</td></tr>
             {% endfor %}
         </tbody>
     </table>

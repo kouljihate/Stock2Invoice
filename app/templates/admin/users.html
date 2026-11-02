@@ -1,21 +1,21 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('User Management') }} — {{ _('Admin') }}{% endblock %}
+{% block title %}{{ dual('User Management') }} — {{ dual('Admin') }}{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-people me-2"></i>{{ _('User Management') }}</h4>
+    <h4 class="mb-0"><i class="bi bi-people me-2"></i>{{ dual('User Management') }}</h4>
     <div class="d-flex gap-2">
         <a href="{{ url_for('admin.create_pme_admin') }}" class="btn btn-primary btn-sm">
-            <i class="bi bi-person-plus me-1"></i>{{ _('Create PME-Admin') }}
+            <i class="bi bi-person-plus me-1"></i>{{ dual('Create PME-Admin') }}
         </a>
         <a href="{{ url_for('admin.index') }}" class="btn btn-outline-secondary btn-sm">
-            <i class="bi bi-arrow-left me-1"></i>{{ _('Admin Panel') }}
+            <i class="bi bi-arrow-left me-1"></i>{{ dual('Admin Panel') }}
         </a>
     </div>
 </div>
 
 <div class="card shadow-sm">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <strong><i class="bi bi-person-lines-fill me-1"></i>{{ _('All Users') }} ({{ total }})</strong>
+        <strong><i class="bi bi-person-lines-fill me-1"></i>{{ dual('All Users') }} ({{ total }})</strong>
         <form method="GET" class="d-flex gap-1">
             <input type="text" name="search" class="form-control form-control-sm" placeholder="{{ _('Search name or email...') }}" value="{{ search }}" style="width:240px;">
             <button type="submit" class="btn btn-sm btn-outline-primary"><i class="bi bi-search"></i></button>
@@ -28,12 +28,12 @@
         <table class="table table-hover mb-0 align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>{{ _('Name') }}</th>
-                    <th>{{ _('Email') }}</th>
-                    <th>{{ _('Role') }}</th>
-                    <th>{{ _('Company') }}</th>
-                    <th>{{ _('Joined') }}</th>
-                    <th class="text-end">{{ _('Actions') }}</th>
+                    <th>{{ dual('Name') }}</th>
+                    <th>{{ dual('Email') }}</th>
+                    <th>{{ dual('Role') }}</th>
+                    <th>{{ dual('Company') }}</th>
+                    <th>{{ dual('Joined') }}</th>
+                    <th class="text-end">{{ dual('Actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -68,9 +68,9 @@
                 <tr>
                     <td colspan="6" class="text-center py-5 text-muted">
                         <i class="bi bi-people" style="font-size:2rem;"></i>
-                        <p class="mt-2 mb-0">{{ _('No users found.') }}</p>
+                        <p class="mt-2 mb-0">{{ dual('No users found.') }}</p>
                         {% if search %}
-                        <small>{{ _('Try a different search term.') }}</small>
+                        <small>{{ dual('Try a different search term.') }}</small>
                         {% endif %}
                     </td>
                 </tr>

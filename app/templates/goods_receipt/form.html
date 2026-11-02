@@ -1,12 +1,12 @@
 {% extends 'base/layout.html' %}
-{% block title %}{% if receipt and receipt.id %}{{ _('Edit') }}{% else %}{{ _('New') }}{% endif %} {{ _('Goods Receipt') }} — Maure S2C{% endblock %}
+{% block title %}{% if receipt and receipt.id %}{{ dual('Edit') }}{% else %}{{ dual('New') }}{% endif %} {{ dual('Goods Receipt') }} — Maure S2C{% endblock %}
 {% block content %}
-<h4 class="mb-4"><i class="bi bi-{% if receipt and receipt.id %}pencil{% else %}plus-circle{% endif %} me-2"></i>{% if receipt and receipt.id %}{{ _('Edit') }}{% else %}{{ _('New') }}{% endif %} {{ _('Goods Receipt') }}</h4>
+<h4 class="mb-4"><i class="bi bi-{% if receipt and receipt.id %}pencil{% else %}plus-circle{% endif %} me-2"></i>{% if receipt and receipt.id %}{{ dual('Edit') }}{% else %}{{ dual('New') }}{% endif %} {{ dual('Goods Receipt') }}</h4>
 <form method="POST" action="" class="card shadow-sm">
     <div class="card-body">
         <div class="row mb-3">
             <div class="col-md-6">
-                <label class="form-label">{{ _('Purchase Order') }} *</label>
+                <label class="form-label">{{ dual('Purchase Order') }} *</label>
                 <select name="po_id" class="form-select" id="po-select" required>
                     <option value="">{{ _('-- Select PO --') }}</option>
                     {% for po in pos %}
@@ -18,7 +18,7 @@
                 <input type="hidden" name="supplier_id" id="supplier-id" value="{{ receipt.supplier_id if receipt and receipt.supplier_id else '' }}">
             </div>
         </div>
-        <h5 class="mt-4 mb-3">{{ _('Received Items') }}</h5>
+        <h5 class="mt-4 mb-3">{{ dual('Received Items') }}</h5>
         <div id="line-items">
             {% if receipt and receipt.items %}
             {% for item in receipt.items %}
@@ -55,15 +55,15 @@
             {% endif %}
         </div>
         <button type="button" class="btn btn-sm btn-outline-success mb-3" id="add-item">
-            <i class="bi bi-plus-lg me-1"></i>{{ _('Add Item') }}
+            <i class="bi bi-plus-lg me-1"></i>{{ dual('Add Item') }}
         </button>
         <div class="mb-3">
-            <label class="form-label">{{ _('Notes') }}</label>
+            <label class="form-label">{{ dual('Notes') }}</label>
             <textarea name="notes" class="form-control" rows="2">{{ receipt.notes if receipt and receipt.notes else '' }}</textarea>
         </div>
         <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>{% if receipt and receipt.id %}{{ _('Update Goods Receipt') }}{% else %}{{ _('Create Goods Receipt') }}{% endif %}</button>
-            <a href="{{ url_for('web_goods_receipt.list_receipts') }}" class="btn btn-outline-secondary">{{ _('Cancel') }}</a>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>{% if receipt and receipt.id %}{{ dual('Update Goods Receipt') }}{% else %}{{ dual('Create Goods Receipt') }}{% endif %}</button>
+            <a href="{{ url_for('web_goods_receipt.list_receipts') }}" class="btn btn-outline-secondary">{{ dual('Cancel') }}</a>
         </div>
     </div>
 </form>

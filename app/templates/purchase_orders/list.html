@@ -1,23 +1,23 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('Purchase Orders') }} — Maure S2C{% endblock %}
+{% block title %}{{ dual('Purchase Orders') }} — Maure S2C{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="mb-0"><i class="bi bi-cart-check me-2"></i>{{
-        _('Purchase Orders') }}</h4>
+        dual('Purchase Orders') }}</h4>
     <a href="{{ url_for('web_purchase_orders.create_order') }}"
         class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>{{
-        _('Add PO') }}</a>
+        dual('Add PO') }}</a>
 </div>
 <div class="card shadow-sm">
     <div class="card-body p-0">
         <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
                 <tr>
-                    <th style="width: 15%;">{{ _('PO #') }}</th>
-                    <th style="width: 30%;">{{ _('Supplier') }}</th>
-                    <th style="width: 15%;">{{_('Status') }}</th><th class="text-end">{{ _('Total')}}</th>
-                    <th style="width: 20%;">{{ _('Date') }}</th>
-                    <th class="text-end" style="width: 20%;">{{_('Actions') }}</th>
+                    <th style="width: 15%;">{{ dual('PO #') }}</th>
+                    <th style="width: 30%;">{{ dual('Supplier') }}</th>
+                    <th style="width: 15%;">{{dual('Status') }}</th><th class="text-end">{{ dual('Total')}}</th>
+                    <th style="width: 20%;">{{ dual('Date') }}</th>
+                    <th class="text-end" style="width: 20%;">{{dual('Actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,7 +28,7 @@
                     <td class="align-middle">{{ o.supplier_name or '-' }}</td>
                     <td class="align-middle"><span
                             class="badge bg-{{ 'success' if o.status == 'received' else 'warning' if o.status in ('draft','pending') else 'info' if o.status == 'sent' else 'danger' }}">{{
-                            _(o.status) }}</span></td>
+                            dual(o.status) }}</span></td>
                     <td class="text-end align-middle">{{ "%.2f"|format(o.total)
                         }}</td>
                     <td class="align-middle"><small>{{ o.created_at[:10] if
@@ -46,7 +46,7 @@
                             <form method="POST"
                                 action="{{ url_for('web_purchase_orders.send_order', po_id=o.id) }}"
                                 class="d-inline-flex"
-                                onsubmit="return confirm('{{ _('Send this purchase order?') }}')">
+                                onsubmit="return confirm('{{ dual('Send this purchase order?') }}')">
                                 <button type="submit"
                                     class="btn btn-sm btn-outline-warning btn-icon-circle"
                                     title="{{ _('Send') }}"><i
@@ -56,7 +56,7 @@
                             <form method="POST"
                                 action="{{ url_for('web_purchase_orders.delete_order', po_id=o.id) }}"
                                 class="d-inline-flex"
-                                onsubmit="return confirm('{{ _('Delete this purchase order?') }}')">
+                                onsubmit="return confirm('{{ dual('Delete this purchase order?') }}')">
                                 <button type="submit"
                                     class="btn btn-sm btn-outline-danger btn-icon-circle"
                                     title="{{ _('Delete') }}"><i
@@ -67,7 +67,7 @@
                 </tr>
                 {% else %}
                 <tr><td colspan="6" class="text-center text-muted py-4">{{
-                        _('No purchase orders yet.') }}</td></tr>
+                        dual('No purchase orders yet.') }}</td></tr>
                 {% endfor %}
             </tbody>
         </table>

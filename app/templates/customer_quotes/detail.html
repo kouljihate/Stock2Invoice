@@ -1,8 +1,8 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('Quote') }} {{ quote.quote_number or quote.id[:8] }} — Maure S2C{% endblock %}
+{% block title %}{{ dual('Quote') }} {{ quote.quote_number or quote.id[:8] }} — Maure S2C{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>{{ _('Quote') }} {{ quote.quote_number or quote.id[:8] }}</h4>
+    <h4 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>{{ dual('Quote') }} {{ quote.quote_number or quote.id[:8] }}</h4>
     <div class="d-flex gap-2 align-items-center">
         {% if not quote.generated_order_id %}
         <a href="{{ url_for('web_customer_quotes.edit_quote', quote_id=quote.id) }}" class="btn btn-sm btn-outline-primary btn-icon-circle" title="{{ _('Edit') }}"><i class="bi bi-pencil"></i></a>
@@ -17,19 +17,19 @@
             <button type="submit" class="btn btn-sm btn-outline-warning btn-icon-circle" title="{{ _('Validate Quote') }}"><i class="bi bi-check-lg"></i></button>
         </form>
         {% endif %}
-        <a href="{{ url_for('web_customer_quotes.list_quotes') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>{{ _('Back') }}</a>
+        <a href="{{ url_for('web_customer_quotes.list_quotes') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i>{{ dual('Back') }}</a>
     </div>
 </div>
 <div class="card shadow-sm">
     <div class="card-body">
         <dl class="row small mb-0">
-            <dt class="col-sm-2">{{ _('Customer') }}</dt>
+            <dt class="col-sm-2">{{ dual('Customer') }}</dt>
             <dd class="col-sm-10">{{ quote.customer_name or '-' }}</dd>
-            <dt class="col-sm-2">{{ _('Status') }}</dt>
-            <dd class="col-sm-10"><span class="badge bg-{{ 'success' if quote.status in ('accepted','confirmed') else 'warning' }}">{{ _(quote.status) }}</span></dd>
-            <dt class="col-sm-2">{{ _('Total') }}</dt>
+            <dt class="col-sm-2">{{ dual('Status') }}</dt>
+            <dd class="col-sm-10"><span class="badge bg-{{ 'success' if quote.status in ('accepted','confirmed') else 'warning' }}">{{ dual(quote.status) }}</span></dd>
+            <dt class="col-sm-2">{{ dual('Total') }}</dt>
             <dd class="col-sm-10">{{ "%.2f"|format(quote.total) }}</dd>
-            <dt class="col-sm-2">{{ _('Valid Until') }}</dt>
+            <dt class="col-sm-2">{{ dual('Valid Until') }}</dt>
             <dd class="col-sm-10">{{ quote.valid_until[:10] if quote.valid_until else '-' }}</dd>
         </dl>
     </div>
@@ -38,19 +38,19 @@
 {% if quote and quote.get('items') %}
 <div class="card shadow-sm mt-3">
     <div class="card-body">
-        <h5 class="mb-3">{{ _('Line Items') }}</h5>
+        <h5 class="mb-3">{{ dual('Line Items') }}</h5>
         <div class="table-responsive">
             <table class="table table-sm">
                 <thead>
                     <tr>
-                        <th>{{ _('SKU') }}</th>
-                        <th>{{ _('Name') }}</th>
-                        <th class="text-end">{{ _('QTY') }}</th>
-                        <th class="text-end">{{ _('Price') }}</th>
-                        <th>{{ _('Pack Type') }}</th>
-                        <th>{{ _('Pack Size / Unit') }}</th>
-                        <th class="text-end">{{ _('Stock') }}</th>
-                        <th class="text-end">{{ _('Total') }}</th>
+                        <th>{{ dual('SKU') }}</th>
+                        <th>{{ dual('Name') }}</th>
+                        <th class="text-end">{{ dual('QTY') }}</th>
+                        <th class="text-end">{{ dual('Price') }}</th>
+                        <th>{{ dual('Pack Type') }}</th>
+                        <th>{{ dual('Pack Size / Unit') }}</th>
+                        <th class="text-end">{{ dual('Stock') }}</th>
+                        <th class="text-end">{{ dual('Total') }}</th>
                     </tr>
                 </thead>
                 <tbody>

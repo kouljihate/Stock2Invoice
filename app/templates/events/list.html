@@ -1,8 +1,8 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('Activity Log') }} â€” Maure S2C{% endblock %}
+{% block title %}{{ dual('Activity Log') }} â€” Maure S2C{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-activity me-2"></i>{{ _('Activity Log') }}</h4>
+    <h4 class="mb-0"><i class="bi bi-activity me-2"></i>{{ dual('Activity Log') }}</h4>
 </div>
 
 <form method="GET" class="row g-2 mb-3">
@@ -37,12 +37,12 @@
         <table class="table table-hover mb-0 align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>{{ _('Date') }}</th>
-                    <th>{{ _('Entity') }}</th>
-                    <th>{{ _('Reference') }}</th>
-                    <th>{{ _('Action') }}</th>
-                    <th>{{ _('Details') }}</th>
-                    <th>{{ _('User') }}</th>
+                    <th>{{ dual('Date') }}</th>
+                    <th>{{ dual('Entity') }}</th>
+                    <th>{{ dual('Reference') }}</th>
+                    <th>{{ dual('Action') }}</th>
+                    <th>{{ dual('Details') }}</th>
+                    <th>{{ dual('User') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -56,13 +56,13 @@
                         {% if ev.action == 'status_changed' %}
                             {{ ev.changes.from }} â†’ {{ ev.changes.to }}
                         {% elif ev.action == 'stock_movement' %}
-                            {{ _('Qty:') }} {{ ev.changes.quantity }} ({{ ev.changes.reason }})
+                            {{ dual('Qty:') }} {{ ev.changes.quantity }} ({{ ev.changes.reason }})
                         {% elif ev.action == 'updated' %}
                             {{ ev.changes.field }}: {{ ev.changes.old_value }} â†’ {{ ev.changes.new_value }}
                         {% elif ev.action == 'deleted' %}
-                            <span class="text-danger">{{ _('Deleted') }}</span>
+                            <span class="text-danger">{{ dual('Deleted') }}</span>
                         {% elif ev.action == 'validated' %}
-                            <span class="text-success">{{ _('Converted to order') }}</span>
+                            <span class="text-success">{{ dual('Converted to order') }}</span>
                         {% else %}
                             <span class="text-muted">â€”</span>
                         {% endif %}
@@ -70,7 +70,7 @@
                     <td><small>{{ ev.user_name or '-' }}</small></td>
                 </tr>
                 {% else %}
-                <tr><td colspan="6" class="text-center text-muted py-4">{{ _('No events yet.') }}</td></tr>
+                <tr><td colspan="6" class="text-center text-muted py-4">{{ dual('No events yet.') }}</td></tr>
                 {% endfor %}
             </tbody>
         </table>

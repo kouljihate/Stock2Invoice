@@ -1,5 +1,5 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ company.name }} — {{ _('Admin') }}{% endblock %}
+{% block title %}{{ company.name }} — {{ dual('Admin') }}{% endblock %}
 {% block extra_head %}
 <style>
 .nav-tabs .nav-link { font-size: 0.9rem; padding: 0.5rem 1rem; }
@@ -16,7 +16,7 @@
     </h4>
     <div>
         <a href="{{ url_for('admin.companies') }}" class="btn btn-outline-secondary btn-sm">
-            <i class="bi bi-arrow-left me-1"></i>{{ _('All Companies') }}
+            <i class="bi bi-arrow-left me-1"></i>{{ dual('All Companies') }}
         </a>
     </div>
 </div>
@@ -26,7 +26,7 @@
         <div class="card border-primary text-center h-100">
             <div class="card-body py-2">
                 <h5 class="text-primary mb-0">{{ stats.product_count }}</h5>
-                <small class="text-muted">{{ _('Products') }}</small>
+                <small class="text-muted">{{ dual('Products') }}</small>
             </div>
         </div>
     </div>
@@ -34,7 +34,7 @@
         <div class="card border-success text-center h-100">
             <div class="card-body py-2">
                 <h5 class="text-success mb-0">{{ stats.order_count }}</h5>
-                <small class="text-muted">{{ _('Orders') }}</small>
+                <small class="text-muted">{{ dual('Orders') }}</small>
             </div>
         </div>
     </div>
@@ -42,7 +42,7 @@
         <div class="card border-info text-center h-100">
             <div class="card-body py-2">
                 <h5 class="text-info mb-0">{{ stats.invoice_count }}</h5>
-                <small class="text-muted">{{ _('Invoices') }}</small>
+                <small class="text-muted">{{ dual('Invoices') }}</small>
             </div>
         </div>
     </div>
@@ -50,7 +50,7 @@
         <div class="card border-warning text-center h-100">
             <div class="card-body py-2">
                 <h5 class="text-warning mb-0">{{ stats.movement_count }}</h5>
-                <small class="text-muted">{{ _('Movements') }}</small>
+                <small class="text-muted">{{ dual('Movements') }}</small>
             </div>
         </div>
     </div>
@@ -58,7 +58,7 @@
         <div class="card border-secondary text-center h-100">
             <div class="card-body py-2">
                 <h5 class="text-secondary mb-0">{{ users|length }}</h5>
-                <small class="text-muted">{{ _('Users') }}</small>
+                <small class="text-muted">{{ dual('Users') }}</small>
             </div>
         </div>
     </div>
@@ -66,7 +66,7 @@
         <div class="card border-dark text-center h-100">
             <div class="card-body py-2">
                 <a href="{{ url_for('admin.edit_company', company_id=company.id) }}" class="btn btn-outline-primary btn-sm">
-                    <i class="bi bi-pencil"></i> {{ _('Edit') }}
+                    <i class="bi bi-pencil"></i> {{ dual('Edit') }}
                 </a>
             </div>
         </div>
@@ -74,11 +74,11 @@
 </div>
 
 <ul class="nav nav-tabs mb-3" id="companyTabs">
-    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabOverview">{{ _('Overview') }}</button></li>
-    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabProducts">{{ _('Products') }} <span class="badge bg-info">{{ stats.product_count }}</span></button></li>
-    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabOrders">{{ _('Orders') }} <span class="badge bg-warning text-dark">{{ stats.order_count }}</span></button></li>
-    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabInvoices">{{ _('Invoices') }} <span class="badge bg-secondary">{{ stats.invoice_count }}</span></button></li>
-    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabUsers">{{ _('Users') }} <span class="badge bg-success">{{ users|length }}</span></button></li>
+    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabOverview">{{ dual('Overview') }}</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabProducts">{{ dual('Products') }} <span class="badge bg-info">{{ stats.product_count }}</span></button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabOrders">{{ dual('Orders') }} <span class="badge bg-warning text-dark">{{ stats.order_count }}</span></button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabInvoices">{{ dual('Invoices') }} <span class="badge bg-secondary">{{ stats.invoice_count }}</span></button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabUsers">{{ dual('Users') }} <span class="badge bg-success">{{ users|length }}</span></button></li>
 </ul>
 
 <div class="tab-content">
@@ -86,36 +86,36 @@
         <div class="row g-3">
             <div class="col-md-6">
                 <div class="card shadow-sm h-100">
-                    <div class="card-header"><strong><i class="bi bi-info-circle me-1"></i>{{ _('Company Info') }}</strong></div>
+                    <div class="card-header"><strong><i class="bi bi-info-circle me-1"></i>{{ dual('Company Info') }}</strong></div>
                     <div class="card-body">
                         <dl class="row mb-0 small">
-                            <dt class="col-sm-4">{{ _('Name') }}</dt>
+                            <dt class="col-sm-4">{{ dual('Name') }}</dt>
                             <dd class="col-sm-8">{{ company.name }}</dd>
                             {% if company.address %}
-                            <dt class="col-sm-4">{{ _('Address') }}</dt>
+                            <dt class="col-sm-4">{{ dual('Address') }}</dt>
                             <dd class="col-sm-8">{{ company.address }}</dd>
                             {% endif %}
                             {% if company.city %}
-                            <dt class="col-sm-4">{{ _('City') }}</dt>
+                            <dt class="col-sm-4">{{ dual('City') }}</dt>
                             <dd class="col-sm-8">{{ company.city }}</dd>
                             {% endif %}
                             {% if company.phone %}
-                            <dt class="col-sm-4">{{ _('Phone') }}</dt>
+                            <dt class="col-sm-4">{{ dual('Phone') }}</dt>
                             <dd class="col-sm-8">{{ company.phone }}</dd>
                             {% endif %}
                             {% if company.email %}
-                            <dt class="col-sm-4">{{ _('Email') }}</dt>
+                            <dt class="col-sm-4">{{ dual('Email') }}</dt>
                             <dd class="col-sm-8">{{ company.email }}</dd>
                             {% endif %}
                             {% if company.contact_name %}
-                            <dt class="col-sm-4">{{ _('Contact') }}</dt>
+                            <dt class="col-sm-4">{{ dual('Contact') }}</dt>
                             <dd class="col-sm-8">{{ company.contact_name }}</dd>
                             {% endif %}
                             {% if company.website %}
-                            <dt class="col-sm-4">{{ _('Website') }}</dt>
+                            <dt class="col-sm-4">{{ dual('Website') }}</dt>
                             <dd class="col-sm-8"><a href="{{ company.website }}" target="_blank">{{ company.website }}</a></dd>
                             {% endif %}
-                            <dt class="col-sm-4">{{ _('Created') }}</dt>
+                            <dt class="col-sm-4">{{ dual('Created') }}</dt>
                             <dd class="col-sm-8"><small>{{ company.created_at[:10] if company.created_at else '-' }}</small></dd>
                         </dl>
                     </div>
@@ -123,41 +123,41 @@
             </div>
             <div class="col-md-6">
                 <div class="card shadow-sm h-100">
-                    <div class="card-header"><strong><i class="bi bi-file-earmark-text me-1"></i>{{ _('Legal IDs') }}</strong></div>
+                    <div class="card-header"><strong><i class="bi bi-file-earmark-text me-1"></i>{{ dual('Legal IDs') }}</strong></div>
                     <div class="card-body">
                         <dl class="row mb-0 small">
                             {% if company.ice %}
-                            <dt class="col-sm-4">{{ _('ICE') }}</dt>
+                            <dt class="col-sm-4">{{ dual('ICE') }}</dt>
                             <dd class="col-sm-8"><code>{{ company.ice }}</code></dd>
                             {% endif %}
                             {% if company.rc %}
-                            <dt class="col-sm-4">{{ _('RC') }}</dt>
+                            <dt class="col-sm-4">{{ dual('RC') }}</dt>
                             <dd class="col-sm-8"><code>{{ company.rc }}</code></dd>
                             {% endif %}
                             {% if company.if_tax %}
-                            <dt class="col-sm-4">{{ _('IF') }}</dt>
+                            <dt class="col-sm-4">{{ dual('IF') }}</dt>
                             <dd class="col-sm-8"><code>{{ company.if_tax }}</code></dd>
                             {% endif %}
                             {% if company.cnss %}
-                            <dt class="col-sm-4">{{ _('CNSS') }}</dt>
+                            <dt class="col-sm-4">{{ dual('CNSS') }}</dt>
                             <dd class="col-sm-8"><code>{{ company.cnss }}</code></dd>
                             {% endif %}
                             {% if company.patente %}
-                            <dt class="col-sm-4">{{ _('Patente') }}</dt>
+                            <dt class="col-sm-4">{{ dual('Patente') }}</dt>
                             <dd class="col-sm-8"><code>{{ company.patente }}</code></dd>
                             {% endif %}
                             {% if not company.ice and not company.rc and not company.if_tax and not company.cnss and not company.patente %}
-                            <dd class="text-muted mb-0">{{ _('No legal IDs registered.') }}</dd>
+                            <dd class="text-muted mb-0">{{ dual('No legal IDs registered.') }}</dd>
                             {% endif %}
                         </dl>
                     </div>
                 </div>
                 <div class="card shadow-sm mt-3">
-                    <div class="card-header text-danger"><strong><i class="bi bi-exclamation-triangle me-1"></i>{{ _('Danger Zone') }}</strong></div>
+                    <div class="card-header text-danger"><strong><i class="bi bi-exclamation-triangle me-1"></i>{{ dual('Danger Zone') }}</strong></div>
                     <div class="card-body">
-                        <p class="small text-muted mb-2">{{ _('Delete this company and all associated data permanently.') }}</p>
+                        <p class="small text-muted mb-2">{{ dual('Delete this company and all associated data permanently.') }}</p>
                         <form method="POST" action="{{ url_for('admin.delete_company', company_id=company.id) }}" onsubmit="return confirm('Delete {{ company.name }}? This cannot be undone.')">
-                            <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash me-1"></i>{{ _('Delete Company') }}</button>
+                            <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash me-1"></i>{{ dual('Delete Company') }}</button>
                         </form>
                     </div>
                 </div>
@@ -170,7 +170,7 @@
             <div class="card-body p-0">
                 <table class="table table-hover mb-0 small">
                     <thead class="table-light">
-                        <tr><th>{{ _('Name') }}</th><th>{{ _('SKU') }}</th><th>{{ _('Category') }}</th><th class="text-center">{{ _('Qty') }}</th><th class="text-end">{{ _('Price') }}</th><th class="text-end">{{ _('Stock Value') }}</th></tr>
+                        <tr><th>{{ dual('Name') }}</th><th>{{ dual('SKU') }}</th><th>{{ dual('Category') }}</th><th class="text-center">{{ dual('Qty') }}</th><th class="text-end">{{ dual('Price') }}</th><th class="text-end">{{ dual('Stock Value') }}</th></tr>
                     </thead>
                     <tbody>
                         {% for p in products %}
@@ -183,7 +183,7 @@
                             <td class="text-end">{{ "%.2f"|format(p.stock_value) }}</td>
                         </tr>
                         {% else %}
-                        <tr><td colspan="6" class="text-center text-muted py-4">{{ _('No products.') }}</td></tr>
+                        <tr><td colspan="6" class="text-center text-muted py-4">{{ dual('No products.') }}</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -196,19 +196,19 @@
             <div class="card-body p-0">
                 <table class="table table-hover mb-0 small">
                     <thead class="table-light">
-                        <tr><th>{{ _('Order #') }}</th><th>{{ _('Customer') }}</th><th>{{ _('Status') }}</th><th class="text-end">{{ _('Total') }}</th><th>{{ _('Date') }}</th></tr>
+                        <tr><th>{{ dual('Order #') }}</th><th>{{ dual('Customer') }}</th><th>{{ dual('Status') }}</th><th class="text-end">{{ dual('Total') }}</th><th>{{ dual('Date') }}</th></tr>
                     </thead>
                     <tbody>
                         {% for o in orders %}
                         <tr>
                             <td><code>{{ o.order_number }}</code></td>
                             <td>{{ o.customer_name }}</td>
-                            <td><span class="badge bg-{{ 'success' if o.status == 'delivered' else 'warning' if o.status == 'pending' else 'info' if o.status == 'confirmed' else 'primary' if o.status == 'shipped' else 'danger' }}">{{ _(o.status) }}</span></td>
+                            <td><span class="badge bg-{{ 'success' if o.status == 'delivered' else 'warning' if o.status == 'pending' else 'info' if o.status == 'confirmed' else 'primary' if o.status == 'shipped' else 'danger' }}">{{ dual(o.status) }}</span></td>
                             <td class="text-end">{{ "%.2f"|format(o.total) }}</td>
                             <td>{{ o.created_at }}</td>
                         </tr>
                         {% else %}
-                        <tr><td colspan="5" class="text-center text-muted py-4">{{ _('No orders.') }}</td></tr>
+                        <tr><td colspan="5" class="text-center text-muted py-4">{{ dual('No orders.') }}</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -221,19 +221,19 @@
             <div class="card-body p-0">
                 <table class="table table-hover mb-0 small">
                     <thead class="table-light">
-                        <tr><th>{{ _('Invoice #') }}</th><th>{{ _('Customer') }}</th><th>{{ _('Status') }}</th><th class="text-end">{{ _('Total') }}</th><th>{{ _('Date') }}</th></tr>
+                        <tr><th>{{ dual('Invoice #') }}</th><th>{{ dual('Customer') }}</th><th>{{ dual('Status') }}</th><th class="text-end">{{ dual('Total') }}</th><th>{{ dual('Date') }}</th></tr>
                     </thead>
                     <tbody>
                         {% for inv in invoices %}
                         <tr>
                             <td><code>{{ inv.invoice_number }}</code></td>
                             <td>{{ inv.customer_name }}</td>
-                            <td><span class="badge bg-{{ 'success' if inv.status == 'paid' else 'warning' if inv.status == 'draft' else 'info' if inv.status == 'sent' else 'danger' }}">{{ _(inv.status) }}</span></td>
+                            <td><span class="badge bg-{{ 'success' if inv.status == 'paid' else 'warning' if inv.status == 'draft' else 'info' if inv.status == 'sent' else 'danger' }}">{{ dual(inv.status) }}</span></td>
                             <td class="text-end">{{ "%.2f"|format(inv.total) }}</td>
                             <td>{{ inv.created_at }}</td>
                         </tr>
                         {% else %}
-                        <tr><td colspan="5" class="text-center text-muted py-4">{{ _('No invoices.') }}</td></tr>
+                        <tr><td colspan="5" class="text-center text-muted py-4">{{ dual('No invoices.') }}</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -244,9 +244,9 @@
     <div class="tab-pane fade" id="tabUsers">
         <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <strong><i class="bi bi-people me-1"></i>{{ _('Users') }}</strong>
+                <strong><i class="bi bi-people me-1"></i>{{ dual('Users') }}</strong>
                 <button class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#addUserForm">
-                    <i class="bi bi-plus-lg me-1"></i>{{ _('Add User') }}
+                    <i class="bi bi-plus-lg me-1"></i>{{ dual('Add User') }}
                 </button>
             </div>
             <div class="collapse" id="addUserForm">
@@ -278,7 +278,7 @@
             <div class="card-body p-0">
                 <table class="table table-hover mb-0 small align-middle">
                     <thead class="table-light">
-                        <tr><th>{{ _('Name') }}</th><th>{{ _('Email') }}</th><th>{{ _('Role') }}</th><th>{{ _('Joined') }}</th><th class="text-end">{{ _('Actions') }}</th></tr>
+                        <tr><th>{{ dual('Name') }}</th><th>{{ dual('Email') }}</th><th>{{ dual('Role') }}</th><th>{{ dual('Joined') }}</th><th class="text-end">{{ dual('Actions') }}</th></tr>
                     </thead>
                     <tbody>
                         {% for u in users %}
@@ -302,7 +302,7 @@
                             </td>
                         </tr>
                         {% else %}
-                        <tr><td colspan="5" class="text-center text-muted py-4">{{ _('No users.') }}</td></tr>
+                        <tr><td colspan="5" class="text-center text-muted py-4">{{ dual('No users.') }}</td></tr>
                         {% endfor %}
                     </tbody>
                 </table>

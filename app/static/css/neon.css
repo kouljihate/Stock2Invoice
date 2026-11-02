@@ -561,6 +561,10 @@ code { color: var(--neon-green); }
 /* Offset page content below the fixed navbar (only on pages that render it) */
 body.has-navbar { padding-top: 56px; }
 
+/* Breathing room between the fixed navbar and the page content, so a page
+   title and its action buttons never sit flush against the header. */
+body.has-navbar main { margin-top: 1.25rem; }
+
 .navbar-brand {
     font-family: 'Orbitron', sans-serif !important;
     font-weight: 700;

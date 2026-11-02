@@ -1,30 +1,30 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('Edit User') }} — {{ _('Admin') }}{% endblock %}
+{% block title %}{{ dual('Edit User') }} — {{ dual('Admin') }}{% endblock %}
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="mb-0"><i class="bi bi-pencil me-2"></i>{{ _('Edit User') }}</h4>
+            <h4 class="mb-0"><i class="bi bi-pencil me-2"></i>{{ dual('Edit User') }}</h4>
             <a href="{{ url_for('admin.list_users') }}" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-arrow-left me-1"></i>{{ _('Back') }}
+                <i class="bi bi-arrow-left me-1"></i>{{ dual('Back') }}
             </a>
         </div>
 
         <div class="card shadow-sm mb-4">
-            <div class="card-header"><strong>{{ _('User Details') }}</strong></div>
+            <div class="card-header"><strong>{{ dual('User Details') }}</strong></div>
             <div class="card-body">
                 <form method="POST">
                     <div class="mb-3">
-                        <label class="form-label">{{ _('Full Name') }}</label>
+                        <label class="form-label">{{ dual('Full Name') }}</label>
                         <input type="text" name="name" class="form-control" value="{{ target.name }}" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">{{ _('Email') }}</label>
+                        <label class="form-label">{{ dual('Email') }}</label>
                         <input type="email" name="email" class="form-control" value="{{ target.email }}" required>
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label">{{ _('Roles') }}</label>
+                        <label class="form-label">{{ dual('Roles') }}</label>
                         <div>
                             {% for role in roles %}
                             <div class="form-check">
@@ -39,35 +39,35 @@
                     </div>
                     
                     <div class="mb-3">
-                        <small class="text-muted">{{ _('Note: Users must have at least one role selected.') }}</small>
+                        <small class="text-muted">{{ dual('Note: Users must have at least one role selected.') }}</small>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-check me-1"></i>{{ _('Save Changes') }}</button>
-                    <a href="{{ url_for('admin.list_users') }}" class="btn btn-outline-secondary">{{ _('Cancel') }}</a>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check me-1"></i>{{ dual('Save Changes') }}</button>
+                    <a href="{{ url_for('admin.list_users') }}" class="btn btn-outline-secondary">{{ dual('Cancel') }}</a>
                 </form>
             </div>
         </div>
 
         <div class="card shadow-sm">
-            <div class="card-header"><strong>{{ _('Reset Password') }}</strong></div>
+            <div class="card-header"><strong>{{ dual('Reset Password') }}</strong></div>
             <div class="card-body">
                 <form method="POST" action="{{ url_for('admin.reset_password', user_id=target.id) }}">
                     <div class="mb-3">
-                        <label class="form-label">{{ _('New Password') }}</label>
+                        <label class="form-label">{{ dual('New Password') }}</label>
                         <input type="password" name="new_password" class="form-control" placeholder="{{ _('Min 8 characters') }}" required>
                     </div>
-                    <button type="submit" class="btn btn-warning"><i class="bi bi-key me-1"></i>{{ _('Reset Password') }}</button>
+                    <button type="submit" class="btn btn-warning"><i class="bi bi-key me-1"></i>{{ dual('Reset Password') }}</button>
                 </form>
             </div>
         </div>
 
         {% if 'Admin' not in target.role_names %}
         <div class="card shadow-sm mt-3">
-            <div class="card-header text-danger"><strong><i class="bi bi-exclamation-triangle me-1"></i>{{ _('Danger Zone') }}</strong></div>
+            <div class="card-header text-danger"><strong><i class="bi bi-exclamation-triangle me-1"></i>{{ dual('Danger Zone') }}</strong></div>
             <div class="card-body">
-                <p class="small text-muted">{{ _('Remove this user permanently.') }}</p>
+                <p class="small text-muted">{{ dual('Remove this user permanently.') }}</p>
                 <form method="POST" action="{{ url_for('admin.delete_user', user_id=target.id) }}" onsubmit="return confirm('Delete user {{ target.email }}? This cannot be undone.')">
-                    <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash me-1"></i>{{ _('Delete User') }}</button>
+                    <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash me-1"></i>{{ dual('Delete User') }}</button>
                 </form>
             </div>
         </div>

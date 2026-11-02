@@ -1,0 +1,1720 @@
+{
+  "sha": "00af3a2a15436f6710306b0ed3a6f24231060de7",
+  "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/00af3a2a15436f6710306b0ed3a6f24231060de7",
+  "tree": [
+    {
+      "path": ".editorconfig",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "65365be68e69b7d8dcf18c1c5ae99b9e6925aa35",
+      "size": 283,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/65365be68e69b7d8dcf18c1c5ae99b9e6925aa35"
+    },
+    {
+      "path": ".github",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "36b3fd5f15e1549ddb12e78ac560bae28b2efe1a",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/36b3fd5f15e1549ddb12e78ac560bae28b2efe1a"
+    },
+    {
+      "path": ".github/assets",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "3f6ad1339a11b92ad0212f4fb883771e305179b7",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/3f6ad1339a11b92ad0212f4fb883771e305179b7"
+    },
+    {
+      "path": ".github/assets/logotype.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f502ec0f2d68b08e2c2251abbcd64e9dac51b20c",
+      "size": 7499,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/f502ec0f2d68b08e2c2251abbcd64e9dac51b20c"
+    },
+    {
+      "path": ".github/workflows",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "348edd3844cf5a57d2efe4548f06a5814594a961",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/348edd3844cf5a57d2efe4548f06a5814594a961"
+    },
+    {
+      "path": ".github/workflows/deploy.yml",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "747bd7932624f60d19b208327d652696a3bb9794",
+      "size": 1266,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/747bd7932624f60d19b208327d652696a3bb9794"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "efe4058c713e5f6c828a9aa603d6b38f4ef1c850",
+      "size": 910,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/efe4058c713e5f6c828a9aa603d6b38f4ef1c850"
+    },
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dd2005c4a636d3bbc9ab776e5def17a9d471e483",
+      "size": 1077,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/dd2005c4a636d3bbc9ab776e5def17a9d471e483"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "78fbfeafee68c140bf956f7b045833190cbc962c",
+      "size": 1644,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/78fbfeafee68c140bf956f7b045833190cbc962c"
+    },
+    {
+      "path": "babel.config.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0c05fd696389968ad8a50e36eb460b0578ad5a2c",
+      "size": 257,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/0c05fd696389968ad8a50e36eb460b0578ad5a2c"
+    },
+    {
+      "path": "dist",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "779dbcfc1360d80fb2870d605b42ae84d5f57bf0",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/779dbcfc1360d80fb2870d605b42ae84d5f57bf0"
+    },
+    {
+      "path": "dist/scripts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a4ca8b9ea43b4777644e916793f37377416c4015",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/a4ca8b9ea43b4777644e916793f37377416c4015"
+    },
+    {
+      "path": "dist/scripts/exportTemplate.native.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7b897da67974131f8eecc6eb19620a230c584053",
+      "size": 2078,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/7b897da67974131f8eecc6eb19620a230c584053"
+    },
+    {
+      "path": "dist/scripts/exportTemplate.web.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fe15ea3e5f9c53f77f689ed78a262fc06a20511f",
+      "size": 2105,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/fe15ea3e5f9c53f77f689ed78a262fc06a20511f"
+    },
+    {
+      "path": "dist/scripts/indexTemplate.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1bd24e0dcb064f43456a5aaa49ce305f4475f9ca",
+      "size": 3112,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/1bd24e0dcb064f43456a5aaa49ce305f4475f9ca"
+    },
+    {
+      "path": "eslint.config.mjs",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "16b00bbcd910ddd72c54a9b815beb02071c0df90",
+      "size": 819,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/16b00bbcd910ddd72c54a9b815beb02071c0df90"
+    },
+    {
+      "path": "example",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "9616d66b9b71a58ebf3116a7ef3133226bcd9cbf",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/9616d66b9b71a58ebf3116a7ef3133226bcd9cbf"
+    },
+    {
+      "path": "example/app.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e43e08ff9c1ef4388bf9887e8c323c610e51ebe4",
+      "size": 563,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/e43e08ff9c1ef4388bf9887e8c323c610e51ebe4"
+    },
+    {
+      "path": "example/assets",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "270c6bb68db8561fe522d711d9e3404bf098eec0",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/270c6bb68db8561fe522d711d9e3404bf098eec0"
+    },
+    {
+      "path": "example/assets/adaptive-icon.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "03d6f6b6c6727954aec1d8206222769afd178d8d",
+      "size": 17547,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/03d6f6b6c6727954aec1d8206222769afd178d8d"
+    },
+    {
+      "path": "example/assets/favicon.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e75f697b1801871ad8cd9309b05e8ffe8c6b6d01",
+      "size": 1466,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/e75f697b1801871ad8cd9309b05e8ffe8c6b6d01"
+    },
+    {
+      "path": "example/assets/icon.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a0b1526fc7b78680fd8d733dbc6113e1af695487",
+      "size": 22380,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/a0b1526fc7b78680fd8d733dbc6113e1af695487"
+    },
+    {
+      "path": "example/assets/papicons.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3912e9382be528e4dea29893159799c2f1636133",
+      "size": 4766,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/3912e9382be528e4dea29893159799c2f1636133"
+    },
+    {
+      "path": "example/assets/splash-icon.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "03d6f6b6c6727954aec1d8206222769afd178d8d",
+      "size": 17547,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/03d6f6b6c6727954aec1d8206222769afd178d8d"
+    },
+    {
+      "path": "example/babel.config.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7a437af62d4b91329207c5cfc5b1e43a9f416c6b",
+      "size": 339,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/7a437af62d4b91329207c5cfc5b1e43a9f416c6b"
+    },
+    {
+      "path": "example/index.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "018d06f91f7af3c0e91c538d8de27de98f1812de",
+      "size": 311,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/018d06f91f7af3c0e91c538d8de27de98f1812de"
+    },
+    {
+      "path": "example/metro.config.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "659bab9862ed380c34cfd6d83044ec78bbd2c5aa",
+      "size": 431,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/659bab9862ed380c34cfd6d83044ec78bbd2c5aa"
+    },
+    {
+      "path": "example/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e6a83d279f78a7703b2785b512457625c3b686bd",
+      "size": 746,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/e6a83d279f78a7703b2785b512457625c3b686bd"
+    },
+    {
+      "path": "example/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "d3c3f92d8ea7c67d27ea3a3c60496587e6a25982",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/d3c3f92d8ea7c67d27ea3a3c60496587e6a25982"
+    },
+    {
+      "path": "example/src/App.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3ac32dda42918f51e1f9c3e700bbd6734428e12f",
+      "size": 4237,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/3ac32dda42918f51e1f9c3e700bbd6734428e12f"
+    },
+    {
+      "path": "example/tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "facc3ec365ed8b2b94af7fdeab7e145b1b089618",
+      "size": 108,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/facc3ec365ed8b2b94af7fdeab7e145b1b089618"
+    },
+    {
+      "path": "icons",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "b71f4b8d96667800b6d7a8e5bbdb78cce4599c53",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/b71f4b8d96667800b6d7a8e5bbdb78cce4599c53"
+    },
+    {
+      "path": "icons/accessibility.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "546dbc6e9feb3eae659c687f692a9753da33e9d8",
+      "size": 1185,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/546dbc6e9feb3eae659c687f692a9753da33e9d8"
+    },
+    {
+      "path": "icons/add.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "005aec7ce038107cf46a42a4b82cce058158f40b",
+      "size": 1641,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/005aec7ce038107cf46a42a4b82cce058158f40b"
+    },
+    {
+      "path": "icons/alert-circle.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d8befbea05d66ea6bcd634779a8462e6bffb436f",
+      "size": 765,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/d8befbea05d66ea6bcd634779a8462e6bffb436f"
+    },
+    {
+      "path": "icons/alert-triangle.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4929ba994efe79bba69a0cb01ac8ed692104cead",
+      "size": 1095,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/4929ba994efe79bba69a0cb01ac8ed692104cead"
+    },
+    {
+      "path": "icons/alert.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "353dccb16cba9a28af05118687cf72663edaeabb",
+      "size": 576,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/353dccb16cba9a28af05118687cf72663edaeabb"
+    },
+    {
+      "path": "icons/apple.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d8291580742810e16462b2f448f60f28057abb15",
+      "size": 997,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/d8291580742810e16462b2f448f60f28057abb15"
+    },
+    {
+      "path": "icons/archive.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9f6c8d5484c181a2ef530d0c4373a151193baafc",
+      "size": 1322,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/9f6c8d5484c181a2ef530d0c4373a151193baafc"
+    },
+    {
+      "path": "icons/arrow-down-box.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3ef2412b5fb53421da3a2713a7b441d14b81ade0",
+      "size": 1458,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/3ef2412b5fb53421da3a2713a7b441d14b81ade0"
+    },
+    {
+      "path": "icons/arrow-down.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "97a5aa7d55531a84edabcc736d481aec5a9bbe21",
+      "size": 811,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/97a5aa7d55531a84edabcc736d481aec5a9bbe21"
+    },
+    {
+      "path": "icons/arrow-left-box.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1820e161ceb0805bbb8cf1d0e16afcf0824b93e2",
+      "size": 1456,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/1820e161ceb0805bbb8cf1d0e16afcf0824b93e2"
+    },
+    {
+      "path": "icons/arrow-left-down-box.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f6751e41d4d1154c65b1a893ad1ef2b0c613e252",
+      "size": 1451,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/f6751e41d4d1154c65b1a893ad1ef2b0c613e252"
+    },
+    {
+      "path": "icons/arrow-left-down.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "394b3826e77b328280a165fd94a88ce956aa8d01",
+      "size": 546,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/394b3826e77b328280a165fd94a88ce956aa8d01"
+    },
+    {
+      "path": "icons/arrow-left-up-box.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "474c229340fcc7c8e333babd712d8e77bd528928",
+      "size": 1444,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/474c229340fcc7c8e333babd712d8e77bd528928"
+    },
+    {
+      "path": "icons/arrow-left-up.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d173eadd77e011a20d19694efae693373768ed3e",
+      "size": 490,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/d173eadd77e011a20d19694efae693373768ed3e"
+    },
+    {
+      "path": "icons/arrow-left.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e3aedd21e264ecd32d29f8f09ff95de0944059e4",
+      "size": 829,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/e3aedd21e264ecd32d29f8f09ff95de0944059e4"
+    },
+    {
+      "path": "icons/arrow-right-box.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "95025e1e8abd5d5cdc6631acba4d0e9defdc87ea",
+      "size": 1457,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/95025e1e8abd5d5cdc6631acba4d0e9defdc87ea"
+    },
+    {
+      "path": "icons/arrow-right-down-box.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1fa56c5c0407edf5aa05aaf63dd263283efe80d9",
+      "size": 1454,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/1fa56c5c0407edf5aa05aaf63dd263283efe80d9"
+    },
+    {
+      "path": "icons/arrow-right-down.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bb8d6a480c356b4f8185dd3256294c0a08bf3721",
+      "size": 518,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/bb8d6a480c356b4f8185dd3256294c0a08bf3721"
+    },
+    {
+      "path": "icons/arrow-right-up-box.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "23aed5cbf8cda37a321fee2663f44142886c1eb3",
+      "size": 1453,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/23aed5cbf8cda37a321fee2663f44142886c1eb3"
+    },
+    {
+      "path": "icons/arrow-right-up.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "03cc939097658adb961fa9496d8c276e2ad18356",
+      "size": 462,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/03cc939097658adb961fa9496d8c276e2ad18356"
+    },
+    {
+      "path": "icons/arrow-right.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d952084f81b8b529fb55592c5be9340212a24c31",
+      "size": 817,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/d952084f81b8b529fb55592c5be9340212a24c31"
+    },
+    {
+      "path": "icons/arrow-up-box.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dc77959022d94f9410ba64b28f777ddaff4a4b2f",
+      "size": 1450,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/dc77959022d94f9410ba64b28f777ddaff4a4b2f"
+    },
+    {
+      "path": "icons/arrow-up.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f4fd7c1c980ee355976108d26b4eba3cd791446a",
+      "size": 825,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/f4fd7c1c980ee355976108d26b4eba3cd791446a"
+    },
+    {
+      "path": "icons/bell.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ed65b43eb5639feb2c313075e094621d4a9a3707",
+      "size": 831,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/ed65b43eb5639feb2c313075e094621d4a9a3707"
+    },
+    {
+      "path": "icons/bold.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7a73e493d035d3994ee8047460c89cbf95878685",
+      "size": 1767,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/7a73e493d035d3994ee8047460c89cbf95878685"
+    },
+    {
+      "path": "icons/bookmark.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b0d588f4a5e123bf26c4f474383b8d37f8a1fbe9",
+      "size": 651,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/b0d588f4a5e123bf26c4f474383b8d37f8a1fbe9"
+    },
+    {
+      "path": "icons/bus.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aebc6c4f5de97738118d314c17dfaf431f46f234",
+      "size": 1919,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/aebc6c4f5de97738118d314c17dfaf431f46f234"
+    },
+    {
+      "path": "icons/butterfly.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "133b4c3958248b4d163b061b8e9c126d8cbf2d45",
+      "size": 773,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/133b4c3958248b4d163b061b8e9c126d8cbf2d45"
+    },
+    {
+      "path": "icons/calendar.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ce3bbbaa27769a3c82d2abb0bfea8ccb0c3342ae",
+      "size": 1036,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/ce3bbbaa27769a3c82d2abb0bfea8ccb0c3342ae"
+    },
+    {
+      "path": "icons/camera.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3a918305f9b0e50d001c2cdb960a5715fe4eac25",
+      "size": 1017,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/3a918305f9b0e50d001c2cdb960a5715fe4eac25"
+    },
+    {
+      "path": "icons/car.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a24e74e6bf2412d1ad5caff9bb4f30f1ca0895a9",
+      "size": 2136,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/a24e74e6bf2412d1ad5caff9bb4f30f1ca0895a9"
+    },
+    {
+      "path": "icons/card.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "81dfdba1020778425e2620857680911b90b973a1",
+      "size": 1575,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/81dfdba1020778425e2620857680911b90b973a1"
+    },
+    {
+      "path": "icons/chair.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c81958ce363ce3f85ca56489a41dad4e3a090bd6",
+      "size": 619,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/c81958ce363ce3f85ca56489a41dad4e3a090bd6"
+    },
+    {
+      "path": "icons/check.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "64f8ab6f27d8fdefa99ddc63aa75ee918116e11c",
+      "size": 1137,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/64f8ab6f27d8fdefa99ddc63aa75ee918116e11c"
+    },
+    {
+      "path": "icons/chevron-down.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a94f50a4b919ba2c17b33209d9a22bec137205b0",
+      "size": 447,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/a94f50a4b919ba2c17b33209d9a22bec137205b0"
+    },
+    {
+      "path": "icons/chevron-left.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c155f53cfae3b1ea6f5abaf3545d5a494d78b8b7",
+      "size": 445,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/c155f53cfae3b1ea6f5abaf3545d5a494d78b8b7"
+    },
+    {
+      "path": "icons/chevron-right.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "da3d42c9ccbcc353f328464aa5d9bf54aa89cd5f",
+      "size": 447,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/da3d42c9ccbcc353f328464aa5d9bf54aa89cd5f"
+    },
+    {
+      "path": "icons/chevron-up.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0394f095703b5abab27c612960371b389ce52799",
+      "size": 444,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/0394f095703b5abab27c612960371b389ce52799"
+    },
+    {
+      "path": "icons/clock.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "55caa6ff80313c6e8a58ea761661d0642aaee857",
+      "size": 663,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/55caa6ff80313c6e8a58ea761661d0642aaee857"
+    },
+    {
+      "path": "icons/code.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "96cc1077019db261d4edef2124c0f1f82f94b655",
+      "size": 2096,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/96cc1077019db261d4edef2124c0f1f82f94b655"
+    },
+    {
+      "path": "icons/coefficient.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7b25a8ace855ddd6040c248302572bf664dba172",
+      "size": 999,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/7b25a8ace855ddd6040c248302572bf664dba172"
+    },
+    {
+      "path": "icons/color-theme.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b0f373d6def47c7911a77f1c3894308cdb7ee750",
+      "size": 929,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/b0f373d6def47c7911a77f1c3894308cdb7ee750"
+    },
+    {
+      "path": "icons/cross.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c2ccb1211244cf2192a4acc3f8e0069469a46d3c",
+      "size": 1649,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/c2ccb1211244cf2192a4acc3f8e0069469a46d3c"
+    },
+    {
+      "path": "icons/crown.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1fec7bd1915fa60d3717c62c360daf73d6e9176a",
+      "size": 580,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/1fec7bd1915fa60d3717c62c360daf73d6e9176a"
+    },
+    {
+      "path": "icons/cutlery.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "767e3118a82127aa44722496a37036b1b6baa27f",
+      "size": 1367,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/767e3118a82127aa44722496a37036b1b6baa27f"
+    },
+    {
+      "path": "icons/ecoledirecte.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7ea7af5555e09c1214d62bbdbbe9d38a683a0339",
+      "size": 1725,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/7ea7af5555e09c1214d62bbdbbe9d38a683a0339"
+    },
+    {
+      "path": "icons/emoji.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d1397508bd0b68b54f591e74b62fcac83722a708",
+      "size": 1892,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/d1397508bd0b68b54f591e74b62fcac83722a708"
+    },
+    {
+      "path": "icons/external-link.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c30a12dabff4f19323385fb2882618975b8df3e9",
+      "size": 1171,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/c30a12dabff4f19323385fb2882618975b8df3e9"
+    },
+    {
+      "path": "icons/filter.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b087fe4dd1a256ebb3df39c9649e94a3c04d3161",
+      "size": 1084,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/b087fe4dd1a256ebb3df39c9649e94a3c04d3161"
+    },
+    {
+      "path": "icons/folder.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4de6fbef8fa4e56ecc75282ee9d30d5ec520120c",
+      "size": 1201,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/4de6fbef8fa4e56ecc75282ee9d30d5ec520120c"
+    },
+    {
+      "path": "icons/font.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3df3fbb4c0bebe0e3a65c7ddcae7f23c3ca9e0ff",
+      "size": 631,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/3df3fbb4c0bebe0e3a65c7ddcae7f23c3ca9e0ff"
+    },
+    {
+      "path": "icons/gallery.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ca320077af4d68d4dcb3ee61a6fd9e783b6ce7c1",
+      "size": 1243,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/ca320077af4d68d4dcb3ee61a6fd9e783b6ce7c1"
+    },
+    {
+      "path": "icons/gears.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "699671b7133177c82e3531536613ce915c5e6b3d",
+      "size": 2213,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/699671b7133177c82e3531536613ce915c5e6b3d"
+    },
+    {
+      "path": "icons/ghost.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "548327aa541188b048113d9089d390345078e2cd",
+      "size": 1140,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/548327aa541188b048113d9089d390345078e2cd"
+    },
+    {
+      "path": "icons/globe-cross.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1a77eef017c2778b64fafbcfb1997f7ac71d8c64",
+      "size": 3406,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/1a77eef017c2778b64fafbcfb1997f7ac71d8c64"
+    },
+    {
+      "path": "icons/globe.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "81bdc199e623e7447313a76d69d05e2f4cb32669",
+      "size": 1164,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/81bdc199e623e7447313a76d69d05e2f4cb32669"
+    },
+    {
+      "path": "icons/grades.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fbaf0f3d08981fc7c90a6b1f11d3174eb332cd29",
+      "size": 1663,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/fbaf0f3d08981fc7c90a6b1f11d3174eb332cd29"
+    },
+    {
+      "path": "icons/graduation-hat.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fefa415cc177790f10b41d662b99abeb69a86a9f",
+      "size": 1473,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/fefa415cc177790f10b41d662b99abeb69a86a9f"
+    },
+    {
+      "path": "icons/grid.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dcd9683f3e3d47ef3257f76d97bbd8b69bbff5a2",
+      "size": 2155,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/dcd9683f3e3d47ef3257f76d97bbd8b69bbff5a2"
+    },
+    {
+      "path": "icons/heart.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "191bb04652bafbd06d3fd0b9f6fdda1d4007a029",
+      "size": 523,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/191bb04652bafbd06d3fd0b9f6fdda1d4007a029"
+    },
+    {
+      "path": "icons/home.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7ae74d26fcc0e142716e667786f0bad5b64ba610",
+      "size": 674,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/7ae74d26fcc0e142716e667786f0bad5b64ba610"
+    },
+    {
+      "path": "icons/info-box.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8aff6d30d3066ecdd67dae03e96d17f66a58a5da",
+      "size": 1188,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/8aff6d30d3066ecdd67dae03e96d17f66a58a5da"
+    },
+    {
+      "path": "icons/info.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8aff6d30d3066ecdd67dae03e96d17f66a58a5da",
+      "size": 1188,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/8aff6d30d3066ecdd67dae03e96d17f66a58a5da"
+    },
+    {
+      "path": "icons/link.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "85fcbd939ffd35ee9d4dc8eab7abea10e7855b80",
+      "size": 3247,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/85fcbd939ffd35ee9d4dc8eab7abea10e7855b80"
+    },
+    {
+      "path": "icons/list.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "25925601ff84f713b538a88fc1e6427a22a26f63",
+      "size": 1548,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/25925601ff84f713b538a88fc1e6427a22a26f63"
+    },
+    {
+      "path": "icons/lock.png",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f42245ea2da7100aa20fb93f59a608562b2c1cd4",
+      "size": 290,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/f42245ea2da7100aa20fb93f59a608562b2c1cd4"
+    },
+    {
+      "path": "icons/lock.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a8dd782ab2fe7668e19fc7b677a6a2dd7e6b339c",
+      "size": 1129,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/a8dd782ab2fe7668e19fc7b677a6a2dd7e6b339c"
+    },
+    {
+      "path": "icons/login.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c295fb155c2babe94175dfe6cecc7a39bfdff7d2",
+      "size": 1506,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/c295fb155c2babe94175dfe6cecc7a39bfdff7d2"
+    },
+    {
+      "path": "icons/logout.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "28234c73e2d8c5a90ecd2723cf40fb3ed123b27c",
+      "size": 1704,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/28234c73e2d8c5a90ecd2723cf40fb3ed123b27c"
+    },
+    {
+      "path": "icons/mail.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "686d7f5624d9e184b46c3e49c606c34f6db4f287",
+      "size": 1014,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/686d7f5624d9e184b46c3e49c606c34f6db4f287"
+    },
+    {
+      "path": "icons/map-pin.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "954163d605230544c89cf53ce49a0a11950522eb",
+      "size": 481,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/954163d605230544c89cf53ce49a0a11950522eb"
+    },
+    {
+      "path": "icons/menu.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "daef01b2a7035b9e2b688708cd699f050aa32ad2",
+      "size": 1100,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/daef01b2a7035b9e2b688708cd699f050aa32ad2"
+    },
+    {
+      "path": "icons/metro.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "59e26814634eb81e7934bf91383c0791a0a64c8b",
+      "size": 3272,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/59e26814634eb81e7934bf91383c0791a0a64c8b"
+    },
+    {
+      "path": "icons/minus.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "60b1e2734e312fccc985f20100cd77f16ec89a5b",
+      "size": 568,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/60b1e2734e312fccc985f20100cd77f16ec89a5b"
+    },
+    {
+      "path": "icons/moon.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "603f99cb715a8be453ea700f08690e0d19cfa121",
+      "size": 474,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/603f99cb715a8be453ea700f08690e0d19cfa121"
+    },
+    {
+      "path": "icons/newspaper.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "286412bf51883c94a36612fcb06e16d114f36c4d",
+      "size": 2125,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/286412bf51883c94a36612fcb06e16d114f36c4d"
+    },
+    {
+      "path": "icons/palette.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2da696d3ff9e1ff6e6723d07bf52bf261bc6c83a",
+      "size": 887,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/2da696d3ff9e1ff6e6723d07bf52bf261bc6c83a"
+    },
+    {
+      "path": "icons/paper.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d385db0f76f9cce4766191f0d4e885cee0fe66de",
+      "size": 1067,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/d385db0f76f9cce4766191f0d4e885cee0fe66de"
+    },
+    {
+      "path": "icons/papillon-app.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "12f2b83c50306cdec1789ae736d406fa48ba332c",
+      "size": 3328,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/12f2b83c50306cdec1789ae736d406fa48ba332c"
+    },
+    {
+      "path": "icons/papillon-icon.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e9b4a13d7b9aa989184bda633300b57c730aa1f9",
+      "size": 3131,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/e9b4a13d7b9aa989184bda633300b57c730aa1f9"
+    },
+    {
+      "path": "icons/password.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c643a124317c5f0561c029b307a42f85bfa5b419",
+      "size": 1018,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/c643a124317c5f0561c029b307a42f85bfa5b419"
+    },
+    {
+      "path": "icons/pause.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "803f39be8d59982d3f289bc1004b9ebaa2c5a6ab",
+      "size": 856,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/803f39be8d59982d3f289bc1004b9ebaa2c5a6ab"
+    },
+    {
+      "path": "icons/pen-alt.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "045db4c9dee6900b5960139a4cc074758cdb607d",
+      "size": 1386,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/045db4c9dee6900b5960139a4cc074758cdb607d"
+    },
+    {
+      "path": "icons/pen.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "769360f39e818b854ef39d7f4ece31dce930b0b6",
+      "size": 1632,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/769360f39e818b854ef39d7f4ece31dce930b0b6"
+    },
+    {
+      "path": "icons/phone.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "344d52e6bef46a12759d650bdf95d08178150965",
+      "size": 1225,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/344d52e6bef46a12759d650bdf95d08178150965"
+    },
+    {
+      "path": "icons/pie.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "797db67b00aa45f7853acfe161d5385820d4bdc9",
+      "size": 900,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/797db67b00aa45f7853acfe161d5385820d4bdc9"
+    },
+    {
+      "path": "icons/piggy-bank.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5b89c0cda2e593dc50ecf944f1ae09fccae60d91",
+      "size": 1965,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/5b89c0cda2e593dc50ecf944f1ae09fccae60d91"
+    },
+    {
+      "path": "icons/pillar.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "77aa9e3835007f374e8670981236bff64f8a914c",
+      "size": 1131,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/77aa9e3835007f374e8670981236bff64f8a914c"
+    },
+    {
+      "path": "icons/placeholder.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a4ebc621360e4bc1a880310155095e2287ca46e8",
+      "size": 1970,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/a4ebc621360e4bc1a880310155095e2287ca46e8"
+    },
+    {
+      "path": "icons/play.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "35b97b1e7d220326436954218e0d5c96b6bfc53c",
+      "size": 429,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/35b97b1e7d220326436954218e0d5c96b6bfc53c"
+    },
+    {
+      "path": "icons/plus.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6e62158c238c7d28771d66acf27f9f09b328b211",
+      "size": 844,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/6e62158c238c7d28771d66acf27f9f09b328b211"
+    },
+    {
+      "path": "icons/private_papillon-app.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2ff68c2048d37d2d3f7c7970ea1c784f922a7298",
+      "size": 3336,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/2ff68c2048d37d2d3f7c7970ea1c784f922a7298"
+    },
+    {
+      "path": "icons/private_papillon-icon.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a6e075e48cd9c26f9474c4fe6628d77696ffe65a",
+      "size": 3129,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/a6e075e48cd9c26f9474c4fe6628d77696ffe65a"
+    },
+    {
+      "path": "icons/pronote.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "924b8f123ae34dfa969f43733bc725ef56983e2f",
+      "size": 1198,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/924b8f123ae34dfa969f43733bc725ef56983e2f"
+    },
+    {
+      "path": "icons/qr-code.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "72f77b916148413091789128cedaf9ff98e3d9ad",
+      "size": 3467,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/72f77b916148413091789128cedaf9ff98e3d9ad"
+    },
+    {
+      "path": "icons/search.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "185eb7d402c9a8348adb47f8de06a6e7bf2e5cb0",
+      "size": 555,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/185eb7d402c9a8348adb47f8de06a6e7bf2e5cb0"
+    },
+    {
+      "path": "icons/skolengo.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ff2b595b48337f4d297a0745bf2e864ba885dcd1",
+      "size": 4404,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/ff2b595b48337f4d297a0745bf2e864ba885dcd1"
+    },
+    {
+      "path": "icons/sparkles.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "789648774cd7afae8f017770097e8a4e181f6707",
+      "size": 1361,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/789648774cd7afae8f017770097e8a4e181f6707"
+    },
+    {
+      "path": "icons/star.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb0c0fce16094e9072a27fb1b9954d9d4a3283bb",
+      "size": 1206,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/cb0c0fce16094e9072a27fb1b9954d9d4a3283bb"
+    },
+    {
+      "path": "icons/sun.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8048d9f88f33f7786b1d02d69919df6bd1814ff7",
+      "size": 1805,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/8048d9f88f33f7786b1d02d69919df6bd1814ff7"
+    },
+    {
+      "path": "icons/sunrise.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "40348bb2ce48f0caa836899100bd427fd8548d83",
+      "size": 2401,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/40348bb2ce48f0caa836899100bd427fd8548d83"
+    },
+    {
+      "path": "icons/tasks.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "19c30a9bd55b83df71cc30d40f5718289b688966",
+      "size": 1093,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/19c30a9bd55b83df71cc30d40f5718289b688966"
+    },
+    {
+      "path": "icons/text-bubble.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f278edc75ed2c4889d58a76f0e7ddcf3a2f59dc3",
+      "size": 1642,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/f278edc75ed2c4889d58a76f0e7ddcf3a2f59dc3"
+    },
+    {
+      "path": "icons/trash.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cce6e42c8a1fd62c256879ea32bfcb2e1065a17e",
+      "size": 1859,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/cce6e42c8a1fd62c256879ea32bfcb2e1065a17e"
+    },
+    {
+      "path": "icons/underline.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7b268ec6e926b935e1ee4b5fec2b1f6dbdb5853b",
+      "size": 1074,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/7b268ec6e926b935e1ee4b5fec2b1f6dbdb5853b"
+    },
+    {
+      "path": "icons/unlock.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cc3188ec5b93971a0814efd67f3575f8f3b9fd78",
+      "size": 1127,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/cc3188ec5b93971a0814efd67f3575f8f3b9fd78"
+    },
+    {
+      "path": "icons/user-cross.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0273c81c06ea79d1f30cfaf852131e6dcf2220aa",
+      "size": 2860,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/0273c81c06ea79d1f30cfaf852131e6dcf2220aa"
+    },
+    {
+      "path": "icons/user.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8bc37f3a3cd45ab5775577024e861482f37ea5cb",
+      "size": 910,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/8bc37f3a3cd45ab5775577024e861482f37ea5cb"
+    },
+    {
+      "path": "icons/volume-cross.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5ffbad253af011e27379438d5a181d8487e0b0b4",
+      "size": 2334,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/5ffbad253af011e27379438d5a181d8487e0b0b4"
+    },
+    {
+      "path": "icons/volume-half.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b9855d2cd9e44c0f08cd8750d1cb020b48fcfd0c",
+      "size": 1135,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/b9855d2cd9e44c0f08cd8750d1cb020b48fcfd0c"
+    },
+    {
+      "path": "icons/volume-no.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "06fdc6b48d40cd99fc2c41aefe9394d463381cd3",
+      "size": 739,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/06fdc6b48d40cd99fc2c41aefe9394d463381cd3"
+    },
+    {
+      "path": "icons/volume.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "583f6c98f7f5d2a5c56eb356e864a2d54f75dcf3",
+      "size": 1527,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/583f6c98f7f5d2a5c56eb356e864a2d54f75dcf3"
+    },
+    {
+      "path": "icons/walk.svg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "71142c7b93885bfff9ff46967fce55b2837c15a1",
+      "size": 1982,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/71142c7b93885bfff9ff46967fce55b2837c15a1"
+    },
+    {
+      "path": "package-lock.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "46aa5e0eb18d662338ae6d4dc0d02948b9cff0e5",
+      "size": 828222,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/46aa5e0eb18d662338ae6d4dc0d02948b9cff0e5"
+    },
+    {
+      "path": "package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7e64fe484502d5452997611e2bd7536a184b794d",
+      "size": 3581,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/7e64fe484502d5452997611e2bd7536a184b794d"
+    },
+    {
+      "path": "scripts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4f60a4c3a28c059b8d44363fc1211ece0655b541",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/4f60a4c3a28c059b8d44363fc1211ece0655b541"
+    },
+    {
+      "path": "scripts/exportTemplate.native.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6962ef7e3e3300e569f0e95d1ffb565cea44b9d8",
+      "size": 1699,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/6962ef7e3e3300e569f0e95d1ffb565cea44b9d8"
+    },
+    {
+      "path": "scripts/exportTemplate.web.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0988c515f5098d708270c23b31da866a8b0ff58d",
+      "size": 1713,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/0988c515f5098d708270c23b31da866a8b0ff58d"
+    },
+    {
+      "path": "scripts/indexTemplate.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ebd4f02dd28f0b605d54181a28d4ed8e6e7a1b3c",
+      "size": 3075,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/ebd4f02dd28f0b605d54181a28d4ed8e6e7a1b3c"
+    },
+    {
+      "path": "src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "22753442750bac6b1770a04621ad55e6d613d389",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/22753442750bac6b1770a04621ad55e6d613d389"
+    },
+    {
+      "path": "src/components",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2d86487d20e5fd660fce4f124d40b70151b76c6d",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/2d86487d20e5fd660fce4f124d40b70151b76c6d"
+    },
+    {
+      "path": "src/components/Papicons.native.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a377d3f7a7221df180b392b3b2c593898d78bccb",
+      "size": 730,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/a377d3f7a7221df180b392b3b2c593898d78bccb"
+    },
+    {
+      "path": "src/components/Papicons.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "516aa9f580b99b43dcecb2f17ccb75f2d8deeec1",
+      "size": 731,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/516aa9f580b99b43dcecb2f17ccb75f2d8deeec1"
+    },
+    {
+      "path": "src/index.native.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "517b058e6c67a4d5be4dd5619e64ca7d09235451",
+      "size": 106,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/517b058e6c67a4d5be4dd5619e64ca7d09235451"
+    },
+    {
+      "path": "src/index.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a20c099eba2288a1224acdae3fde97e3b25d74ea",
+      "size": 96,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/a20c099eba2288a1224acdae3fde97e3b25d74ea"
+    },
+    {
+      "path": "src/types",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "dd4230b883176f9f80f293038a64740b16e3ae4d",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/dd4230b883176f9f80f293038a64740b16e3ae4d"
+    },
+    {
+      "path": "src/types/PapiconsProps.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c15d59dcbae7811305848cb947fb46b9003150c9",
+      "size": 115,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/c15d59dcbae7811305848cb947fb46b9003150c9"
+    },
+    {
+      "path": "svgr.native.config.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d5616813c1176397b2e1265a1f2cc87e0270e427",
+      "size": 619,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/d5616813c1176397b2e1265a1f2cc87e0270e427"
+    },
+    {
+      "path": "svgr.web.config.js",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d620b48fde3dc57bf93f96598cd03f706178ef06",
+      "size": 614,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/d620b48fde3dc57bf93f96598cd03f706178ef06"
+    },
+    {
+      "path": "tsconfig.build.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4177c671bc7e8c5018fbf66a78f3960eade178db",
+      "size": 101,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/4177c671bc7e8c5018fbf66a78f3960eade178db"
+    },
+    {
+      "path": "tsconfig.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "55310a0c4f3a5cf02e41ba10588af58ccdebb7ea",
+      "size": 748,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/55310a0c4f3a5cf02e41ba10588af58ccdebb7ea"
+    },
+    {
+      "path": "website",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "b6ef731e95deae61f926f6365687fbe4612ec9b1",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/b6ef731e95deae61f926f6365687fbe4612ec9b1"
+    },
+    {
+      "path": "website/index.html",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ea404ab0963ec0460aaab880dd28070fa4a338ad",
+      "size": 1298,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/ea404ab0963ec0460aaab880dd28070fa4a338ad"
+    },
+    {
+      "path": "website/package-lock.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0724635a60975fb183795eec3db8277d788b2929",
+      "size": 89949,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/0724635a60975fb183795eec3db8277d788b2929"
+    },
+    {
+      "path": "website/package.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e383f0707fa347a1294cca937bfda331f3364858",
+      "size": 614,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/e383f0707fa347a1294cca937bfda331f3364858"
+    },
+    {
+      "path": "website/public",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "637b93e5d738e8a54986bcc569a82493366e86c7",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/637b93e5d738e8a54986bcc569a82493366e86c7"
+    },
+    {
+      "path": "website/public/banner.jpg",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "078686d7aaa6d5a478c8c380ffe779a9c526d00a",
+      "size": 237752,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/078686d7aaa6d5a478c8c380ffe779a9c526d00a"
+    },
+    {
+      "path": "website/public/favicon.ico",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "49d64fde45ee018a2582fed99dcd4ce746c29b3b",
+      "size": 172794,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/49d64fde45ee018a2582fed99dcd4ce746c29b3b"
+    },
+    {
+      "path": "website/public/fonts",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "723b8e3b3fc255b224c77d229601d71518a32229",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/723b8e3b3fc255b224c77d229601d71518a32229"
+    },
+    {
+      "path": "website/public/fonts/SNPro",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "e777856013fad1b0f7a459133a8bd8b7a9a0fd59",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/e777856013fad1b0f7a459133a8bd8b7a9a0fd59"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-Black.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "39d2ed336f23a0389f86099f140443c9ace8c617",
+      "size": 67028,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/39d2ed336f23a0389f86099f140443c9ace8c617"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-BlackItalic.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "fd4be29234a49c9e2d99cec811a750bad5e1cff0",
+      "size": 71832,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/fd4be29234a49c9e2d99cec811a750bad5e1cff0"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-Bold.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "d922690f3425e208b620f9cac3c7a0ed26e168a9",
+      "size": 67268,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/d922690f3425e208b620f9cac3c7a0ed26e168a9"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-BoldItalic.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "cc17015e11440c6e8d20beda10225046edfb9f99",
+      "size": 72624,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/cc17015e11440c6e8d20beda10225046edfb9f99"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-Book.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "3c4a0f4f67396411deb832fdf1b01f41efda8157",
+      "size": 66908,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/3c4a0f4f67396411deb832fdf1b01f41efda8157"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-BookItalic.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "54d791f015a0931dcbaa85e7898e34f4ddd119c4",
+      "size": 70192,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/54d791f015a0931dcbaa85e7898e34f4ddd119c4"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-Heavy.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "f508a55c6a4c7788e7a011bd7ab7a57e03b82504",
+      "size": 67268,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/f508a55c6a4c7788e7a011bd7ab7a57e03b82504"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-HeavyItalic.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "7e89f14b42d56ae6423ced9584014aeb8bd5d64e",
+      "size": 72560,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/7e89f14b42d56ae6423ced9584014aeb8bd5d64e"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-Light.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "54756c6d4113de3544383ed0f420c68085d9fcaa",
+      "size": 66084,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/54756c6d4113de3544383ed0f420c68085d9fcaa"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-LightItalic.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "300a3a1649573f3efe6433a84bee8b1f0781607d",
+      "size": 68008,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/300a3a1649573f3efe6433a84bee8b1f0781607d"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-Medium.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "55e888e280f09f2e4b96423fab6e030545ede2cd",
+      "size": 66844,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/55e888e280f09f2e4b96423fab6e030545ede2cd"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-MediumItalic.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "a016d1f14ce2752a6442a1dd6e4dcae9a7913456",
+      "size": 70844,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/a016d1f14ce2752a6442a1dd6e4dcae9a7913456"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-Regular.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "c88ac411182eb5ba5f4315a94b1abeb8719ba481",
+      "size": 67260,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/c88ac411182eb5ba5f4315a94b1abeb8719ba481"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-RegularItalic.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "cdf5b093c75331d1786cd04f95588add17e8ce08",
+      "size": 70904,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/cdf5b093c75331d1786cd04f95588add17e8ce08"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-Semibold.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "2eca6c12f4999809c64441bc549d8e58139c2963",
+      "size": 66548,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/2eca6c12f4999809c64441bc549d8e58139c2963"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-SemiboldItalic.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "7401d5ed1b8dad602e3948228aeb5ac3cc0350bd",
+      "size": 70056,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/7401d5ed1b8dad602e3948228aeb5ac3cc0350bd"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-Thin.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "bdd4e725eb9f1c73774c7a3bdee87ceff6b90971",
+      "size": 61532,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/bdd4e725eb9f1c73774c7a3bdee87ceff6b90971"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-ThinItalic.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "0ba8e34f465fac7ec69d391b91c268fb61fa884d",
+      "size": 63888,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/0ba8e34f465fac7ec69d391b91c268fb61fa884d"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-Variable.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "14a69540339d84a7eb3549a3e1c546116f01061c",
+      "size": 178864,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/14a69540339d84a7eb3549a3e1c546116f01061c"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-VariableItalic.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "f78c8372cada2608823514d40d83312455a5aee5",
+      "size": 116884,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/f78c8372cada2608823514d40d83312455a5aee5"
+    },
+    {
+      "path": "website/public/fonts/SNPro/SNPro-VariableRegular.woff2",
+      "mode": "100755",
+      "type": "blob",
+      "sha": "d05b9be53c9de386160a67d48e6b5c485e59b000",
+      "size": 108452,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/d05b9be53c9de386160a67d48e6b5c485e59b000"
+    },
+    {
+      "path": "website/src",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "c5ca413122b7be0be805430015398e9e173c943e",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/c5ca413122b7be0be805430015398e9e173c943e"
+    },
+    {
+      "path": "website/src/App.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3986ecf5fcff11d5f10cd8ec6f722a9678eeaf1c",
+      "size": 3173,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/3986ecf5fcff11d5f10cd8ec6f722a9678eeaf1c"
+    },
+    {
+      "path": "website/src/components",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "5d1f356e5dd69ec6a5fe2799b27b636a8f478b75",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/5d1f356e5dd69ec6a5fe2799b27b636a8f478b75"
+    },
+    {
+      "path": "website/src/components/CopyModeSelector.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b6ff4d8aeaf4b472f1ae4cf057d01c70d637f57c",
+      "size": 1428,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/b6ff4d8aeaf4b472f1ae4cf057d01c70d637f57c"
+    },
+    {
+      "path": "website/src/components/Footer.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f1dfb04f4a04470db0eecb69663b0264f6469bcb",
+      "size": 549,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/f1dfb04f4a04470db0eecb69663b0264f6469bcb"
+    },
+    {
+      "path": "website/src/components/Header.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "640436ee410180e578aed6d375736166320871f2",
+      "size": 1587,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/640436ee410180e578aed6d375736166320871f2"
+    },
+    {
+      "path": "website/src/components/Hero.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "30a383ad196598d65ccf3e9447c19cdc49ae9d14",
+      "size": 3469,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/30a383ad196598d65ccf3e9447c19cdc49ae9d14"
+    },
+    {
+      "path": "website/src/components/IconItem.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "af782863dde11bc0d109ea2fbd3adbea125b48ff",
+      "size": 3581,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/af782863dde11bc0d109ea2fbd3adbea125b48ff"
+    },
+    {
+      "path": "website/src/components/IconList.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9ccff0d56c24072617c0273e4b216f5498933d2d",
+      "size": 615,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/9ccff0d56c24072617c0273e4b216f5498933d2d"
+    },
+    {
+      "path": "website/src/components/IconRenderer.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "54a09f20e7ff56b8b0dd7861e070ba91315dd1ad",
+      "size": 428,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/54a09f20e7ff56b8b0dd7861e070ba91315dd1ad"
+    },
+    {
+      "path": "website/src/components/SearchInput.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2b03468cd0f2db8ce6013f5dfbef3f93fa3f95fb",
+      "size": 1640,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/2b03468cd0f2db8ce6013f5dfbef3f93fa3f95fb"
+    },
+    {
+      "path": "website/src/constants",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7e725bd068c7001a5b098947b6cdad4c89c1738b",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/7e725bd068c7001a5b098947b6cdad4c89c1738b"
+    },
+    {
+      "path": "website/src/constants/copyModes.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b8c3b9385dd36a46d4b467fbfc831974d6225cad",
+      "size": 450,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/b8c3b9385dd36a46d4b467fbfc831974d6225cad"
+    },
+    {
+      "path": "website/src/data",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "45d36c8b053a7aeedd6ed292ccd93d88eb765c7a",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/45d36c8b053a7aeedd6ed292ccd93d88eb765c7a"
+    },
+    {
+      "path": "website/src/data/icons.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7d5421cf3b85460e582bedc9fdb9498bdca3d2cd",
+      "size": 656,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/7d5421cf3b85460e582bedc9fdb9498bdca3d2cd"
+    },
+    {
+      "path": "website/src/icons",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "a77252ed501c91cde96fb6ddefc9706435238299",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/a77252ed501c91cde96fb6ddefc9706435238299"
+    },
+    {
+      "path": "website/src/icons/PapiconsLogotype.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3eb3e3d5075d40402024a3df86f7949e1010c062",
+      "size": 4922,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/3eb3e3d5075d40402024a3df86f7949e1010c062"
+    },
+    {
+      "path": "website/src/main.tsx",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b31fb6bc324932da13fb4a0959ee1f4240917e7d",
+      "size": 208,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/b31fb6bc324932da13fb4a0959ee1f4240917e7d"
+    },
+    {
+      "path": "website/src/style.css",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bc895e1da64d724e4ed52347d6f32f7d64f745ee",
+      "size": 1535,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/bc895e1da64d724e4ed52347d6f32f7d64f745ee"
+    },
+    {
+      "path": "website/src/types.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f539d8041ee9dae62e12ebfd660df71b5ac61fb0",
+      "size": 128,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/f539d8041ee9dae62e12ebfd660df71b5ac61fb0"
+    },
+    {
+      "path": "website/src/utils",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "95ad520ef34d85afaacc87e01b8edf6d061543af",
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/trees/95ad520ef34d85afaacc87e01b8edf6d061543af"
+    },
+    {
+      "path": "website/src/utils/iconName.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "50828359a4276fa16f72117d2f139e848bc6349c",
+      "size": 157,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/50828359a4276fa16f72117d2f139e848bc6349c"
+    },
+    {
+      "path": "website/src/utils/search.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "980fc0c6fe0fc61e86d4bfa310d8aa1a45fdd816",
+      "size": 230,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/980fc0c6fe0fc61e86d4bfa310d8aa1a45fdd816"
+    },
+    {
+      "path": "website/vite.config.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b963a70afdf61dac0cd15e542dbf815ce5f6ed34",
+      "size": 447,
+      "url": "https://api.github.com/repos/PapillonApp/Papicons/git/blobs/b963a70afdf61dac0cd15e542dbf815ce5f6ed34"
+    }
+  ],
+  "truncated": false
+}

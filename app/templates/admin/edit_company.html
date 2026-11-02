@@ -1,10 +1,10 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('Edit') }} {{ company.name }} — {{ _('Admin') }}{% endblock %}
+{% block title %}{{ dual('Edit') }} {{ company.name }} — {{ dual('Admin') }}{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-pencil me-2"></i>{{ _('Edit Company') }}</h4>
+    <h4 class="mb-0"><i class="bi bi-pencil me-2"></i>{{ dual('Edit Company') }}</h4>
     <a href="{{ url_for('admin.company_detail', company_id=company.id) }}" class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-arrow-left me-1"></i>{{ _('Back') }}
+        <i class="bi bi-arrow-left me-1"></i>{{ dual('Back') }}
     </a>
 </div>
 
@@ -12,27 +12,27 @@
 <div class="row g-3">
     <div class="col-md-7">
         <div class="card shadow-sm">
-            <div class="card-header"><strong><i class="bi bi-info-circle me-1"></i>{{ _('Company Information') }}</strong></div>
+            <div class="card-header"><strong><i class="bi bi-info-circle me-1"></i>{{ dual('Company Information') }}</strong></div>
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-8">
-                        <label class="form-label">{{ _('Company Name') }} *</label>
+                        <label class="form-label">{{ dual('Company Name') }} *</label>
                         <input type="text" name="company_name" class="form-control" value="{{ company.name }}" required>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">{{ _('Phone') }}</label>
+                        <label class="form-label">{{ dual('Phone') }}</label>
                         <input type="text" name="phone" class="form-control" value="{{ company.phone or '' }}">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">{{ _('Address') }}</label>
+                        <label class="form-label">{{ dual('Address') }}</label>
                         <input type="text" name="address" class="form-control" value="{{ company.address or '' }}">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">{{ _('City') }}</label>
+                        <label class="form-label">{{ dual('City') }}</label>
                         <input type="text" name="city" class="form-control" value="{{ company.city or '' }}">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">{{ _('Website') }}</label>
+                        <label class="form-label">{{ dual('Website') }}</label>
                         <input type="url" name="website" class="form-control" value="{{ company.website or '' }}">
                     </div>
                 </div>
@@ -41,7 +41,7 @@
     </div>
     <div class="col-md-5">
         <div class="card shadow-sm">
-            <div class="card-header"><strong><i class="bi bi-image me-1"></i>{{ _('Logo') }}</strong></div>
+            <div class="card-header"><strong><i class="bi bi-image me-1"></i>{{ dual('Logo') }}</strong></div>
             <div class="card-body d-flex flex-column align-items-center">
                 <div class="mb-3 text-center">
                     <div id="logoPreview" class="border rounded d-flex align-items-center justify-content-center bg-light" style="width:140px;height:140px;">
@@ -53,21 +53,21 @@
                     </div>
                 </div>
                 <input type="file" name="logo" class="form-control form-control-sm" accept="image/*" onchange="previewLogo(this)">
-                <small class="text-muted mt-1">{{ _('Leave empty to keep current logo.') }}</small>
+                <small class="text-muted mt-1">{{ dual('Leave empty to keep current logo.') }}</small>
             </div>
         </div>
     </div>
     <div class="col-md-6">
         <div class="card shadow-sm">
-            <div class="card-header"><strong><i class="bi bi-person me-1"></i>{{ _('Contact Person') }}</strong></div>
+            <div class="card-header"><strong><i class="bi bi-person me-1"></i>{{ dual('Contact Person') }}</strong></div>
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label">{{ _('Contact Name') }}</label>
+                        <label class="form-label">{{ dual('Contact Name') }}</label>
                         <input type="text" name="contact_name" class="form-control" value="{{ company.contact_name or '' }}">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">{{ _('Contact Email') }}</label>
+                        <label class="form-label">{{ dual('Contact Email') }}</label>
                         <input type="email" name="contact_email" class="form-control" value="{{ company.email or '' }}">
                     </div>
                 </div>
@@ -76,27 +76,27 @@
     </div>
     <div class="col-md-6">
         <div class="card shadow-sm">
-            <div class="card-header"><strong><i class="bi bi-file-earmark-text me-1"></i>{{ _('Moroccan Legal IDs') }}</strong></div>
+            <div class="card-header"><strong><i class="bi bi-file-earmark-text me-1"></i>{{ dual('Moroccan Legal IDs') }}</strong></div>
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label class="form-label">{{ _('ICE') }}</label>
+                        <label class="form-label">{{ dual('ICE') }}</label>
                         <input type="text" name="ice" class="form-control" value="{{ company.ice or '' }}">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">{{ _('RC') }}</label>
+                        <label class="form-label">{{ dual('RC') }}</label>
                         <input type="text" name="rc" class="form-control" value="{{ company.rc or '' }}">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">{{ _('IF') }}</label>
+                        <label class="form-label">{{ dual('IF') }}</label>
                         <input type="text" name="if_tax" class="form-control" value="{{ company.if_tax or '' }}">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">{{ _('CNSS') }}</label>
+                        <label class="form-label">{{ dual('CNSS') }}</label>
                         <input type="text" name="cnss" class="form-control" value="{{ company.cnss or '' }}">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">{{ _('Patente') }}</label>
+                        <label class="form-label">{{ dual('Patente') }}</label>
                         <input type="text" name="patente" class="form-control" value="{{ company.patente or '' }}">
                     </div>
                 </div>
@@ -106,26 +106,26 @@
 
     <div class="col-12">
         <div class="card shadow-sm">
-            <div class="card-header"><strong><i class="bi bi-file-earmark me-1"></i>{{ _('Invoice Template') }}</strong></div>
+            <div class="card-header"><strong><i class="bi bi-file-earmark me-1"></i>{{ dual('Invoice Template') }}</strong></div>
             <div class="card-body">
                 {% set tpl = company.invoice_template or {} %}
                 <div class="row g-3">
                     <div class="col-md-3">
-                        <label class="form-label">{{ _('Primary Color') }}</label>
+                        <label class="form-label">{{ dual('Primary Color') }}</label>
                         <input type="color" name="inv_primary_color" class="form-control form-control-color" value="{{ tpl.get('primary_color', '#1a73e8') }}">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">{{ _('Secondary Color') }}</label>
+                        <label class="form-label">{{ dual('Secondary Color') }}</label>
                         <input type="color" name="inv_secondary_color" class="form-control form-control-color" value="{{ tpl.get('secondary_color', '#6c757d') }}">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">{{ _('Accent Color') }}</label>
+                        <label class="form-label">{{ dual('Accent Color') }}</label>
                         <input type="color" name="inv_accent_color" class="form-control form-control-color" value="{{ tpl.get('accent_color', '#0d6efd') }}">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">{{ _('Font Family') }}</label>
+                        <label class="form-label">{{ dual('Font Family') }}</label>
                         <select name="inv_font_family" class="form-select">
-                            {{ _('Comfortaa') }}
+                            {{ dual('Comfortaa') }}
                             <option value="'Comfortaa', sans-serif" {% if tpl.get('font_family') == "'Comfortaa', sans-serif" or not tpl.get('font_family') %}selected{% endif %}>Comfortaa</option>
                             <option value="'Inter', sans-serif" {% if tpl.get('font_family') == "'Inter', sans-serif" %}selected{% endif %}>Inter</option>
                             <option value="'Roboto', sans-serif" {% if tpl.get('font_family') == "'Roboto', sans-serif" %}selected{% endif %}>Roboto</option>
@@ -136,37 +136,37 @@
                         </select>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">{{ _('Header Text') }}</label>
+                        <label class="form-label">{{ dual('Header Text') }}</label>
                         <input type="text" name="inv_header_text" class="form-control" value="{{ tpl.get('header_text', '') }}" placeholder="{{ _('e.g. Equipment for drinking water, wellness water, spas and pools.') }}">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">{{ _('Footer Text') }}</label>
+                        <label class="form-label">{{ dual('Footer Text') }}</label>
                         <input type="text" name="inv_footer_text" class="form-control" value="{{ tpl.get('footer_text', '') }}" placeholder="{{ _('e.g. Thank you for your business!') }}">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">{{ _('Payment Terms') }}</label>
+                        <label class="form-label">{{ dual('Payment Terms') }}</label>
                         <input type="text" name="inv_payment_terms" class="form-control" value="{{ tpl.get('payment_terms', '') }}" placeholder="{{ _('e.g. Net 30 days') }}">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">{{ _('Signature Name') }}</label>
+                        <label class="form-label">{{ dual('Signature Name') }}</label>
                         <input type="text" name="inv_signature_name" class="form-control" value="{{ tpl.get('signature_name', '') }}">
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label">{{ _('Signature Title') }}</label>
+                        <label class="form-label">{{ dual('Signature Title') }}</label>
                         <input type="text" name="inv_signature_title" class="form-control" value="{{ tpl.get('signature_title', '') }}">
                     </div>
                     <div class="col-12">
                         <div class="form-check form-check-inline">
                             <input type="checkbox" class="form-check-input" name="inv_show_logo" id="inv_show_logo" value="1" {% if tpl.get('show_logo', true) %}checked{% endif %}>
-                            <label class="form-check-label" for="inv_show_logo">{{ _('Show logo on invoices') }}</label>
+                            <label class="form-check-label" for="inv_show_logo">{{ dual('Show logo on invoices') }}</label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input type="checkbox" class="form-check-input" name="inv_show_legal_ids" id="inv_show_legal_ids" value="1" {% if tpl.get('show_legal_ids', true) %}checked{% endif %}>
-                            <label class="form-check-label" for="inv_show_legal_ids">{{ _('Show legal IDs (ICE/RC/IF)') }}</label>
+                            <label class="form-check-label" for="inv_show_legal_ids">{{ dual('Show legal IDs (ICE/RC/IF)') }}</label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input type="checkbox" class="form-check-input" name="inv_show_rib" id="inv_show_rib" value="1" {% if tpl.get('show_rib', true) %}checked{% endif %}>
-                            <label class="form-check-label" for="inv_show_rib">{{ _('Show RIB') }}</label>
+                            <label class="form-check-label" for="inv_show_rib">{{ dual('Show RIB') }}</label>
                         </div>
                     </div>
                 </div>
@@ -175,8 +175,8 @@
     </div>
 
     <div class="col-12">
-        <button type="submit" class="btn btn-primary"><i class="bi bi-check me-1"></i>{{ _('Save Changes') }}</button>
-        <a href="{{ url_for('admin.company_detail', company_id=company.id) }}" class="btn btn-outline-secondary">{{ _('Cancel') }}</a>
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check me-1"></i>{{ dual('Save Changes') }}</button>
+        <a href="{{ url_for('admin.company_detail', company_id=company.id) }}" class="btn btn-outline-secondary">{{ dual('Cancel') }}</a>
     </div>
 </div>
 </form>

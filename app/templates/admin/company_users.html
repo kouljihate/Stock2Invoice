@@ -1,10 +1,10 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('Users') }} — {{ company.name }} — {{ _('Admin') }}{% endblock %}
+{% block title %}{{ dual('Users') }} — {{ company.name }} — {{ dual('Admin') }}{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-people me-2"></i>{{ company.name }} — {{ _('Users') }}</h4>
+    <h4 class="mb-0"><i class="bi bi-people me-2"></i>{{ company.name }} — {{ dual('Users') }}</h4>
     <a href="{{ url_for('admin.index') }}" class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-arrow-left me-1"></i>{{ _('Back to Companies') }}
+        <i class="bi bi-arrow-left me-1"></i>{{ dual('Back to Companies') }}
     </a>
 </div>
 
@@ -13,10 +13,10 @@
         <table class="table table-hover mb-0 align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>{{ _('Name') }}</th>
-                    <th>{{ _('Email') }}</th>
-                    <th>{{ _('Role') }}</th>
-                    <th>{{ _('Joined') }}</th>
+                    <th>{{ dual('Name') }}</th>
+                    <th>{{ dual('Email') }}</th>
+                    <th>{{ dual('Role') }}</th>
+                    <th>{{ dual('Joined') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,7 +33,7 @@
                     <td>{{ u.created_at[:10] if u.created_at else '-' }}</td>
                 </tr>
                 {% else %}
-                <tr><td colspan="4" class="text-center text-muted py-4">{{ _('No users for this company.') }}</td></tr>
+                <tr><td colspan="4" class="text-center text-muted py-4">{{ dual('No users for this company.') }}</td></tr>
                 {% endfor %}
             </tbody>
         </table>

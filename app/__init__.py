@@ -40,6 +40,8 @@ from .blueprints.mobile.orders.routes import mobile_orders_bp
 
 from .blueprints.admin.routes import admin_bp
 from .version import VERSION, BUILD_DATE
+from .core.utils.i18n import (PAIR_BADGES, PAIR_COOKIE, PAIR_LABELS, arabic,
+                              dual_markup, primary_lang, resolve_pair)
 from .translations import _ as _translate
 
 
@@ -53,7 +55,7 @@ SETUP_EXEMPT = frozenset({
     'web_profile.setup',
     'web_auth.login', 'web_auth.logout',
     'mobile_auth.login', 'mobile_auth.logout',
-    'static', 'favicon', 'health', 'set_lang', 'index',
+    'static', 'favicon', 'health', 'set_lang', 'set_lang_pair', 'index',
 })
 
 
@@ -227,6 +229,12 @@ def create_app(config_class=Config):
 
     app.register_blueprint(admin_bp, url_prefix='/admin')
 
+    # Every screen gets a stable page ID (login = 0.0) rendered in a badge and
+    # explained by a dialog. Built after all blueprints so the registry always
+    # matches the live url map.
+    from .core.utils.page_registry import register as register_page_registry
+    register_page_registry(app)
+
     @app.route('/favicon.ico')
     def favicon():
         from flask import send_from_directory
@@ -241,11 +249,20 @@ def create_app(config_class=Config):
             return resp
         return redirect(url_for('web_auth.login'))
 
+    @app.route('/lang/pair/<pair>')
+    def set_lang_pair(pair):
+        """Switch the bilingual pair: Arabic/English or Arabic/French."""
+        resp = redirect(request.referrer or url_for('web_auth.login'))
+        resp.set_cookie(PAIR_COOKIE, resolve_pair(pair), max_age=365 * 24 * 3600)
+        return resp
+
     @app.context_processor
     def inject_globals():
-        lang = request.cookies.get('lang', 'en')
-        if lang not in LANGS:
-            lang = 'en'
+        # The interface is bilingual: text is shown in Arabic alongside the
+        # primary language of the chosen pair. ``_()`` follows that primary
+        # language (used where markup is not allowed, e.g. placeholders).
+        pair = resolve_pair(request.cookies.get(PAIR_COOKIE))
+        lang = primary_lang(pair)
 
         from .core.models.company_model import CompanyModel
         company_doc = _current_company()
@@ -253,6 +270,9 @@ def create_app(config_class=Config):
 
         return {
             'current_lang': lang,
+            'lang_pair': pair,
+            'lang_pair_labels': PAIR_LABELS,
+            'lang_pair_badges': PAIR_BADGES,
             'available_langs': LANGS,
             'version': VERSION,
             'build_date': BUILD_DATE,
@@ -260,6 +280,8 @@ def create_app(config_class=Config):
             'registration_enabled': app.config['ALLOW_PUBLIC_REGISTRATION'],
             'now': datetime.now(),
             '_': lambda key: _translate(key, lang),
+            'dual': lambda key: dual_markup(key, lang),
+            'arabic': arabic,
         }
 
     @app.cli.command('create-super-admin')

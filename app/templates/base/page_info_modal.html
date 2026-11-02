@@ -1,0 +1,60 @@
+{% if page_info %}
+<div class="modal fade" id="pageInfoModal" tabindex="-1" aria-labelledby="pageInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content page-info-modal">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pageInfoModalLabel">
+                    <i class="bi bi-upc-scan me-2" aria-hidden="true"></i>
+                    <code>{{ page_info.id }}</code>
+                    <span class="text-muted mx-1">&middot;</span>{{ page_info.name }}
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="{{ _('Close') }}"></button>
+            </div>
+            <div class="modal-body">
+                <p class="page-info-desc mb-3">{{ page_info.description }}</p>
+                <dl class="row page-info-grid mb-0">
+                    <dt class="col-sm-3">ID</dt>
+                    <dd class="col-sm-9"><code>{{ page_info.id }}</code></dd>
+
+                    <dt class="col-sm-3">{{ dual('Name') }}</dt>
+                    <dd class="col-sm-9">{{ page_info.name }}</dd>
+
+                    <dt class="col-sm-3">{{ dual('Module') }}</dt>
+                    <dd class="col-sm-9">{{ page_info.module }} <span class="text-muted">({{ page_info.module_no }})</span></dd>
+
+                    <dt class="col-sm-3">{{ dual('Description') }}</dt>
+                    <dd class="col-sm-9">{{ page_info.description }}</dd>
+
+                    {% if page_info.route %}
+                    <dt class="col-sm-3">{{ dual('Route') }}</dt>
+                    <dd class="col-sm-9">
+                        <code>{{ page_info.route }}</code>
+                        {% if page_info.methods %}<span class="badge bg-secondary ms-1">{{ page_info.methods }}</span>{% endif %}
+                    </dd>
+                    {% endif %}
+
+                    <dt class="col-sm-3">{{ dual('Endpoint') }}</dt>
+                    <dd class="col-sm-9"><code>{{ page_info.endpoint }}</code></dd>
+
+                    {% if page_info.template %}
+                    <dt class="col-sm-3">{{ dual('Template file') }}</dt>
+                    <dd class="col-sm-9"><code>{{ page_info.template }}</code></dd>
+                    {% endif %}
+
+                    {% if page_info.handler %}
+                    <dt class="col-sm-3">{{ dual('Handler file') }}</dt>
+                    <dd class="col-sm-9"><code>{{ page_info.handler }}</code></dd>
+                    {% endif %}
+
+                    <dt class="col-sm-3">{{ dual('Access') }}</dt>
+                    <dd class="col-sm-9">{{ page_info.access }}</dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <span class="small text-muted me-auto">Maure S2C v{{ version }} &middot; {{ build_date }}</span>
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">{{ dual('Close') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}

@@ -1,15 +1,15 @@
 {% extends 'base/layout.html' %}
-{% block title %}{{ _('Goods Receipts') }} — Maure S2C{% endblock %}
+{% block title %}{{ dual('Goods Receipts') }} — Maure S2C{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="mb-0"><i class="bi bi-box-seam me-2"></i>{{ _('Goods Receipts') }}</h4>
-    <a href="{{ url_for('web_goods_receipt.create_receipt') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>{{ _('Add Receipt') }}</a>
+    <h4 class="mb-0"><i class="bi bi-box-seam me-2"></i>{{ dual('Goods Receipts') }}</h4>
+    <a href="{{ url_for('web_goods_receipt.create_receipt') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>{{ dual('Add Receipt') }}</a>
 </div>
 <div class="card shadow-sm">
     <div class="card-body p-0">
         <table class="table table-hover mb-0">
             <thead class="table-light">
-                <tr><th>{{ _('Receipt #') }}</th><th>{{ _('PO #') }}</th><th>{{ _('Supplier') }}</th><th>{{ _('Status') }}</th><th>{{ _('Date') }}</th><th class="text-end">{{ _('Actions') }}</th></tr>
+                <tr><th>{{ dual('Receipt #') }}</th><th>{{ dual('PO #') }}</th><th>{{ dual('Supplier') }}</th><th>{{ dual('Status') }}</th><th>{{ dual('Date') }}</th><th class="text-end">{{ dual('Actions') }}</th></tr>
             </thead>
             <tbody>
                 {% for r in receipts %}
@@ -17,24 +17,24 @@
                     <td class="align-middle"><code>{{ r.receipt_number or r.id[:8] }}</code></td>
                     <td class="align-middle">{{ r.po_number or '-' }}</td>
                     <td class="align-middle">{{ r.supplier_name or '-' }}</td>
-                    <td class="align-middle"><span class="badge bg-{{ 'success' if r.status == 'received' else 'warning' if r.status == 'waiting' else 'info' }}">{{ _(r.status) }}</span></td>
+                    <td class="align-middle"><span class="badge bg-{{ 'success' if r.status == 'received' else 'warning' if r.status == 'waiting' else 'info' }}">{{ dual(r.status) }}</span></td>
                     <td class="align-middle"><small>{{ r.created_at[:10] if r.created_at else '-' }}</small></td>
                     <td class="text-end align-middle" style="white-space: nowrap;">
                         <div class="d-flex gap-1 justify-content-end align-items-center">
                             <a href="{{ url_for('web_goods_receipt.edit_receipt', gr_id=r.id) }}" class="btn btn-sm btn-outline-primary btn-icon-circle" title="{{ _('Edit') }}"><i class="bi bi-pencil"></i></a>
                             {% if r.po_status != 'received' %}
-                            <form method="POST" action="{{ url_for('web_goods_receipt.mark_po_received', gr_id=r.id) }}" class="d-inline-flex" onsubmit="return confirm('{{ _('Mark the linked PO as received?') }}')">
+                            <form method="POST" action="{{ url_for('web_goods_receipt.mark_po_received', gr_id=r.id) }}" class="d-inline-flex" onsubmit="return confirm('{{ dual('Mark the linked PO as received?') }}')">
                                 <button type="submit" class="btn btn-sm btn-outline-success btn-icon-circle" title="{{ _('Mark PO Received') }}"><i class="bi bi-check-lg"></i></button>
                             </form>
                             {% endif %}
-                            <form method="POST" action="{{ url_for('web_goods_receipt.delete_receipt', gr_id=r.id) }}" class="d-inline-flex" onsubmit="return confirm('{{ _('Delete this goods receipt?') }}')">
+                            <form method="POST" action="{{ url_for('web_goods_receipt.delete_receipt', gr_id=r.id) }}" class="d-inline-flex" onsubmit="return confirm('{{ dual('Delete this goods receipt?') }}')">
                                 <button type="submit" class="btn btn-sm btn-outline-danger btn-icon-circle" title="{{ _('Delete') }}"><i class="bi bi-trash"></i></button>
                             </form>
                         </div>
                     </td>
                 </tr>
                 {% else %}
-                <tr><td colspan="6" class="text-center text-muted py-4">{{ _('No goods receipts yet.') }}</td></tr>
+                <tr><td colspan="6" class="text-center text-muted py-4">{{ dual('No goods receipts yet.') }}</td></tr>
                 {% endfor %}
             </tbody>
         </table>
