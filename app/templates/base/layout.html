@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" data-mode="{{ mode }}" data-lang="{{ current_lang }}" data-bs-theme="dark">
+<html lang="en" data-mode="{{ mode }}" data-lang="{{ current_lang }}" data-bs-theme="dark"
+      data-primary-font-size="{{ user.get('primary_font_size', 'medium') if user else 'medium' }}"
+      data-arabic-font-size="{{ user.get('arabic_font_size', 'medium') if user else 'medium' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

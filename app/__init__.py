@@ -3,7 +3,6 @@ import logging
 from datetime import datetime
 from flask import Flask, abort, g, request, redirect, url_for
 from flask_cors import CORS
-from flask_jwt_extended import get_jwt_identity
 
 from .config import Config
 from .extensions.db import mongo, bcrypt, jwt
@@ -60,23 +59,13 @@ SETUP_EXEMPT = frozenset({
 
 
 def _current_user():
-    """The acting user for this request, loaded once and cached on ``g``."""
-    if 'rbac_user' in g:
-        return g.rbac_user
-    user = None
-    try:
-        identity = get_jwt_identity()
-    except Exception:
-        identity = None
-    if identity:
-        from .core.models.user_model import UserModel
-        try:
-            user = UserModel.find_by_id(identity)
-        except Exception:
-            logger.exception('Could not load user %s', identity)
-            user = None
-    g.rbac_user = user
-    return user
+    """The acting user for this request, loaded once and cached on ``g``.
+
+    Delegates to :mod:`app.core.utils.context` — the single place that
+    resolves identity from the database rather than from JWT claims.
+    """
+    from .core.utils.context import current_user
+    return current_user()
 
 
 def _current_company():

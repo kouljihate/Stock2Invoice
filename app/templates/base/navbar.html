@@ -59,6 +59,25 @@
                                     <span class="badge bg-secondary">{{ lang_pair_badges['ar-fr'] }}</span>
                                 </a>
                             </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form action="{{ url_for('web_profile.update_font_size') }}" method="post" class="px-3 py-2" onclick="event.stopPropagation()">
+                                    <div class="small text-muted mb-2"><i class="bi bi-type me-1"></i>{{ dual('Font size') }}</div>
+                                    <label for="primary-font-size" class="form-label small mb-1">{{ dual('English / French') }}</label>
+                                    <select id="primary-font-size" name="primary_font_size" class="form-select form-select-sm mb-2">
+                                        <option value="small" {% if user.primary_font_size == 'small' %}selected{% endif %}>{{ dual('Small') }}</option>
+                                        <option value="medium" {% if user.primary_font_size == 'medium' %}selected{% endif %}>{{ dual('Default') }}</option>
+                                        <option value="large" {% if user.primary_font_size == 'large' %}selected{% endif %}>{{ dual('Large') }}</option>
+                                    </select>
+                                    <label for="arabic-font-size" class="form-label small mb-1">{{ dual('Arabic') }}</label>
+                                    <select id="arabic-font-size" name="arabic_font_size" class="form-select form-select-sm mb-2">
+                                        <option value="small" {% if user.arabic_font_size == 'small' %}selected{% endif %}>{{ dual('Small') }}</option>
+                                        <option value="medium" {% if user.arabic_font_size == 'medium' %}selected{% endif %}>{{ dual('Default') }}</option>
+                                        <option value="large" {% if user.arabic_font_size == 'large' %}selected{% endif %}>{{ dual('Large') }}</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-outline-primary w-100">{{ dual('Save display settings') }}</button>
+                                </form>
+                            </li>
 
                             <li><hr class="dropdown-divider"></li>
                             <li>

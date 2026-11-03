@@ -3,7 +3,7 @@ import os
 import re
 from uuid import uuid4
 from flask import Blueprint, current_app, render_template, request, redirect, url_for, flash, abort
-from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.core.models.company_model import CompanyModel
 from app.core.models.user_model import UserModel
 from app.core.models.role_model import RoleModel
@@ -34,17 +34,20 @@ admin_bp = Blueprint('admin', __name__, template_folder='../templates')
 def super_admin_required(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
-        claims = get_jwt()
-        role_names = claims.get('role_names', [])
-        if 'Admin' not in role_names:
+        # Roles are read from the user document, not the token: a demoted
+        # Admin must lose the panel on the next request, not when his
+        # (up to 24h) access token finally expires.
+        from app.core.utils.context import is_super_admin
+        if not is_super_admin():
             abort(403)
         return fn(*args, **kwargs)
     return wrapper
 
 
 def _get_user():
-    uid = get_jwt_identity()
-    return UserModel.find_by_id(uid)
+    """Acting user document, resolved from the database (never claims)."""
+    from app.core.utils.context import current_user
+    return current_user()
 
 
 @admin_bp.route('/')

@@ -21,6 +21,7 @@ REQUIRED_COMPANY = (
     ('city', 'City'),
     ('company_phone', 'Company phone'),
 )
+FONT_SIZES = frozenset({'small', 'medium', 'large'})
 
 
 def _slugify(name):
@@ -132,7 +133,10 @@ def edit():
         return redirect(url_for('web_auth.login'))
 
     user_dict = UserModel.to_dict(user)
-    values = {'name': user.get('name') or '', 'phone': user.get('phone') or ''}
+    values = {
+        'name': user.get('name') or '',
+        'phone': user.get('phone') or '',
+    }
 
     if request.method == 'GET':
         return render_template('profile/edit.html', mode='web', user=user_dict,
@@ -146,7 +150,30 @@ def edit():
         return render_template('profile/edit.html', mode='web', user=user_dict,
                                values=values)
 
-    UserModel.update(uid, {'name': values['name'], 'phone': values['phone']})
+    UserModel.update(uid, values)
     logger.info('Profile updated for %s', user.get('email'))
     flash('Your profile has been updated.', 'success')
     return redirect(url_for('web_profile.edit'))
+
+
+@web_profile_bp.route('/font-size', methods=['POST'])
+@jwt_required()
+def update_font_size():
+    """Save the display preferences exposed in the Languages menu."""
+    uid = get_jwt_identity()
+    user = UserModel.find_by_id(uid)
+    if not user:
+        flash('Please log in again.', 'danger')
+        return redirect(url_for('web_auth.login'))
+
+    preferences = {
+        'primary_font_size': request.form.get('primary_font_size', 'medium'),
+        'arabic_font_size': request.form.get('arabic_font_size', 'medium'),
+    }
+    if any(value not in FONT_SIZES for value in preferences.values()):
+        flash('Invalid font-size selection.', 'danger')
+    else:
+        UserModel.update(uid, preferences)
+        flash('Display settings updated.', 'success')
+
+    return redirect(request.referrer or url_for('web_dashboard.index'))

@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.9.0] - 2026-11-03
+### Added
+- Per-user typography controls in Edit Profile: independently choose Small,
+  Default, or Large text for English/French and Arabic. The selection is
+  saved to the account and applied across every page.
+
 ## [2.8.0] — 2026-11-02
 ### Added
 - **Dual-language interface**: every screen renders Arabic alongside English or

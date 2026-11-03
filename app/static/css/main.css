@@ -53,6 +53,33 @@
   font-family: var(--font-arabic);
 }
 
+/* Arabic glyphs are visually smaller than the accompanying Latin text in
+   VIP Rawy. Increase the base size on fully Arabic pages; bilingual Arabic
+   labels receive matching, context-specific sizing in dual-lang.css. */
+html[data-primary-font-size="small"] {
+  font-size: 90%;
+}
+
+html[data-primary-font-size="medium"] {
+  font-size: 100%;
+}
+
+html[data-primary-font-size="large"] {
+  font-size: 112.5%;
+}
+
+html[data-lang="ar"][data-arabic-font-size="small"] {
+  font-size: 125%;
+}
+
+html[data-lang="ar"][data-arabic-font-size="medium"] {
+  font-size: 156.25%;
+}
+
+html[data-lang="ar"][data-arabic-font-size="large"] {
+  font-size: 187.5%;
+}
+
 html[data-lang="en"] body {
   font-family: var(--font-default);
 }

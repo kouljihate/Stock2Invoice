@@ -112,6 +112,8 @@ class UserModel:
             'role_names': role_names,
             'permissions': effective_permissions,
             'company_id': str(user.get('company_id')) if user.get('company_id') else None,
+            'primary_font_size': user.get('primary_font_size', 'medium'),
+            'arabic_font_size': user.get('arabic_font_size', 'medium'),
             'created_at': user.get('created_at').isoformat() if user.get('created_at') else None,
         }
 

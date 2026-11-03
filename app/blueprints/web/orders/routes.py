@@ -1,6 +1,6 @@
 import logging
 from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file
-from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.core.services.order_service import OrderService
 from app.core.models.order_model import CustomerOrderModel
 from app.core.models.product_model import ProductModel
@@ -14,13 +14,15 @@ web_orders_bp = Blueprint('web_orders', __name__, template_folder='../../../temp
 
 
 def _get_user():
-    uid = get_jwt_identity()
-    return UserModel.find_by_id(uid)
+    """Acting user document, resolved from the database (never claims)."""
+    from app.core.utils.context import current_user
+    return current_user()
 
 
 def _company_id():
-    claims = get_jwt()
-    return claims.get('company_id')
+    """Acting user's company id, resolved from the database (never claims)."""
+    from app.core.utils.context import current_company_id
+    return current_company_id()
 
 
 @web_orders_bp.route('')

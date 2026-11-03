@@ -19,6 +19,8 @@
 
 .dual .d-s {
   color: inherit;
+  letter-spacing: normal;   /* tracking breaks Arabic joining */
+  font-size: 1.14em;
 }
 
 .dual .d-s::before {
@@ -43,7 +45,7 @@ button .dual,
 button .dual .d-s,
 .page-link .dual .d-s {
   order: -1;                 /* first in the column: the top line */
-  font-size: .82em;
+  font-size: .94em;
   opacity: .92;
 }
 
@@ -65,7 +67,7 @@ th .dual {
 
 th .dual .d-s {
   order: -1;
-  font-size: .82em;
+  font-size: .94em;
   opacity: .92;
 }
 
@@ -73,34 +75,60 @@ th .dual .d-s::before {
   content: none;
 }
 
-/* --- Labels: two columns — English right, Arabic left -------------------- */
+/* --- Labels: two columns — English left, Arabic right ------------------- */
+/* The label itself must span the same width as its input, otherwise the two
+   columns collapse onto each other: .form-label is inline-block, so it shrinks
+   to the width of its own text. */
+label:has(.dual):not(.form-check-label),
+.form-label:has(.dual) {
+  display: block;
+  width: 100%;
+}
+
 label .dual,
-.form-label .dual,
-.form-check-label .dual {
-  display: flex;
-  flex-direction: row-reverse;   /* the first child (English) lands on the right */
+.form-label .dual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;   /* Col1 English (left) | Col2 Arabic (right) */
   align-items: baseline;
-  justify-content: space-between;
   gap: .75rem;
   width: 100%;
 }
 
 label .dual .d-p,
-.form-label .dual .d-p,
-.form-check-label .dual .d-p {
-  text-align: right;
+.form-label .dual .d-p {
+  text-align: left;
 }
 
 label .dual .d-s,
-.form-label .dual .d-s,
-.form-check-label .dual .d-s {
-  text-align: left;
-  font-size: .92em;
+.form-label .dual .d-s {
+  text-align: right;
+  font-size: 1.05em;
   opacity: .85;
 }
 
 label .dual .d-s::before,
-.form-label .dual .d-s::before,
+.form-label .dual .d-s::before {
+  content: none;
+}
+
+/* Checkbox / radio labels stay inline next to their box: English, then Arabic. */
+.form-check-label .dual {
+  display: inline-flex;
+  flex-direction: row;
+  gap: .4rem;
+  width: auto;
+}
+
+.form-check-label .dual .d-p {
+  text-align: left;
+}
+
+.form-check-label .dual .d-s {
+  text-align: left;
+  font-size: 1.05em;
+  opacity: .85;
+}
+
 .form-check-label .dual .d-s::before {
   content: none;
 }
@@ -243,13 +271,126 @@ body.has-company-logo .card-header > h5 > .bi {
 
 .navbar-dual .navbar-nav .nav-link .dual .d-s {
   order: 0;
-  font-size: .9em;
+  font-size: 1.03em;
   opacity: .9;
 }
 
 .navbar-dual .navbar-nav .nav-link .dual .d-s::before {
   content: none;
 }
+
+/* --- Sidebar: English/French left, Arabic right at every menu level ------ */
+.sidebar .nav-link .dual {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  column-gap: .5rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.sidebar .nav-link .dual .d-p {
+  grid-column: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+.sidebar .nav-link .dual .d-s {
+  grid-column: 2;
+  min-width: 0;
+  text-align: right;
+}
+
+.sidebar .nav-link .dual .d-s::before {
+  content: none;
+}
+
+/* Direct links include both top-level items and every nested submenu link. */
+.sidebar .nav-link:not([data-bs-toggle]):has(> .dual) {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: .5rem;
+}
+
+.sidebar .nav-link:not([data-bs-toggle]):has(> .dual) > .bi,
+.sidebar .nav-link:not([data-bs-toggle]):has(> .dual) > .material-symbols-outlined {
+  grid-column: 1;
+}
+
+.sidebar .nav-link:not([data-bs-toggle]):has(> .dual) > .dual {
+  grid-column: 2;
+}
+
+/* Icon-free submenu links use the entire available row. */
+.sidebar .nav-link:not([data-bs-toggle]):not(:has(> .bi, > .material-symbols-outlined)) > .dual {
+  grid-column: 1 / -1;
+}
+
+/* Collapsible module headers have an icon + label group before the chevron. */
+.sidebar .nav-link[data-bs-toggle="collapse"] > span:first-child {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: .5rem;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.sidebar .nav-link[data-bs-toggle="collapse"] > span:first-child > strong {
+  display: contents;
+}
+
+.sidebar .nav-link[data-bs-toggle="collapse"] > span:first-child > .bi,
+.sidebar .nav-link[data-bs-toggle="collapse"] > span:first-child > .material-symbols-outlined {
+  grid-column: 1;
+}
+
+.sidebar .nav-link[data-bs-toggle="collapse"] > span:first-child .dual {
+  grid-column: 2;
+}
+
+/* Per-user Arabic font size. These values preserve the layout-specific
+   proportions above while allowing the Profile settings to apply everywhere. */
+html[data-arabic-font-size="small"] .dual .d-s { font-size: 20px; }
+html[data-arabic-font-size="medium"] .dual .d-s { font-size: 25px; }
+html[data-arabic-font-size="large"] .dual .d-s { font-size: 30px; }
+
+html[data-arabic-font-size="small"] .btn .dual .d-s,
+html[data-arabic-font-size="small"] button .dual .d-s,
+html[data-arabic-font-size="small"] .page-link .dual .d-s,
+html[data-arabic-font-size="small"] th .dual .d-s { font-size: 20px; }
+html[data-arabic-font-size="medium"] .btn .dual .d-s,
+html[data-arabic-font-size="medium"] button .dual .d-s,
+html[data-arabic-font-size="medium"] .page-link .dual .d-s,
+html[data-arabic-font-size="medium"] th .dual .d-s { font-size: 25px; }
+html[data-arabic-font-size="large"] .btn .dual .d-s,
+html[data-arabic-font-size="large"] button .dual .d-s,
+html[data-arabic-font-size="large"] .page-link .dual .d-s,
+html[data-arabic-font-size="large"] th .dual .d-s { font-size: 30px; }
+
+html[data-arabic-font-size="small"] label .dual .d-s,
+html[data-arabic-font-size="small"] .form-label .dual .d-s,
+html[data-arabic-font-size="small"] .form-check-label .dual .d-s { font-size: 20px; }
+html[data-arabic-font-size="medium"] label .dual .d-s,
+html[data-arabic-font-size="medium"] .form-label .dual .d-s,
+html[data-arabic-font-size="medium"] .form-check-label .dual .d-s { font-size: 25px; }
+html[data-arabic-font-size="large"] label .dual .d-s,
+html[data-arabic-font-size="large"] .form-label .dual .d-s,
+html[data-arabic-font-size="large"] .form-check-label .dual .d-s { font-size: 30px; }
+
+html[data-arabic-font-size="small"] .navbar-dual .navbar-nav .nav-link .dual .d-s { font-size: 20px; }
+html[data-arabic-font-size="medium"] .navbar-dual .navbar-nav .nav-link .dual .d-s { font-size: 25px; }
+html[data-arabic-font-size="large"] .navbar-dual .navbar-nav .nav-link .dual .d-s { font-size: 30px; }
+
+/* neon.css sets body text in pixels, so set it explicitly here as well. */
+html:is([data-lang="en"], [data-lang="fr"])[data-primary-font-size="small"] body { font-size: 13.5px; }
+html:is([data-lang="en"], [data-lang="fr"])[data-primary-font-size="medium"] body { font-size: 15px; }
+html:is([data-lang="en"], [data-lang="fr"])[data-primary-font-size="large"] body { font-size: 16.875px; }
+
+html[data-lang="ar"][data-arabic-font-size="small"] body { font-size: 20px; }
+html[data-lang="ar"][data-arabic-font-size="medium"] body { font-size: 25px; }
+html[data-lang="ar"][data-arabic-font-size="large"] body { font-size: 30px; }
 
 @media (max-width: 991.98px) {
   .navbar-dual {

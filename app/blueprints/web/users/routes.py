@@ -1,6 +1,6 @@
 import logging
 from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
-from flask_jwt_extended import jwt_required, get_jwt, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.core.models.user_model import UserModel
 from app.core.models.company_model import CompanyModel
 from app.core.models.role_model import RoleModel
@@ -11,8 +11,9 @@ web_users_bp = Blueprint('web_users', __name__, template_folder='../../../templa
 
 
 def _company_id():
-    claims = get_jwt()
-    return claims.get('company_id')
+    """Acting user's company id, resolved from the database (never claims)."""
+    from app.core.utils.context import current_company_id
+    return current_company_id()
 
 
 def _company_admin_required(user):

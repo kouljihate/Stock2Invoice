@@ -2,7 +2,7 @@ import json
 import logging
 from datetime import datetime, timezone
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.core.models.user_model import UserModel
 from app.core.models.customer_model import CustomerModel
 from app.core.models.customer_quote_model import CustomerQuoteModel
@@ -15,13 +15,15 @@ web_customer_quotes_bp = Blueprint('web_customer_quotes', __name__, template_fol
 
 
 def _get_user():
-    uid = get_jwt_identity()
-    return UserModel.find_by_id(uid)
+    """Acting user document, resolved from the database (never claims)."""
+    from app.core.utils.context import current_user
+    return current_user()
 
 
 def _company_id():
-    claims = get_jwt()
-    return claims.get('company_id')
+    """Acting user's company id, resolved from the database (never claims)."""
+    from app.core.utils.context import current_company_id
+    return current_company_id()
 
 
 @web_customer_quotes_bp.route('')

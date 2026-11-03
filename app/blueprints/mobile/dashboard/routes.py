@@ -1,6 +1,6 @@
 import logging
 from flask import Blueprint, render_template
-from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.core.models.product_model import ProductModel
 from app.core.models.user_model import UserModel
 from app.core.services.stock_service import StockService
@@ -12,8 +12,9 @@ mobile_dashboard_bp = Blueprint('mobile_dashboard', __name__, template_folder='.
 
 
 def _company_id():
-    claims = get_jwt()
-    return claims.get('company_id')
+    """Acting user's company id, resolved from the database (never claims)."""
+    from app.core.utils.context import current_company_id
+    return current_company_id()
 
 
 @mobile_dashboard_bp.route('')

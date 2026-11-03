@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
-from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.core.models.product_model import ProductModel
 from app.core.models.user_model import UserModel
 from app.core.services.stock_service import StockService
@@ -9,22 +9,14 @@ from bson.objectid import ObjectId
 eshop_bp = Blueprint('eshop', __name__, template_folder='../../templates')
 
 def _get_user():
-    try:
-        uid = get_jwt_identity()
-        if uid:
-            return UserModel.find_by_id(uid)
-    except:
-        pass
-    return None
+    """Acting user document, resolved from the database (never claims)."""
+    from app.core.utils.context import current_user
+    return current_user()
 
 def _company_id():
-    try:
-        claims = get_jwt()
-        if claims:
-            return claims.get('company_id')
-    except:
-        pass
-    return None
+    """Acting user's company id, resolved from the database (never claims)."""
+    from app.core.utils.context import current_company_id
+    return current_company_id()
 
 @eshop_bp.route('/')
 @eshop_bp.route('')
