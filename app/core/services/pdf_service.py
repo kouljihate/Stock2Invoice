@@ -326,6 +326,50 @@ class InvoicePDF(FPDF):
         return self
 
 
+def _json_safe(value):
+    """Normalize Mongo-flavoured dicts to plain JSON for the service call.
+
+    `to_dict()` output is almost JSON already, but embedded sub-documents
+    (invoice items, invoice_template) can still carry ObjectIds/datetimes,
+    which `requests(json=...)` cannot serialize.
+    """
+    from datetime import datetime, date
+    from bson import ObjectId
+
+    if isinstance(value, dict):
+        return {str(k): _json_safe(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_safe(v) for v in value]
+    if isinstance(value, (datetime, date)):
+        return value.isoformat()
+    if isinstance(value, ObjectId):
+        return str(value)
+    if isinstance(value, bytes):
+        return value.decode('utf-8', 'replace')
+    return value
+
+
+def generate_invoice_pdf_remote(invoice, company, timeout=25):
+    """Render the invoice PDF in workers-service; returns raw PDF bytes.
+
+    First live BFF -> domain-service call (stateless, same input shape the
+    local renderer takes). Raises `ApiError` when workers-service is
+    unreachable or rejects the payload -- callers fall back to the local
+    renderer so a workers outage never breaks downloads.
+    """
+    import io as _io
+    from app.clients.http import post as _service_post
+
+    payload = {'invoice': _json_safe(invoice or {}),
+               'company': _json_safe(company or {})}
+    content = _service_post('workers', '/pdf/invoice', json=payload,
+                            timeout=timeout, expect_bytes=True)
+    buf = _io.BytesIO(content if isinstance(content, (bytes, bytearray))
+                      else str(content).encode('utf-8'))
+    buf.seek(0)
+    return buf
+
+
 def generate_invoice_pdf(invoice, company):
     pdf = InvoicePDF(invoice, company)
     pdf.render()

@@ -7,8 +7,20 @@ from app.number_to_french import number_to_french
 logger = logging.getLogger(__name__)
 
 # Absolute path to app/static, resolved from this module so PDF generation
-# works no matter what the process working directory is.
-STATIC_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'app', 'static'))
+# works no matter what the process working directory is. Two layouts exist:
+# a repo checkout (services/workers/app -> <root>/app/static) and the
+# workers image (service code at /srv/service/app, assets at /srv/app/static).
+def _static_dir():
+    here = os.path.abspath(os.path.dirname(__file__))
+    for cand in (os.path.join(here, '..', '..', '..', 'app', 'static'),
+                 '/srv/app/static'):
+        cand = os.path.abspath(cand)
+        if os.path.isdir(cand):
+            return cand
+    return os.path.abspath(os.path.join(here, '..', '..', '..', 'app', 'static'))
+
+
+STATIC_DIR = _static_dir()
 
 
 def static_path(*parts):

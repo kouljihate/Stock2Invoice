@@ -6,6 +6,11 @@
 #
 # Domain services are also published on the host (8001-8005) so the BFF can
 # be run locally with `python run.py` during development.
+#
+# Event flow: services write domain events to their Mongo `outbox`; an
+# in-process relay publishes them to the `domain.events` topic exchange
+# (publisher confirms on). Consumers ack manually, deduplicate on
+# `event_id`, and retry through a 5s -> 30s -> 300s ladder before the DLQ.
 
 name: stockinvoice
 
@@ -22,8 +27,27 @@ x-service-env: &service-env
   PROCUREMENT_URL: http://procurement:8004
   WORKERS_URL: http://workers:8005
 
+# Every domain service exposes /health -> {"status": "ok"|"degraded"} once its
+# Mongo indexes, outbox relay and RabbitMQ topology are up. The BFF only
+# starts after all five are "ok", so the first browser request never hits a
+# half-booted backend.
+x-service-healthcheck: &service-healthcheck
+  test: ["CMD-SHELL", "python -c \"import json,os,urllib.request; d=json.load(urllib.request.urlopen('http://127.0.0.1:%s/health' % os.environ['SERVICE_PORT'], timeout=5)); raise SystemExit(0 if d.get('status')=='ok' else 1)\""]
+  interval: 30s
+  timeout: 10s
+  retries: 3
+  start_period: 90s
+
+# Unbounded container logs fill the host disk; rotate everywhere.
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 x-service-base: &service-base
   restart: unless-stopped
+  logging: *default-logging
   environment: *service-env
   depends_on:
     mongo:
@@ -34,6 +58,7 @@ x-service-base: &service-base
 services:
   mongo:
     image: mongo:7
+    logging: *default-logging
     volumes:
       - mongo_data:/data/db
     ports:
@@ -47,6 +72,7 @@ services:
   rabbitmq:
     image: rabbitmq:3.13-management
     hostname: stockinvoice-rabbit
+    logging: *default-logging
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -69,6 +95,7 @@ services:
       SERVICE_PORT: "8001"
     ports:
       - "8001:8001"
+    healthcheck: *service-healthcheck
 
   inventory:
     <<: *service-base
@@ -81,6 +108,7 @@ services:
       SERVICE_PORT: "8002"
     ports:
       - "8002:8002"
+    healthcheck: *service-healthcheck
 
   sales:
     <<: *service-base
@@ -93,6 +121,7 @@ services:
       SERVICE_PORT: "8003"
     ports:
       - "8003:8003"
+    healthcheck: *service-healthcheck
 
   procurement:
     <<: *service-base
@@ -105,6 +134,7 @@ services:
       SERVICE_PORT: "8004"
     ports:
       - "8004:8004"
+    healthcheck: *service-healthcheck
 
   workers:
     <<: *service-base
@@ -116,9 +146,15 @@ services:
       SERVICE_PORT: "8005"
     ports:
       - "8005:8005"
+    # Company logos uploaded through the BFF must be visible to the PDF
+    # renderer, and must survive container redeploys: share the folder.
+    volumes:
+      - static_uploads:/srv/app/static/uploads
+    healthcheck: *service-healthcheck
 
   bff:
     restart: unless-stopped
+    logging: *default-logging
     build:
       context: .
       dockerfile: deploy/Dockerfile.bff
@@ -141,21 +177,24 @@ services:
       SALES_URL: http://sales:8003
       PROCUREMENT_URL: http://procurement:8004
       WORKERS_URL: http://workers:8005
+    volumes:
+      # Same uploads folder the workers-service reads when rendering PDFs.
+      - static_uploads:/srv/app/static/uploads
     ports:
       - "5002:5002"
     depends_on:
       mongo:
         condition: service_healthy
       identity:
-        condition: service_started
+        condition: service_healthy
       inventory:
-        condition: service_started
+        condition: service_healthy
       sales:
-        condition: service_started
+        condition: service_healthy
       procurement:
-        condition: service_started
+        condition: service_healthy
       workers:
-        condition: service_started
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:5002/api/health', timeout=3).status==200 else 1)"]
       interval: 15s
@@ -164,6 +203,7 @@ services:
 
   gateway:
     image: nginx:1.27-alpine
+    logging: *default-logging
     ports:
       - "8080:80"
     volumes:
@@ -174,3 +214,4 @@ services:
 volumes:
   mongo_data:
   rabbit_data:
+  static_uploads:   # company logos: written by the BFF, read by workers-service

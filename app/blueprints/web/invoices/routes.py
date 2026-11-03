@@ -197,7 +197,16 @@ def download_pdf(invoice_id):
         company = CompanyModel.find_by_id(cid)
         if company:
             company = CompanyModel.to_dict(company)
-    buf = generate_invoice_pdf(inv, company)
+    try:
+        from app.core.services.pdf_service import \
+            generate_invoice_pdf_remote
+        buf = generate_invoice_pdf_remote(inv, company)
+    except Exception:
+        import logging as _logging
+        _logging.getLogger(__name__).warning(
+            "workers-service PDF failed; rendering locally",
+            exc_info=True)
+        buf = generate_invoice_pdf(inv, company)
     inv_number = inv.get('invoice_number', 'invoice')
     safe_name = inv_number.replace('/', '_').replace('\\', '_')
     return send_file(buf, mimetype='application/pdf',

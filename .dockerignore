@@ -1,0 +1,25 @@
+# Never shipped into images: keeps `docker build` contexts small and hermetic.
+.git
+.gitignore
+venv
+__pycache__
+*.pyc
+*.pyo
+.pytest_cache
+.mypy_cache
+.opencode
+.freebuff
+.cloud-attachments
+.tmp-papicons
+.tmp_refactor_identity.py
+.env
+.env.local
+cookies.txt
+*.png
+prompt_*.txt
+prompt_*.md
+PROMPT_*.md
+verify_fixes.py
+tests
+app/logs/*.log
+app/__pycache__

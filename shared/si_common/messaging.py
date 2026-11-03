@@ -29,6 +29,7 @@ import uuid
 from datetime import datetime, timezone
 
 import pika
+from pika.exceptions import UnroutableError
 
 from .config import get_settings
 
@@ -67,8 +68,20 @@ class Rabbit:
     def __init__(self, service_name):
         self.service_name = service_name
         self.settings = get_settings(service_name)
+        self._binding_keys = ('#',)
         self._local = threading.local()
         self._closed = False
+
+    def _reset(self):
+        """Drop cached connection/channel so the next use reconnects."""
+        try:
+            conn = getattr(self._local, 'conn', None)
+            if conn is not None and conn.is_open:
+                conn.close()
+        except Exception:
+            pass
+        self._local.conn = None
+        self._local.channel = None
 
     # -- connections --------------------------------------------------------
     def _connection(self):
@@ -96,7 +109,10 @@ class Rabbit:
         if chan is not None and chan.is_open and chan.connection.is_open:
             return chan
         chan = conn.channel()
-        chan.confirm_delivery = True
+        # NOTE: this is a method call. A previous version assigned
+        # `chan.confirm_delivery = True`, which merely shadowed the method
+        # and left confirms disabled (silent event loss on broker failure).
+        chan.confirm_delivery()
         self._local.channel = chan
         return chan
 
@@ -114,6 +130,7 @@ class Rabbit:
     # -- topology -----------------------------------------------------------
     def declare_topology(self, binding_keys=('#',)):
         """Declare this service's exchanges, work queue, retry ladder and DLQ."""
+        self._binding_keys = tuple(binding_keys)
         chan = self.channel()
         chan.exchange_declare(EXCHANGE_EVENTS, 'topic', durable=True)
         chan.exchange_declare(EXCHANGE_COMMANDS, 'direct', durable=True)
@@ -142,6 +159,11 @@ class Rabbit:
     def publish(self, routing_key, message, exchange=EXCHANGE_EVENTS):
         body = json.dumps(message, default=str).encode('utf-8')
         last_error = None
+        # NOTE on pika semantics (BlockingChannel.basic_publish always
+        # returns None): with confirms enabled, success is "no exception".
+        # An unroutable mandatory message raises UnroutableError, a broker
+        # nack raises NackError, and transport problems raise connection
+        # errors. Never test the return value -- it is always None.
         for attempt in (1, 2):
             try:
                 self.channel().basic_publish(
@@ -153,12 +175,14 @@ class Rabbit:
                     ),
                     mandatory=True,
                 )
-                return True
+                return True   # broker acked (confirms are on)
+            except UnroutableError:
+                raise   # deterministic: no retry can route this key
             except Exception as exc:
                 last_error = exc
-                self._local.conn = None   # force reconnect on retry
                 logger.warning('Publish %s failed (attempt %d): %s',
                                routing_key, attempt, exc)
+                self._reset()   # force reconnect on retry
         logger.error('Dropping event %s after retries: %s', routing_key, last_error)
         return False
 
@@ -209,14 +233,35 @@ class Rabbit:
         def _on_cancel(*_args):
             raise pika.exceptions.ConnectionClosedByBroker
 
-        chan = self.channel()
-        chan.basic_qos(prefetch_count=16)
-        chan.basic_consume(work_queue, _on_message, auto_ack=False)
-        logger.info('%s consuming %s', self.service_name, work_queue)
-        try:
-            chan.start_consuming()
-        except KeyboardInterrupt:
-            chan.stop_consuming()
+        # A broker restart used to kill consumption forever (the exception
+        # escaped start_consuming and the boot thread died). Reconnect with
+        # capped backoff instead; redelivered messages are deduplicated on
+        # event_id by _ProcessedStore, so at-least-once stays safe.
+        delay = 2.0
+        while not self._closed:
+            try:
+                self.declare_topology(self._binding_keys)
+                chan = self.channel()
+                chan.basic_qos(prefetch_count=16)
+                chan.basic_consume(work_queue, _on_message, auto_ack=False)
+                logger.info('%s consuming %s', self.service_name, work_queue)
+                delay = 2.0
+                chan.start_consuming()
+                return   # clean stop (broker cancelled us and we are closed)
+            except KeyboardInterrupt:
+                try:
+                    chan.stop_consuming()
+                except Exception:
+                    pass
+                return
+            except Exception as exc:
+                if self._closed:
+                    return
+                logger.warning('%s consumer lost (%s); retrying in %.0fs',
+                               self.service_name, exc, delay)
+                self._reset()
+                time.sleep(delay)
+                delay = min(delay * 2, 60.0)
 
     def _park(self, chan, method, body, reason):
         try:
@@ -295,14 +340,29 @@ class OutboxRelay:
         """Publish everything currently pending. Returns count published."""
         published = 0
         for row in self._coll.find({'published_at': None}).sort('created_at', 1).limit(100):
-            if self.rabbit.publish(row.get('routing_key'), row.get('event')):
-                self._coll.update_one(
-                    {'_id': row['_id']},
-                    {'$set': {'published_at': datetime.now(timezone.utc)},
-                     '$inc': {'attempts': 1}})
-                published += 1
-            else:
-                break  # broker problem: try again on the next poll
+            try:
+                ok = self.rabbit.publish(row.get('routing_key'),
+                                         row.get('event'))
+            except UnroutableError as exc:
+                # Deterministic poison: no binding will ever match this key.
+                # Count it down and then stop retrying (row stays as evidence).
+                fails = int(row.get('poison_attempts') or 0) + 1
+                update = {'$set': {'poison_attempts': fails,
+                                   'last_error': str(exc)[:300]}}
+                if fails >= 5:
+                    logger.error('Parking poison event %s after %d tries',
+                                 row.get('routing_key'), fails)
+                    update['$set']['published_at'] = datetime.now(timezone.utc)
+                    update['$set']['dead'] = True
+                self._coll.update_one({'_id': row['_id']}, update)
+                continue  # broker is fine: keep draining the rest
+            if not ok:
+                break  # transient/infra problem: retry all on next poll
+            self._coll.update_one(
+                {'_id': row['_id']},
+                {'$set': {'published_at': datetime.now(timezone.utc)},
+                 '$inc': {'attempts': 1}})
+            published += 1
         return published
 
     def _run(self):

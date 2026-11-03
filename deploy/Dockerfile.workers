@@ -16,6 +16,13 @@ COPY app/static /srv/app/static
 RUN pip install "uvicorn[standard]>=0.27" requests fpdf2 pillow
 
 WORKDIR /srv/service
+
+# Least privilege: the app writes nothing to disk (state lives in Mongo,
+# logs go to stdout), so drop root before serving traffic.
+RUN useradd --create-home --uid 10001 --user-group appuser \
+ && chown -R appuser:appuser /srv
+USER appuser
+
 EXPOSE 8005
 
 CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${SERVICE_PORT:-8005}"]

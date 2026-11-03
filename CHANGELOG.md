@@ -1,5 +1,43 @@
 # Changelog
 
+## [2.10.0] - 2026-11-03
+### Added
+- First live BFF -> domain-service call: invoice PDF downloads (web + mobile)
+  render in workers-service (`POST /pdf/invoice`) with automatic fallback to
+  the local renderer, so a workers outage never breaks downloads
+- Healthchecks on all five domain services (`/health` must report
+  `"status": "ok"`); the BFF only starts after every service is healthy, so
+  the first request never hits a half-booted backend
+- Shared `static_uploads` volume: company logos uploaded through the BFF are
+  visible to the workers-service PDF renderer and survive redeploys
+- Broker-free contract tests (`tests/test_messaging_contract.py`): event
+  envelope shape, outbox row, retry-ladder accounting, PDF payload sanitizer
+- BFF service client retries transient 502/503/504 and connection blips with
+  backoff (POST/PATCH never retried on status)
+
+### Fixed
+- Publisher confirms were never enabled: `chan.confirm_delivery = True`
+  merely shadowed the pika method with a bool. Now actually called, so a
+  publish only returns True once the broker acks
+- `basic_publish` returning False (mandatory + unroutable) was ignored and
+  the event vanished silently; now treated as a failed publish and retried
+- Corrected publish-result handling for pika semantics
+  (`basic_publish` always returns None; confirms failures raise):
+  the relay stamps rows on success, and deterministically
+  unroutable rows are parked after 5 tries instead of republished
+  forever
+- Consumers died permanently on any broker restart; they now reconnect with
+  capped backoff and re-declare topology (redeliveries deduplicated on
+  `event_id`)
+
+### Changed
+- Domain service and workers images run as unprivileged `appuser` (they only
+  use Mongo + stdout). The BFF stays root: it writes uploaded logos and
+  rotating logs, partly onto a fresh root-owned volume
+- Container logs rotate everywhere (json-file, 10m x 3 files)
+- `.dockerignore` keeps build contexts small (venv, .git, tests, screenshots
+  and PNGs no longer ship to the daemon)
+
 ## [2.9.1] - 2026-11-03
 ### Fixed
 - Form labels with dual-language text now span the full width of their input

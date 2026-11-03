@@ -36,6 +36,25 @@ HTTP_TIMEOUT = float(os.getenv('HTTP_TIMEOUT_SECONDS', '10'))
 
 _session = requests.Session()
 
+# Transient-error resilience: services restart on redeploy, and without
+# retries that single refused connection / 503 becomes a user-facing 500.
+# Retries apply to connect/read errors and to 502/503/504 on idempotent
+# methods; POST/PATCH are never retried on status (not idempotent).
+try:
+    from urllib3.util.retry import Retry
+    from requests.adapters import HTTPAdapter
+
+    _retry = Retry(
+        total=2, connect=2, read=2, backoff_factor=0.2,
+        status_forcelist=(502, 503, 504),
+    )
+    _adapter = HTTPAdapter(max_retries=_retry,
+                           pool_connections=10, pool_maxsize=20)
+    _session.mount('http://', _adapter)
+    _session.mount('https://', _adapter)
+except Exception:  # pragma: no cover - urllib3 always ships with requests
+    logger.warning('HTTP retry adapter unavailable; calls run without retries')
+
 
 class ApiError(Exception):
     """A domain service returned an error status (or was unreachable)."""
