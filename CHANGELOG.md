@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.9.1] - 2026-11-03
+### Fixed
+- Form labels with dual-language text now span the full width of their input
+  and render as two columns - English left, Arabic right - instead of
+  collapsing to the text width (`app/static/css/dual-lang.css`)
+- Checkbox/radio labels (`.form-check-label`) stay inline next to their box
+  and are excluded from the full-width label rule
+- Arabic label text ignores inherited letter-spacing, which broke Arabic
+  letter joins on the login page
+
 ## [2.9.0] - 2026-11-03
 ### Added
 - Per-user typography controls in Edit Profile: independently choose Small,
