@@ -19,8 +19,6 @@
 - Publisher confirms were never enabled: `chan.confirm_delivery = True`
   merely shadowed the pika method with a bool. Now actually called, so a
   publish only returns True once the broker acks
-- `basic_publish` returning False (mandatory + unroutable) was ignored and
-  the event vanished silently; now treated as a failed publish and retried
 - Corrected publish-result handling for pika semantics
   (`basic_publish` always returns None; confirms failures raise):
   the relay stamps rows on success, and deterministically
